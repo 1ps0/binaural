@@ -1,0 +1,4238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Binaural Beats & Healing Frequencies</title>
+
+    <style>
+/* Theme System - Base Tokens */
+:root {
+    /* Base Colors - HSL for easier manipulation */
+    --color-primary-h: 220;
+    --color-primary-s: 100%;
+    --color-primary-l: 62%;
+    --color-secondary-h: 260;
+    --color-secondary-s: 84%;
+    --color-secondary-l: 57%;
+    --color-success-h: 160;
+    --color-success-s: 95%;
+    --color-success-l: 43%;
+    --color-danger-h: 358;
+    --color-danger-s: 85%;
+    --color-danger-l: 54%;
+
+    /* Light Theme Defaults */
+    --light-bg: hsl(0, 0%, 100%);
+    --light-text: hsl(0, 0%, 20%);
+    --light-card-bg: hsl(210, 17%, 98%);
+    --light-card-border: hsl(210, 14%, 89%);
+    --light-control-bg: hsla(0, 0%, 100%, 0.95);
+
+    /* Dark Theme Values */
+    --dark-bg: hsl(0, 0%, 10%);
+    --dark-text: hsl(0, 0%, 90%);
+    --dark-card-bg: hsl(0, 0%, 18%);
+    --dark-card-border: hsl(0, 0%, 25%);
+    --dark-control-bg: hsla(0, 0%, 10%, 0.95);
+
+    /* Active Theme Values - Default to Light */
+    --bg: var(--light-bg);
+    --text: var(--light-text);
+    --card-bg: var(--light-card-bg);
+    --card-border: var(--light-card-border);
+    --control-bg: var(--light-control-bg);
+
+    /* Functional Colors */
+    --primary: hsl(var(--color-primary-h), var(--color-primary-s), var(--color-primary-l));
+    --secondary: hsl(var(--color-secondary-h), var(--color-secondary-s), var(--color-secondary-l));
+    --success: hsl(var(--color-success-h), var(--color-success-s), var(--color-success-l));
+    --danger: hsl(var(--color-danger-h), var(--color-danger-s), var(--color-danger-l));
+
+    /* Spacing System */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+
+    /* Typography */
+    --font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-size-base: 16px;
+    --line-height-base: 1.5;
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-normal: 300ms ease;
+    --transition-slow: 500ms ease;
+
+    /* Z-index Layers */
+    --z-control-bar: 1000;
+    --z-modal: 2000;
+    --z-tooltip: 3000;
+
+    /* Add dark variants for hover states */
+    --primary-dark: hsl(var(--color-primary-h), var(--color-primary-s), 52%);
+    --success-dark: hsl(var(--color-success-h), var(--color-success-s), 33%);
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+    --bg: var(--dark-bg);
+    --text: var(--dark-text);
+    --card-bg: var(--dark-card-bg);
+    --card-border: var(--dark-card-border);
+    --control-bg: var(--dark-control-bg);
+}
+
+/* Base Styles */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg);
+    color: var(--text);
+    transition:
+        background-color var(--transition-normal),
+        color var(--transition-normal);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Layout */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-md);
+}
+
+/* Utility Classes */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Main Content Area */
+.main-content {
+    flex: 1;
+    padding: var(--space-xl) 0;
+    margin-bottom: 100px; /* Space for control bar */
+}
+
+/* Legacy Banner */
+
+.legacy-version-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--primary);
+    color: white;
+    padding: 8px 16px;
+    text-align: center;
+    z-index: var(--z-control-bar);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.legacy-version-banner a {
+    color: white;
+    text-decoration: underline;
+    font-weight: bold;
+    margin: 0 8px;
+}
+
+.legacy-banner-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 8px;
+    margin-left: 16px;
+}
+/* Header */
+.app-header {
+    background-color: var(--primary);
+    color: white;
+    padding: var(--space-lg) 0;
+    box-shadow: 0 2px 4px hsla(0, 0%, 0%, 0.1);
+}
+
+.app-title {
+    font-size: 2rem;
+    margin: 0;
+}
+
+.app-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-top: var(--space-sm);
+}
+
+/* Header Actions */
+.app-header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+}
+
+.theme-toggle-button,
+.view-toggle-button {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    color: white;
+    transition: all var(--transition-fast);
+}
+
+.theme-toggle-button:hover,
+.view-toggle-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* View Toggle Group */
+.view-toggle-group {
+    display: flex;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.view-toggle-button {
+    border: none;
+    border-radius: 0;
+    padding: 6px 8px;
+}
+
+.view-toggle-button:first-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.view-toggle-button.active {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.view-toggle-button svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+}
+
+.theme-toggle-icon {
+    font-size: 1.2rem;
+}
+
+/* Control Bar */
+.control-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--control-bg);
+    padding: var(--space-md);
+    box-shadow: 0 -2px 10px hsla(0, 0%, 0%, 0.1);
+    z-index: var(--z-control-bar);
+    transition: transform var(--transition-normal);
+}
+
+.control-bar .container {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+}
+
+.control-bar.minimized {
+    transform: translateY(calc(100% - 40px));
+}
+
+.control-bar.top {
+    top: 0;
+    bottom: auto;
+    box-shadow: 0 2px 10px hsla(0, 0%, 0%, 0.1);
+}
+
+/* Control Bar Components */
+.control-bar__section {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.volume-slider {
+    width: 100px;
+    height: 6px;
+    -webkit-appearance: none;
+    background: var(--card-border);
+    border-radius: 3px;
+    outline: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--primary);
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.volume-display {
+    min-width: 3em;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Search */
+.search-container {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 8px 32px 8px 12px;
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.9rem;
+    transition: border-color var(--transition-fast);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.search-clear {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-fast);
+}
+
+.search-clear.visible {
+    opacity: 0.5;
+    pointer-events: auto;
+}
+
+.search-clear:hover {
+    opacity: 1;
+}
+
+/* Action Buttons */
+.action-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background: var(--primary);
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.action-button:hover:not(:disabled) {
+    background: var(--primary-dark);
+}
+
+.action-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.action-button svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+.action-button.stop-all {
+    background: var(--danger);
+}
+
+/* Active Tones */
+.active-tones-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 32px;
+}
+
+.active-tone {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px 4px 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.active-tone--binaural { border-color: var(--primary); }
+.active-tone--solfeggio { border-color: var(--secondary); }
+.active-tone--special { border-color: var(--success); }
+
+.active-tone__name {
+    font-weight: 500;
+    color: var(--text);
+}
+
+.active-tone__freq {
+    color: var(--text);
+    opacity: 0.7;
+    font-variant-numeric: tabular-nums;
+}
+
+.active-tone__stop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: var(--card-border);
+    color: var(--text);
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.active-tone__stop:hover {
+    background: var(--danger);
+    color: white;
+}
+
+/* Frequency Sections */
+.frequency-section {
+    margin-bottom: var(--space-xl);
+}
+
+.frequency-section__header {
+    margin-bottom: var(--space-lg);
+}
+
+.frequency-section__title {
+    font-size: 1.5rem;
+    color: var(--text);
+    margin: 0 0 var(--space-sm);
+}
+
+.frequency-section__description {
+    color: var(--text);
+    opacity: 0.8;
+    margin: 0;
+}
+
+/* Card View */
+.frequency-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-md);
+}
+
+.frequency-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all var(--transition-normal);
+}
+
+.frequency-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.frequency-card__header {
+    padding: var(--space-md);
+    position: relative;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.frequency-card__title {
+    font-size: 1.2rem;
+    margin: 0;
+    padding-right: 80px; /* Space for frequency badge */
+    color: var(--text);
+}
+
+.frequency-card__frequency {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    background: var(--bg);
+    color: var(--text);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.frequency-card__body {
+    padding: var(--space-md);
+}
+
+.frequency-card__description {
+    margin: 0 0 var(--space-md);
+    color: var(--text);
+    opacity: 0.8;
+    font-size: 0.95rem;
+}
+
+.frequency-card__warning {
+    margin: var(--space-sm) 0;
+    padding: var(--space-sm);
+    background: var(--warning);
+    color: var(--dark);
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.frequency-card__actions {
+    display: flex;
+    gap: 0;
+    margin: var(--space-md) calc(var(--space-md) * -1) calc(var(--space-md) * -1);
+    border-top: 1px solid var(--card-border);
+}
+
+.frequency-card .btn {
+    flex: 1;
+    border-radius: 0;
+    padding: var(--space-md);
+    justify-content: center;
+}
+
+.frequency-card .btn:first-child {
+    border-right: 1px solid var(--card-border);
+}
+
+/* List View */
+.frequency-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.frequency-item {
+    display: grid;
+    grid-template-columns: minmax(150px, 180px) minmax(0, 1fr) auto;
+    gap: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: background-color var(--transition-fast);
+}
+
+.frequency-item:hover {
+    background: var(--bg);
+}
+
+.frequency-item__header {
+    padding: var(--space-md);
+    background: var(--card-bg);
+    border-right: 1px solid var(--card-border);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    justify-content: center;
+}
+
+.frequency-item__title {
+    font-size: 1rem;
+    margin: 0;
+    color: var(--text);
+}
+
+.frequency-item__frequency {
+    font-size: 0.9rem;
+    color: var(--text);
+    opacity: 0.8;
+    font-variant-numeric: tabular-nums;
+    font-family: var(--font-family-mono, monospace);
+    background: var(--bg);
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    border: 1px solid var(--card-border);
+}
+
+.frequency-item__body {
+    padding: var(--space-md);
+    display: flex;
+    align-items: center;
+    min-width: 0;
+}
+
+.frequency-item__description {
+    margin: 0;
+    color: var(--text);
+    opacity: 0.8;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.frequency-item__actions {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+    min-width: 120px;
+    border-left: 1px solid var(--card-border);
+}
+
+.frequency-item .btn {
+    flex: 1;
+    border-radius: 0;
+    padding: var(--space-md);
+    justify-content: center;
+}
+
+.frequency-item .btn:first-child {
+    border-right: 1px solid var(--card-border);
+}
+
+.frequency-item .category-badge {
+    margin-top: 2px;
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    background: var(--bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    color: var(--text);
+    opacity: 0.8;
+    display: inline-block;
+    max-width: fit-content;
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    background: var(--primary);
+    color: white;
+}
+
+.btn:hover:not(:disabled) {
+    background: var(--primary-dark);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn--icon {
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.btn--play {
+    min-width: 100px;
+}
+
+.btn--play.playing {
+    background: var(--success);
+}
+
+.btn--play.playing:hover {
+    background: var(--success-dark);
+}
+
+.btn--pin {
+    background: transparent;
+    border: 1px solid var(--card-border);
+    color: var(--text);
+}
+
+.btn--pin:hover {
+    background: var(--card-bg);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.btn--pin.pinned {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+/* Feature Toggles */
+.frequency-card__advanced-controls,
+.frequency-item__advanced-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: var(--space-sm);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--card-border);
+}
+
+.feature-toggle {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.feature-toggle__input {
+    margin: 0;
+}
+
+.feature-toggle__label {
+    color: var(--text);
+    opacity: 0.9;
+}
+
+/* Advanced button to show/hide toggles */
+.btn--advanced {
+    background: transparent;
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    margin-top: var(--space-sm);
+    opacity: 0.7;
+}
+
+.btn--advanced:hover {
+    background: var(--card-bg);
+    opacity: 1;
+}
+
+/* When advanced options are shown */
+.frequency-card__advanced-controls.visible,
+.frequency-item__advanced-controls.visible {
+    display: flex;
+}
+
+.frequency-card__advanced-controls:not(.visible),
+.frequency-item__advanced-controls:not(.visible) {
+    display: none;
+}
+
+/* Category Badges */
+.category-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: var(--card-bg);
+    color: var(--text);
+    opacity: 0.8;
+}
+
+/* Type-specific styles */
+.frequency-card[data-type="binaural"],
+.frequency-item[data-type="binaural"] {
+    --type-color: var(--primary);
+}
+
+.frequency-card[data-type="solfeggio"],
+.frequency-item[data-type="solfeggio"] {
+    --type-color: var(--secondary);
+}
+
+.frequency-card[data-type="special"],
+.frequency-item[data-type="special"] {
+    --type-color: var(--success);
+}
+
+/* Info Button */
+.btn--info {
+    margin-top: var(--space-md);
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.btn--info:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Info Modal */
+.info-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: var(--z-modal);
+    padding: var(--space-md);
+    overflow-y: auto;
+}
+
+.info-modal.visible {
+    display: block;
+}
+
+.info-modal__content {
+    background: var(--bg);
+    max-width: 800px;
+    margin: var(--space-xl) auto;
+    padding: var(--space-xl);
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+.info-modal__close {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text);
+    cursor: pointer;
+    padding: var(--space-sm);
+    border-radius: 50%;
+    line-height: 1;
+    transition: all var(--transition-fast);
+}
+
+.info-modal__close:hover {
+    background: var(--card-bg);
+}
+
+.info-modal h2 {
+    margin: 0 0 var(--space-lg);
+    color: var(--text);
+}
+
+.info-modal h3 {
+    color: var(--text);
+    margin: var(--space-lg) 0 var(--space-sm);
+}
+
+.info-modal p {
+    color: var(--text);
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+.info-modal section {
+    margin-bottom: var(--space-lg);
+}
+
+.info-modal ul,
+.info-modal ol {
+    color: var(--text);
+    opacity: 0.9;
+    line-height: 1.6;
+    margin: var(--space-sm) 0;
+    padding-left: var(--space-lg);
+}
+
+.info-modal li {
+    margin: var(--space-xs) 0;
+}
+
+/* Version info */
+.version-info {
+    font-family: var(--font-family-mono, monospace);
+    background: var(--card-bg);
+    padding: var(--space-sm);
+    border-radius: 6px;
+    display: inline-block;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .frequency-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .frequency-item {
+        grid-template-columns: 120px minmax(0, 1fr) auto;
+    }
+
+    .frequency-item__actions {
+        min-width: 100px;
+    }
+
+    .btn--play {
+        min-width: 80px;
+        padding: 8px;
+    }
+
+    .control-bar {
+        padding: var(--space-sm);
+    }
+
+    .control-bar .container {
+        gap: var(--space-sm);
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .control-bar__section {
+        margin: 0;
+        width: 100%;
+    }
+
+    .search-container {
+        width: 100%;
+    }
+
+    .control-bar__actions {
+        justify-content: space-between;
+    }
+
+    /* Compact layout for mobile */
+    .control-bar__volume {
+        flex: 0 0 auto;
+    }
+
+    .control-bar__view-toggle {
+        flex: 0 0 auto;
+    }
+
+    .control-bar__search {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .control-bar__actions {
+        flex: 0 0 auto;
+    }
+
+    .volume-slider {
+        width: 80px;
+    }
+
+    .volume-display {
+        display: none;
+    }
+
+    .search-input {
+        padding: 6px 28px 6px 8px;
+        font-size: 0.85rem;
+    }
+
+    .action-button {
+        padding: 6px 8px;
+        font-size: 0.85rem;
+    }
+
+    .action-button svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    /* Adjust spacing for active tones */
+    .active-tones-container {
+        gap: 4px;
+        padding: 4px 0;
+    }
+
+    .active-tone {
+        padding: 2px 6px 2px 8px;
+        font-size: 0.85rem;
+    }
+
+    .active-tone__stop {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .frequency-item {
+        grid-template-columns: 100px minmax(0, 1fr) auto;
+    }
+
+    .frequency-item__actions {
+        min-width: 90px;
+        padding: 6px;
+    }
+
+    .btn {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+    }
+
+    .control-bar {
+        padding: var(--space-xs);
+    }
+
+    .control-bar .container {
+        gap: var(--space-xs);
+    }
+
+    .volume-slider {
+        width: 60px;
+    }
+
+    .btn {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+    }
+}
+
+
+</style>
+</head>
+<body>
+    <header class="app-header">
+        <div class="container">
+            <h1 class="app-title">Binaural Beats & Healing Frequencies</h1>
+            <div class="legacy-version-banner">
+                <p>Looking for the previous version? <a href="1ps0.github.io/v1/index.html">Click here to use v1</a></p>
+                <button class="legacy-banner-close" aria-label="Close banner">×</button>
+            </div>
+            <p class="app-subtitle">Brainwave Entrainment, Solfeggio Tones & Sound Therapy</p>
+            <div class="app-header__actions">
+                <button class="theme-toggle-button" id="themeToggle" aria-label="Toggle theme">
+                    <span class="theme-toggle-icon">🌓</span>
+                </button>
+                <div class="view-toggle-group">
+                    <button class="view-toggle-button" data-view="cards">
+                        <svg class="icon" viewBox="0 0 24 24" width="24" height="24">
+                            <rect x="3" y="3" width="7" height="7" rx="1"/>
+                            <rect x="14" y="3" width="7" height="7" rx="1"/>
+                            <rect x="3" y="14" width="7" height="7" rx="1"/>
+                            <rect x="14" y="14" width="7" height="7" rx="1"/>
+                        </svg>
+                        <span class="visually-hidden">Card View</span>
+                    </button>
+                    <button class="view-toggle-button" data-view="list">
+                        <svg class="icon" viewBox="0 0 24 24" width="24" height="24">
+                            <line x1="3" y1="6" x2="21" y2="6" stroke-width="2"/>
+                            <line x1="3" y1="12" x2="21" y2="12" stroke-width="2"/>
+                            <line x1="3" y1="18" x2="21" y2="18" stroke-width="2"/>
+                        </svg>
+                        <span class="visually-hidden">List View</span>
+                    </button>
+                </div>
+                <button class="btn btn--info" id="showInfo">ℹ️ About Sound Frequencies</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="info-modal" id="infoModal">
+        <div class="info-modal__content">
+            <button class="info-modal__close" id="closeInfo">×</button>
+            <h2>About Therapeutic Frequencies</h2>
+            <section>
+                <h3>What are Binaural Beats?</h3>
+                <p>Binaural beats are created when slightly different frequencies are played in each ear. Your brain perceives the difference between these frequencies as a beat, which can help entrain your brainwaves to specific states.</p>
+            </section>
+            <section>
+                <h3>What are Solfeggio Frequencies?</h3>
+                <p>Solfeggio frequencies are a set of ancient musical tones said to have various healing properties. These frequencies were traditionally used in sacred music and are believed to affect different aspects of well-being.</p>
+            </section>
+            <section>
+                <h3>How Therapeutic Frequencies Work</h3>
+                <p>Different frequencies affect your brain and body in unique ways. These scientifically-studied frequencies can help create optimal mental states for different activities:</p>
+                <ul>
+                    <li><strong>Focus & Productivity:</strong> Beta and Gamma frequencies help sharpen attention and enhance cognitive performance</li>
+                    <li><strong>Meditation & Mindfulness:</strong> Theta frequencies facilitate deep meditative states and creative flow</li>
+                    <li><strong>Sleep & Recovery:</strong> Delta frequencies support restorative sleep and physical healing</li>
+                    <li><strong>Relaxation & Calm:</strong> Alpha frequencies promote relaxation while maintaining alertness</li>
+                    <li><strong>Healing & Wellbeing:</strong> Solfeggio and special frequencies traditionally associated with physical and emotional healing</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Getting the Best Results</h3>
+                <ol>
+                    <li>Use quality headphones for binaural beats to work effectively</li>
+                    <li>Start with shorter sessions (15-30 minutes) and observe how you respond</li>
+                    <li>Choose frequencies based on your current needs and desired state</li>
+                    <li>Keep volume at a comfortable level - louder isn't better</li>
+                    <li>Create favorites lists for different activities using the pin feature</li>
+                </ol>
+            </section>
+            <section>
+                <h3>Important Notes</h3>
+                <ul>
+                    <li>Always use comfortable volume levels</li>
+                    <li>If you experience any discomfort, stop using immediately</li>
+                    <li>This is not a substitute for medical treatment</li>
+                    <li>Some frequencies may be below human hearing range but can still have effects</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Open Source</h3>
+                <p>This project is open source and available on GitHub. Feel free to contribute or report issues:</p>
+                <p><a href="https://github.com/1ps0/binaural" target="_blank" rel="noopener noreferrer" style="color: var(--primary);">github.com/1ps0/binaural</a></p>
+                <p>You can also run this app locally:</p>
+                <ul>
+                    <li><strong>Desktop:</strong> Simply drag index.html into Chrome/Edge</li>
+                    <li><strong>iOS:</strong> Save to Files app and open with Safari</li>
+                    <li><strong>Android:</strong> Open with Chrome from Downloads</li>
+                </ul>
+                <p>See the README for detailed setup instructions.</p>
+            </section>
+            <section>
+                <h3>Version Information</h3>
+                <p class="version-info">
+                    Version: 4.1.0<br>
+                    Build: 20250303.1<br>
+                    Last Updated: March 3, 2025
+                </p>
+            </section>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="frequency-sections">
+                <!-- Sections will be dynamically populated -->
+            </div>
+        </div>
+    </main>
+
+    <div class="control-bar">
+        <div class="container">
+            <!-- Controls will be dynamically populated -->
+        </div>
+    </div>
+
+    <script>
+/**
+ * Application State Management
+ * Centralized state management for the application
+ */
+
+// State Management System
+const AppState = {
+    audio: {
+        context: null,
+        oscillators: {},
+        patternOscillators: {},
+        gainNodes: {},
+        masterGain: null,
+        volume: 0.2,
+        isReady: false,
+        lastResourceCheck: Date.now()
+    },
+    ui: {
+        theme: localStorage.getItem('theme') || 'light',
+        view: localStorage.getItem('view') || 'list',
+        controlBar: {
+            position: localStorage.getItem('controlBarPosition') || 'bottom',
+            minimized: false
+        }
+    },
+    frequencies: {
+        active: [],
+        pinned: {
+            focus: [],
+            meditation: [],
+            sleep: [],
+            relaxation: [],
+            healing: []
+        },
+        filter: ''
+    },
+    // Memory management and performance monitoring
+    performance: {
+        maxSimultaneousTones: 8,
+        resourceCheckInterval: 30000, // 30 seconds
+        memoryWarningThreshold: 0.8, // 80% of available memory
+        memoryStatus: {
+            lastCheck: 0,
+            warningIssued: false
+        }
+    }
+};
+
+// Export the AppState object
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { AppState };
+}
+
+/**
+ * Event System
+ * Centralized event management with proper memory handling
+ */
+
+// Event System
+const EventSystem = {
+    handlers: {},
+    activeListeners: new Map(), // Track active DOM event listeners for cleanup
+    
+    /**
+     * Register an event handler
+     * @param {string} event - Event name
+     * @param {function} handler - Event handler function
+     * @returns {function} Cleanup function to remove the handler
+     */
+    on(event, handler) {
+        if (!this.handlers[event]) {
+            this.handlers[event] = [];
+        }
+        this.handlers[event].push(handler);
+        return () => this.off(event, handler); // Return cleanup function
+    },
+
+    /**
+     * Remove an event handler
+     * @param {string} event - Event name
+     * @param {function} handler - Event handler to remove
+     */
+    off(event, handler) {
+        if (this.handlers[event]) {
+            this.handlers[event] = this.handlers[event].filter(h => h !== handler);
+        }
+    },
+
+    /**
+     * Emit an event with data
+     * @param {string} event - Event name
+     * @param {*} data - Event data
+     */
+    emit(event, data) {
+        if (this.handlers[event]) {
+            this.handlers[event].forEach(handler => {
+                try {
+                    handler(data);
+                } catch (error) {
+                    console.error(`Error in event handler for ${event}:`, error);
+                }
+            });
+        }
+    },
+
+    /**
+     * Register a one-time event handler
+     * @param {string} event - Event name
+     * @param {function} handler - Event handler function
+     * @returns {function} Cleanup function
+     */
+    once(event, handler) {
+        const onceHandler = (data) => {
+            handler(data);
+            this.off(event, onceHandler);
+        };
+        return this.on(event, onceHandler);
+    },
+    
+    /**
+     * Add a DOM event listener with tracking for later cleanup
+     * @param {Element} element - DOM element
+     * @param {string} eventName - DOM event name
+     * @param {function} handler - Event handler
+     * @param {object} options - Event listener options
+     * @returns {function} Cleanup function
+     */
+    addDOMListener(element, eventName, handler, options = {}) {
+        // Create a unique key for this listener
+        const id = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        
+        element.addEventListener(eventName, handler, options);
+        
+        // Store reference for cleanup
+        this.activeListeners.set(id, {
+            element,
+            eventName,
+            handler,
+            options
+        });
+        
+        // Return cleanup function
+        return () => {
+            this.removeDOMListener(id);
+        };
+    },
+    
+    /**
+     * Remove a tracked DOM event listener
+     * @param {string} id - Listener ID
+     */
+    removeDOMListener(id) {
+        if (this.activeListeners.has(id)) {
+            const { element, eventName, handler, options } = this.activeListeners.get(id);
+            element.removeEventListener(eventName, handler, options);
+            this.activeListeners.delete(id);
+        }
+    },
+    
+    /**
+     * Clean up all event handlers
+     */
+    cleanup() {
+        // Clear all custom event handlers
+        this.handlers = {};
+        
+        // Remove all tracked DOM listeners
+        this.activeListeners.forEach((listener, id) => {
+            this.removeDOMListener(id);
+        });
+    }
+};
+
+// Export the EventSystem object
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { EventSystem };
+}
+
+/**
+ * Theme System
+ * Manages application theming and preferences
+ */
+
+// Theme System
+const ThemeSystem = {
+    /**
+     * Initialize the theme system
+     */
+    init() {
+        this.applyTheme(AppState.ui.theme);
+        this.setupListeners();
+    },
+
+    /**
+     * Apply a theme to the application
+     * @param {string} theme - Theme name ('light' or 'dark')
+     */
+    applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        AppState.ui.theme = theme;
+        localStorage.setItem('theme', theme);
+        EventSystem.emit('themeChanged', theme);
+    },
+
+    /**
+     * Toggle between light and dark themes
+     */
+    toggleTheme() {
+        const newTheme = AppState.ui.theme === 'light' ? 'dark' : 'light';
+        this.applyTheme(newTheme);
+    },
+
+    /**
+     * Set up system theme listeners
+     */
+    setupListeners() {
+        // Listen for system theme changes
+        if (window.matchMedia) {
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            
+            // Use proper event listener method based on browser support
+            const mediaQueryHandler = (e) => {
+                if (!localStorage.getItem('theme')) {
+                    this.applyTheme(e.matches ? 'dark' : 'light');
+                }
+            };
+            
+            if (mediaQuery.addEventListener) {
+                mediaQuery.addEventListener('change', mediaQueryHandler);
+            } else if (mediaQuery.addListener) {
+                // Deprecated but needed for older browsers
+                mediaQuery.addListener(mediaQueryHandler);
+            }
+        }
+    },
+    
+    /**
+     * Clean up event listeners
+     */
+    cleanup() {
+        // Remove media query listeners if necessary
+        if (window.matchMedia) {
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            if (mediaQuery.removeEventListener) {
+                mediaQuery.removeEventListener('change', this.mediaQueryHandler);
+            } else if (mediaQuery.removeListener) {
+                mediaQuery.removeListener(this.mediaQueryHandler);
+            }
+        }
+    }
+};
+
+// Export the ThemeSystem object
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { ThemeSystem };
+}
+
+/**
+ * Audio System
+ * Core audio processing and management
+ */
+
+// Audio System
+const AudioSystem = {
+    // Worklet management
+    workletModulesLoaded: false,
+    workletPromises: {},
+
+    // Resource management
+    resourceManagement: {
+        activeNodes: new Map(),
+        maxActiveTones: 8, // Hard limit for simultaneous tones
+
+        registerChain(id, chain) {
+            this.activeNodes.set(id, {
+                chain,
+                createdAt: Date.now()
+            });
+
+            this.enforceResourceLimits();
+        },
+
+        unregisterChain(id) {
+            this.activeNodes.delete(id);
+        },
+
+        // Enforce resource limits by stopping oldest tones if needed
+        enforceResourceLimits() {
+            if (this.activeNodes.size <= AppState.performance.maxSimultaneousTones) return;
+
+            // Sort by creation time
+            const entries = Array.from(this.activeNodes.entries())
+                .sort((a, b) => a[1].createdAt - b[1].createdAt);
+
+            // Stop oldest tones until we're under limit
+            while (entries.length > AppState.performance.maxSimultaneousTones) {
+                const [id, data] = entries.shift();
+                console.log(`Stopping tone ${id} due to resource limits`);
+                AudioSystem.stopTone(id);
+                this.activeNodes.delete(id);
+                EventSystem.emit('resourceLimitReached', {
+                    id,
+                    message: 'Maximum number of simultaneous tones reached. Oldest tone stopped.'
+                });
+            }
+        },
+
+        // Check system resources and cleanup if necessary
+        checkResources() {
+            const now = Date.now();
+
+            // Only check resources at specified intervals
+            if (now - AppState.audio.lastResourceCheck < AppState.performance.resourceCheckInterval) {
+                return;
+            }
+
+            AppState.audio.lastResourceCheck = now;
+
+            // Check for long-running tones (over 1 hour) and clean them up
+            let cleanupNeeded = false;
+
+            this.activeNodes.forEach((data, id) => {
+                // Check if node has been active for more than an hour
+                if (now - data.createdAt > 3600000) {
+                    console.log(`Cleaning up long-running tone ${id}`);
+                    AudioSystem.stopTone(id);
+                    this.activeNodes.delete(id);
+                    cleanupNeeded = true;
+                    EventSystem.emit('autoCleanup', { id, reason: 'long-running' });
+                }
+            });
+
+            if (cleanupNeeded) {
+                // Attempt to trigger garbage collection
+                if (window.gc) window.gc();
+
+                // Force AudioContext cleanup in some cases
+                if (AppState.audio.context &&
+                    AppState.audio.context.state === 'running' &&
+                    this.activeNodes.size === 0) {
+
+                    // Suspend context to save resources if no active tones
+                    AppState.audio.context.suspend().catch(err => {
+                        console.warn('Failed to suspend audio context:', err);
+                    });
+                }
+            }
+
+            return cleanupNeeded;
+        }
+    },
+
+    // Buffer management
+    bufferManagement: {
+        defaultSize: 1024,
+        maxSize: 16384,
+        currentSize: 1024,
+
+        // Calculate optimal buffer size based on complexity
+        calculateOptimalBufferSize(moduleCount, hasAleph) {
+            // Start with default
+            let size = this.defaultSize;
+
+            // Increase for module count
+            size += moduleCount * 256;
+
+            // Significantly increase for Aleph patterns
+            if (hasAleph) {
+                size += 2048;
+            }
+
+            // Cap at maximum
+            return Math.min(size, this.maxSize);
+        }
+    },
+
+    // Initialize the audio system
+    init() {
+        // Only initialize if not already initialized
+        if (!AppState.audio.context && window.AudioContext) {
+            try {
+                return this.initializeAudioContext();
+            } catch (error) {
+                console.error('Failed to initialize audio context:', error);
+                EventSystem.emit('audioError', {
+                    message: 'Failed to initialize audio system. Please ensure your browser supports Web Audio API.',
+                    error
+                });
+                return false;
+            }
+        }
+        return AppState.audio.isReady;
+    },
+
+    // Initialize the Audio Context
+    initializeAudioContext() {
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            const context = new AudioContext();
+
+            if (!context || typeof context.createGain !== 'function') {
+                throw new Error('Invalid Audio Context');
+            }
+
+            AppState.audio.context = context;
+
+            const masterGain = context.createGain();
+            if (!masterGain) {
+                throw new Error('Failed to create gain node');
+            }
+
+            AppState.audio.masterGain = masterGain;
+            AppState.audio.masterGain.gain.value = AppState.audio.volume;
+            AppState.audio.masterGain.connect(AppState.audio.context.destination);
+
+            // If context is suspended (common in some browsers), try to resume it
+            if (context.state === 'suspended') {
+                context.resume().catch(error => {
+                    console.warn('Could not resume audio context:', error);
+                });
+            }
+
+            AppState.audio.isReady = true;
+            EventSystem.emit('audioReady');
+
+            // Set up periodic resource checks
+            setInterval(() => {
+                this.resourceManagement.checkResources();
+            }, AppState.performance.resourceCheckInterval);
+
+            return true;
+        } catch (error) {
+            console.error('Error initializing audio context:', error);
+            return false;
+        }
+    },
+
+    // Create a basic oscillator
+    createOscillator(frequency, type = 'sine') {
+        try {
+            const oscillator = AppState.audio.context.createOscillator();
+            const gainNode = AppState.audio.context.createGain();
+
+            oscillator.type = type;
+            oscillator.frequency.value = frequency;
+
+            // Start with zero gain to prevent clicks
+            gainNode.gain.value = 0;
+
+            // Connect nodes
+            oscillator.connect(gainNode);
+            gainNode.connect(AppState.audio.masterGain);
+
+            return { oscillator, gainNode };
+        } catch (error) {
+            console.error('Error creating oscillator:', error);
+            EventSystem.emit('audioError', { message: 'Failed to create oscillator', error });
+            return null;
+        }
+    },
+
+    // Create a binaural beat
+    createBinauralBeat(frequency, carrierFrequency = 200) {
+        try {
+            // Create merger for stereo output
+            const merger = AppState.audio.context.createChannelMerger(2);
+
+            // Create oscillators for left and right ears
+            const leftOsc = this.createOscillator(carrierFrequency);
+            const rightOsc = this.createOscillator(carrierFrequency + frequency);
+
+            if (!leftOsc || !rightOsc) return null;
+
+            // Reconnect to merger instead of master gain
+            leftOsc.gainNode.disconnect();
+            rightOsc.gainNode.disconnect();
+            leftOsc.gainNode.connect(merger, 0, 0);  // Left channel
+            rightOsc.gainNode.connect(merger, 0, 1); // Right channel
+            merger.connect(AppState.audio.masterGain);
+
+            return {
+                left: leftOsc,
+                right: rightOsc,
+                merger
+            };
+        } catch (error) {
+            console.error('Error creating binaural beat:', error);
+            EventSystem.emit('audioError', { message: 'Failed to create binaural beat', error });
+            return null;
+        }
+    },
+
+    // Add this function to the AudioSystem object near the startTone function:
+    startAlephPattern(id, patternType, options = {}) {
+        try {
+            // Ensure audio context is initialized and resumed
+            if (!this.init()) {
+                EventSystem.emit('audioError', { message: 'Audio system not ready. Please try again.' });
+                return false;
+            }
+
+            // Resume audio context if it's in suspended state
+            if (AppState.audio.context.state === 'suspended') {
+                AppState.audio.context.resume();
+            }
+
+            // Stop any existing pattern with this ID
+            this.stopTone(id);
+
+            // Create Aleph module
+            const ctx = AppState.audio.context;
+            const alephModule = new this.AudioModules.AlephModule(ctx, patternType);
+
+            // Create a carrier to base the pattern on
+            const baseFreq = 432; // Default base frequency
+            const carrier = new this.AudioModules.CarrierModule(ctx, baseFreq);
+
+            // Apply the Aleph pattern to the carrier
+            alephModule.apply(carrier);
+
+            // Create master gain
+            const masterGain = ctx.createGain();
+            masterGain.gain.value = 0; // Start silent
+
+            // Connect the module to master
+            alephModule.output.connect(masterGain);
+            masterGain.connect(AppState.audio.masterGain);
+
+            // Start the oscillators
+            carrier.start();
+            alephModule.start();
+
+            // Ramp up volume
+            this.rampGain(masterGain.gain, options.volume || AppState.audio.volume);
+
+            // Store reference
+            if (!AppState.audio.patternOscillators) {
+                AppState.audio.patternOscillators = {};
+            }
+
+            AppState.audio.patternOscillators[id] = {
+                carrier,
+                alephModule,
+                masterGain
+            };
+
+            // Register with resource management
+            this.resourceManagement.registerChain(id, {
+                modules: [carrier, alephModule],
+                masterGain,
+                start: () => {},
+                stop: () => this.stopPatternTone(id)
+            });
+
+            EventSystem.emit('toneStarted', { id, patternType, isPattern: true });
+            return true;
+        } catch (error) {
+            console.error('Error starting Aleph pattern:', error);
+            EventSystem.emit('audioError', { message: 'Failed to start Aleph pattern', error });
+            return false;
+        }
+    },
+
+    // Add this function to handle stopping Aleph patterns
+    stopPatternTone(id) {
+        try {
+            const pattern = AppState.audio.patternOscillators[id];
+            if (!pattern) return false;
+
+            // Fade out
+            this.rampGain(pattern.masterGain.gain, 0).then(() => {
+                try {
+                    // Stop and cleanup components
+                    if (pattern.carrier) pattern.carrier.stop();
+                    if (pattern.alephModule) pattern.alephModule.stop();
+
+                    // Disconnect
+                    pattern.masterGain.disconnect();
+
+                    // Remove references
+                    delete AppState.audio.patternOscillators[id];
+                    this.resourceManagement.unregisterChain(id);
+
+                    EventSystem.emit('toneStopped', { id });
+                } catch (e) {
+                    console.warn('Error during pattern cleanup:', e);
+                }
+            });
+
+            return true;
+        } catch (error) {
+            console.error('Error stopping pattern tone:', error);
+            return false;
+        }
+    },
+
+    // Start playing a tone
+    startTone(id, frequency, options = {}) {
+        const {
+            type = 'sine',
+            isBinaural = false,
+            carrierFrequency = 200,
+            volume = AppState.audio.volume,
+            isPattern = false,
+            patternType = null
+        } = options;
+
+        try {
+            // Ensure audio context is initialized and resumed
+            if (!this.init()) {
+                EventSystem.emit('audioError', { message: 'Audio system not ready. Please try again.' });
+                return false;
+            }
+
+            // Resume audio context if it's in suspended state
+            if (AppState.audio.context.state === 'suspended') {
+                AppState.audio.context.resume();
+            }
+
+            // Stop any existing tone with this ID
+            this.stopTone(id);
+
+            // Check if we're at resource limits before creating new tone
+            if (Object.keys(AppState.audio.oscillators).length >= AppState.performance.maxSimultaneousTones) {
+                // Find the oldest tone to replace
+                this.resourceManagement.enforceResourceLimits();
+            }
+
+            // Handle different types of audio generation
+            if (isPattern) {
+                // Delegate to pattern handling system
+                if (this.AudioModules && patternType.startsWith('aleph')) {
+                    return this.startAlephPattern(id, patternType, options);
+                }
+                return false;
+            } else if (isBinaural) {
+                // Create binaural beat
+                const nodes = this.createBinauralBeat(frequency, carrierFrequency);
+                if (nodes) {
+                    nodes.left.oscillator.start();
+                    nodes.right.oscillator.start();
+                    // Ramp up gain smoothly
+                    this.rampGain(nodes.left.gainNode.gain, volume);
+                    this.rampGain(nodes.right.gainNode.gain, volume);
+                    AppState.audio.oscillators[id] = nodes;
+
+                    // Register with resource management
+                    this.resourceManagement.registerChain(id, nodes);
+                }
+            } else {
+                // Create standard oscillator
+                const nodes = this.createOscillator(frequency, type);
+                if (nodes) {
+                    nodes.oscillator.start();
+                    this.rampGain(nodes.gainNode.gain, volume);
+                    AppState.audio.oscillators[id] = nodes;
+
+                    // Register with resource management
+                    this.resourceManagement.registerChain(id, nodes);
+                }
+            }
+
+            EventSystem.emit('toneStarted', { id, frequency, isBinaural, isPattern });
+            return true;
+        } catch (error) {
+            console.error('Error starting tone:', error);
+            EventSystem.emit('audioError', { message: 'Failed to start tone', error });
+            return false;
+        }
+    },
+
+    // Stop a specific tone
+    stopTone(id) {
+        try {
+            const nodes = AppState.audio.oscillators[id];
+            if (!nodes) {
+                // Check if this is a pattern oscillator
+                if (AppState.audio.patternOscillators && AppState.audio.patternOscillators[id]) {
+                    return this.stopPatternTone(id);
+                }
+                return false;
+            }
+
+            const cleanup = () => {
+                if (nodes.merger) nodes.merger.disconnect();
+                delete AppState.audio.oscillators[id];
+                this.resourceManagement.unregisterChain(id);
+                EventSystem.emit('toneStopped', { id });
+            };
+
+            if (nodes.left && nodes.right) {
+                // Binaural beat cleanup
+                this.rampGain(nodes.left.gainNode.gain, 0).then(() => {
+                    try {
+                        nodes.left.oscillator.stop();
+                        nodes.right.oscillator.stop();
+                    } catch (e) {
+                        console.warn('Error stopping oscillators:', e);
+                    }
+                    cleanup();
+                });
+            } else {
+                // Single tone cleanup
+                this.rampGain(nodes.gainNode.gain, 0).then(() => {
+                    try {
+                        nodes.oscillator.stop();
+                    } catch (e) {
+                        console.warn('Error stopping oscillator:', e);
+                    }
+                    cleanup();
+                });
+            }
+            return true;
+        } catch (error) {
+            console.error('Error stopping tone:', error);
+            EventSystem.emit('audioError', { message: 'Failed to stop tone', error });
+            return false;
+        }
+    },
+
+    // Stop all tones
+    stopAll() {
+        try {
+            const activeIds = Object.keys(AppState.audio.oscillators);
+
+            // Also get pattern oscillator IDs if they exist
+            const patternIds = AppState.audio.patternOscillators ?
+                Object.keys(AppState.audio.patternOscillators) : [];
+
+            const allIds = [...activeIds, ...patternIds];
+
+            // Immediately stop and disconnect all oscillators
+            allIds.forEach(id => {
+                if (activeIds.includes(id)) {
+                    this.stopTone(id);
+                } else if (patternIds.includes(id)) {
+                    this.stopPatternTone(id);
+                }
+            });
+
+            // Update UI state
+            const playButtons = document.querySelectorAll(`.btn--play.playing`);
+            playButtons.forEach(button => {
+                button.classList.remove('playing');
+                button.innerHTML = `<span class="visually-hidden">Play</span>▶`;
+            });
+
+            // Clear active tones container
+            const activeTones = document.querySelector('.active-tones-container');
+            if (activeTones) {
+                activeTones.innerHTML = '';
+            }
+
+            EventSystem.emit('allTonesStopped');
+        } catch (error) {
+            console.error('Error in stopAll:', error);
+            // Force reset state even if cleanup fails
+            AppState.audio.oscillators = {};
+            if (AppState.audio.patternOscillators) {
+                AppState.audio.patternOscillators = {};
+            }
+            EventSystem.emit('allTonesStopped');
+        }
+    },
+
+    // Set master volume
+    setVolume(value) {
+        try {
+            const newVolume = Math.max(0, Math.min(1, value));
+            AppState.audio.volume = newVolume;
+
+            if (AppState.audio.masterGain) {
+                this.rampGain(AppState.audio.masterGain.gain, newVolume);
+            }
+
+            EventSystem.emit('volumeChanged', newVolume);
+            return true;
+        } catch (error) {
+            console.error('Error setting volume:', error);
+            EventSystem.emit('audioError', { message: 'Failed to set volume', error });
+            return false;
+        }
+    },
+
+    // Helper to ramp gain smoothly
+    async rampGain(gainParam, targetValue, duration = 0.05) {
+        const now = AppState.audio.context.currentTime;
+        gainParam.cancelScheduledValues(now);
+        gainParam.setValueAtTime(gainParam.value, now);
+        gainParam.linearRampToValueAtTime(targetValue, now + duration);
+        return new Promise(resolve => setTimeout(resolve, duration * 1000));
+    },
+
+    // Utility method to check if a frequency is audible
+    isAudible(frequency) {
+        return frequency >= 20 && frequency <= 20000;
+    },
+
+    // Utility method to format frequency for display
+    formatFrequency(frequency) {
+        if (frequency === null || frequency === undefined) {
+            return "N/A";
+        }
+        return `${parseFloat(frequency).toFixed(2)} Hz`;
+    },
+
+    // Clean up and release audio resources
+    cleanup() {
+        try {
+            // Stop all active tones
+            this.stopAll();
+
+            // Suspend audio context to save resources
+            if (AppState.audio.context && AppState.audio.context.state === 'running') {
+                AppState.audio.context.suspend().catch(err => {
+                    console.warn('Could not suspend audio context during cleanup:', err);
+                });
+            }
+
+            // Clear references to allow garbage collection
+            if (AppState.audio.masterGain) {
+                AppState.audio.masterGain.disconnect();
+            }
+
+            EventSystem.emit('audioCleanup');
+            return true;
+        } catch (error) {
+            console.error('Error during audio cleanup:', error);
+            return false;
+        }
+    }
+};
+
+// Export the AudioSystem object
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { AudioSystem };
+}
+
+/**
+ * Carrier Module
+ * Base audio generation module for standard oscillators
+ */
+
+// Initialize AudioModules namespace if it doesn't exist
+if (!AudioSystem.AudioModules) {
+    AudioSystem.AudioModules = {};
+}
+
+// Base audio module that all specific modules will extend
+AudioSystem.AudioModules.BaseModule = class {
+    constructor(ctx) {
+        this.ctx = ctx;
+        this.input = null;
+        this.output = null;
+    }
+
+    connect(module) {
+        if (this.output && module.input) {
+            this.output.connect(module.input);
+        }
+        return module; // For chaining
+    }
+
+    disconnect() {
+        if (this.output) {
+            this.output.disconnect();
+        }
+    }
+
+    start() {
+        // Override in subclasses
+        return this;
+    }
+
+    stop() {
+        // Override in subclasses
+        return this;
+    }
+
+    cleanup() {
+        this.disconnect();
+        return true;
+    }
+};
+
+// Generates a base carrier frequency
+AudioSystem.AudioModules.CarrierModule = class extends AudioSystem.AudioModules.BaseModule {
+    constructor(ctx, frequency, type = 'sine') {
+        super(ctx);
+        this.oscillator = ctx.createOscillator();
+        this.gain = ctx.createGain();
+
+        this.oscillator.type = type;
+        this.oscillator.frequency.value = frequency;
+        this.gain.gain.value = 0; // Start silent
+
+        this.oscillator.connect(this.gain);
+
+        this.input = null; // No input as this is a source
+        this.output = this.gain;
+    }
+
+    setFrequency(freq) {
+        this.oscillator.frequency.value = freq;
+        return this;
+    }
+
+    setVolume(vol, rampTime = 0.05) {
+        const now = this.ctx.currentTime;
+        this.gain.gain.cancelScheduledValues(now);
+        this.gain.gain.setValueAtTime(this.gain.gain.value, now);
+        this.gain.gain.linearRampToValueAtTime(vol, now + rampTime);
+        return this;
+    }
+
+    start() {
+        try {
+            this.oscillator.start();
+        } catch (e) {
+            console.warn('Error starting oscillator:', e);
+        }
+        return this;
+    }
+
+    stop() {
+        try {
+            // Ramp down gain first to avoid clicks
+            const now = this.ctx.currentTime;
+            this.gain.gain.cancelScheduledValues(now);
+            this.gain.gain.setValueAtTime(this.gain.gain.value, now);
+            this.gain.gain.linearRampToValueAtTime(0, now + 0.05);
+
+            // Schedule oscillator stop after gain ramp
+            setTimeout(() => {
+                try {
+                    this.oscillator.stop();
+                } catch (e) {
+                    console.warn('Error stopping oscillator:', e);
+                }
+            }, 60);
+        } catch (e) {
+            console.warn('Error during carrier stop:', e);
+            // Attempt immediate stop as fallback
+            try {
+                this.oscillator.stop();
+            } catch (e) {
+                console.warn('Error in fallback stop:', e);
+            }
+        }
+        return this;
+    }
+
+    cleanup() {
+        try {
+            this.stop();
+            this.disconnect();
+            return true;
+        } catch (e) {
+            console.warn('Error during carrier cleanup:', e);
+            return false;
+        }
+    }
+};
+
+// Export the modules if in a module environment
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        BaseModule: AudioSystem.AudioModules.BaseModule,
+        CarrierModule: AudioSystem.AudioModules.CarrierModule
+    };
+}
+
+/**
+ * Binaural Module
+ * Creates binaural beat effect by generating slightly different frequencies in each ear
+ */
+
+// Creates a binaural effect by generating left/right variations
+AudioSystem.AudioModules.BinauralModule = class extends AudioSystem.AudioModules.BaseModule {
+    constructor(ctx, beatFrequency = 7.83) {
+        super(ctx);
+        this.beatFrequency = beatFrequency;
+        
+        // Create stereo merger
+        this.merger = ctx.createChannelMerger(2);
+        this.leftGain = ctx.createGain();
+        this.rightGain = ctx.createGain();
+        
+        // Connect to merger
+        this.leftGain.connect(this.merger, 0, 0);  // Left channel
+        this.rightGain.connect(this.merger, 0, 1); // Right channel
+        
+        this.input = ctx.createGain(); // Placeholder input
+        this.output = this.merger;
+        
+        this.rightOsc = null; // Will be created during apply
+        this.isApplied = false;
+    }
+    
+    apply(carrierModule) {
+        // Create a second oscillator for the right ear
+        const baseFreq = carrierModule.oscillator.frequency.value;
+        
+        // Disconnect the carrier from its gain
+        carrierModule.oscillator.disconnect();
+        
+        // Create the right ear oscillator
+        this.rightOsc = this.ctx.createOscillator();
+        this.rightOsc.type = carrierModule.oscillator.type;
+        this.rightOsc.frequency.value = baseFreq + this.beatFrequency;
+        
+        // Connect to appropriate channels
+        carrierModule.oscillator.connect(this.leftGain);
+        this.rightOsc.connect(this.rightGain);
+        
+        this.isApplied = true;
+        return this;
+    }
+    
+    setBeatFrequency(freq) {
+        if (this.rightOsc && this.isApplied) {
+            // Update the right oscillator frequency to maintain the beat
+            const leftFreq = this.leftOsc ? this.leftOsc.frequency.value : 
+                             (this.carrierRef ? this.carrierRef.oscillator.frequency.value : 200);
+            this.rightOsc.frequency.value = leftFreq + freq;
+            this.beatFrequency = freq;
+        }
+        return this;
+    }
+    
+    start() {
+        if (this.rightOsc && this.isApplied) {
+            try {
+                this.rightOsc.start();
+            } catch (e) {
+                console.warn('Error starting right oscillator:', e);
+            }
+        }
+        return this;
+    }
+    
+    stop() {
+        if (this.rightOsc && this.isApplied) {
+            try {
+                // Ramp down gain first to avoid clicks
+                const now = this.ctx.currentTime;
+                this.leftGain.gain.cancelScheduledValues(now);
+                this.rightGain.gain.cancelScheduledValues(now);
+                this.leftGain.gain.setValueAtTime(this.leftGain.gain.value, now);
+                this.rightGain.gain.setValueAtTime(this.rightGain.gain.value, now);
+                this.leftGain.gain.linearRampToValueAtTime(0, now + 0.05);
+                this.rightGain.gain.linearRampToValueAtTime(0, now + 0.05);
+                
+                // Schedule oscillator stop after gain ramp
+                setTimeout(() => {
+                    try {
+                        this.rightOsc.stop();
+                    } catch (e) {
+                        console.warn('Error stopping right oscillator:', e);
+                    }
+                }, 60);
+            } catch (e) {
+                console.warn('Error during binaural stop:', e);
+                // Attempt immediate stop as fallback
+                try {
+                    this.rightOsc.stop();
+                } catch (e) {
+                    console.warn('Error in fallback right oscillator stop:', e);
+                }
+            }
+        }
+        return this;
+    }
+    
+    setVolume(vol, rampTime = 0.05) {
+        const now = this.ctx.currentTime;
+        this.leftGain.gain.cancelScheduledValues(now);
+        this.rightGain.gain.cancelScheduledValues(now);
+        this.leftGain.gain.setValueAtTime(this.leftGain.gain.value, now);
+        this.rightGain.gain.setValueAtTime(this.rightGain.gain.value, now);
+        this.leftGain.gain.linearRampToValueAtTime(vol, now + rampTime);
+        this.rightGain.gain.linearRampToValueAtTime(vol, now + rampTime);
+        return this;
+    }
+    
+    cleanup() {
+        try {
+            this.stop();
+            this.leftGain.disconnect();
+            this.rightGain.disconnect();
+            this.merger.disconnect();
+            this.isApplied = false;
+            this.rightOsc = null;
+            return true;
+        } catch (e) {
+            console.warn('Error during binaural cleanup:', e);
+            return false;
+        }
+    }
+};
+
+// Export the module if in a module environment
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { 
+        BinauralModule: AudioSystem.AudioModules.BinauralModule
+    };
+}
+
+/**
+ * Solfeggio Module
+ * Implements Solfeggio tuning frequencies
+ */
+
+// Applies Solfeggio tuning to a carrier
+AudioSystem.AudioModules.SolfeggioModule = class extends AudioSystem.AudioModules.BaseModule {
+    constructor(ctx, solfNote) {
+        super(ctx);
+        this.input = ctx.createGain();
+        this.output = ctx.createGain();
+        this.input.connect(this.output);
+        
+        // Solfeggio frequencies
+        this.solfeggioMap = {
+            ut: 396, // Liberating guilt and fear
+            re: 417, // Undoing situations and facilitating change
+            mi: 528, // Transformation and miracles (DNA repair)
+            fa: 639, // Connecting/relationships
+            sol: 741, // Awakening intuition
+            la: 852, // Returning to spiritual order
+            si: 963  // Awakening perfect state/higher consciousness
+        };
+        
+        this.note = solfNote;
+        this.frequency = this.solfeggioMap[solfNote] || 432;
+        this.originalFrequency = null;
+        this.carrierRef = null;
+    }
+    
+    // This module modifies the frequency of the previous carrier
+    apply(carrierModule) {
+        // Store reference to carrier for potential reset
+        this.carrierRef = carrierModule;
+        
+        // Store original frequency in case we need to restore it
+        this.originalFrequency = carrierModule.oscillator.frequency.value;
+        
+        // Apply the solfeggio frequency
+        carrierModule.setFrequency(this.frequency);
+        return this;
+    }
+    
+    // Change the solfeggio note
+    setNote(solfNote) {
+        if (this.solfeggioMap[solfNote]) {
+            this.note = solfNote;
+            this.frequency = this.solfeggioMap[solfNote];
+            
+            // Update carrier if we have a reference
+            if (this.carrierRef) {
+                this.carrierRef.setFrequency(this.frequency);
+            }
+        }
+        return this;
+    }
+    
+    // Restore original frequency
+    reset() {
+        if (this.carrierRef && this.originalFrequency) {
+            this.carrierRef.setFrequency(this.originalFrequency);
+        }
+        return this;
+    }
+    
+    // Find the nearest solfeggio note to a given frequency
+    static findNearestNote(frequency) {
+        const solfeggioMap = {
+            ut: 396,
+            re: 417,
+            mi: 528,
+            fa: 639,
+            sol: 741,
+            la: 852,
+            si: 963
+        };
+        
+        let closestNote = 'ut';
+        let closestDiff = Math.abs(solfeggioMap.ut - frequency);
+        
+        for (const [note, freq] of Object.entries(solfeggioMap)) {
+            const diff = Math.abs(freq - frequency);
+            if (diff < closestDiff) {
+                closestDiff = diff;
+                closestNote = note;
+            }
+        }
+        
+        return closestNote;
+    }
+    
+    cleanup() {
+        this.reset();
+        this.disconnect();
+        this.carrierRef = null;
+        return true;
+    }
+};
+
+// Export the module if in a module environment
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { 
+        SolfeggioModule: AudioSystem.AudioModules.SolfeggioModule
+    };
+}
+
+/**
+ * Aleph Module
+ * Implements complex mathematical pattern generation based on aleph infinity concepts
+ */
+
+// Creates Aleph pattern variations based on set theory infinity concepts
+AudioSystem.AudioModules.AlephModule = class extends AudioSystem.AudioModules.BaseModule {
+    constructor(ctx, alephType = 'aleph-null') {
+        super(ctx);
+        this.alephType = alephType;
+        this.oscillators = [];
+        
+        // Create master input/output
+        this.input = ctx.createGain();
+        this.output = ctx.createGain();
+        
+        // Will be populated with oscillators when applied
+        this.workletNode = null;
+        this.workletLoaded = false;
+        this.bufferSource = null;
+        this.carrierRef = null;
+        this.baseFrequency = 432; // Default if no carrier
+    }
+    
+    // Initialize AudioWorklet if supported
+    async initWorklet() {
+        if (!window.AudioWorklet) {
+            console.log('AudioWorklet not supported, using fallback implementation');
+            return false;
+        }
+        
+        try {
+            // Check if there's a promise for this worklet already in progress
+            if (!AudioSystem.workletPromises['aleph-processor']) {
+                // Create a new promise for this worklet
+                AudioSystem.workletPromises['aleph-processor'] = this.ctx.audioWorklet.addModule('aleph-processor.js')
+                    .then(() => {
+                        AudioSystem.workletModulesLoaded = true;
+                        return true;
+                    })
+                    .catch(err => {
+                        console.error('Failed to load AudioWorklet:', err);
+                        delete AudioSystem.workletPromises['aleph-processor'];
+                        return false;
+                    });
+            }
+            
+            // Wait for the worklet to be loaded
+            const success = await AudioSystem.workletPromises['aleph-processor'];
+            
+            if (success) {
+                // Create worklet node
+                this.workletNode = new AudioWorkletNode(this.ctx, 'aleph-processor', {
+                    outputChannelCount: [2] // Stereo output
+                });
+                
+                // Connect the worklet
+                this.input.connect(this.workletNode);
+                this.workletNode.connect(this.output);
+                
+                // Set up message handling
+                this.workletNode.port.onmessage = (event) => {
+                    if (event.data.type === 'bufferStatus') {
+                        if (event.data.overrun) {
+                            console.warn('Buffer overrun detected in Aleph processor');
+                            this.reduceComplexity();
+                        }
+                    }
+                };
+                
+                this.workletLoaded = true;
+                return true;
+            }
+            
+            return false;
+        } catch (error) {
+            console.error('Error initializing Aleph AudioWorklet:', error);
+            return false;
+        }
+    }
+    
+    async apply(carrierModule) {
+        // Store reference to carrier
+        this.carrierRef = carrierModule;
+        
+        // Get base frequency from carrier
+        this.baseFrequency = carrierModule ? carrierModule.oscillator.frequency.value : this.baseFrequency;
+        
+        try {
+            // Try to use AudioWorklet first (preferred implementation)
+            if (await this.initWorklet()) {
+                // Configure worklet parameters based on aleph type
+                this.workletNode.port.postMessage({
+                    type: 'configure',
+                    alephType: this.alephType,
+                    baseFrequency: this.baseFrequency,
+                    bufferSize: 4096 // Larger buffer for complex patterns
+                });
+            } else {
+                // Fallback to standard audio node implementation
+                if (this.alephType === 'aleph-two') {
+                    // For extremely complex patterns, use precomputed buffer
+                    await this.applyWithBufferedPattern();
+                } else {
+                    // Use standard oscillator implementation for simpler patterns
+                    this.applyWithOscillators();
+                }
+            }
+            
+            return this;
+        } catch (error) {
+            console.error('Error applying Aleph pattern:', error);
+            // Create a very simple fallback pattern
+            this.createSimpleFallbackPattern();
+            return this;
+        }
+    }
+    
+    // Apply using oscillators (fallback when AudioWorklet not available)
+    applyWithOscillators() {
+        // Clear any existing oscillators
+        this.clearOscillators();
+        
+        // Based on Aleph type, create the appropriate pattern
+        switch(this.alephType) {
+            case 'aleph-null':
+                this.createCountableInfinityPattern();
+                break;
+            case 'aleph-one':
+                this.createUncountableInfinityPattern();
+                break;
+            default:
+                this.createSimpleFallbackPattern();
+                break;
+        }
+    }
+    
+    // Apply using precomputed buffer for complex patterns
+    async applyWithBufferedPattern() {
+        try {
+            const buffer = await AudioSystem.precomputedPatterns.getPattern(
+                this.ctx, 
+                this.alephType, 
+                this.baseFrequency
+            );
+            
+            this.bufferSource = this.ctx.createBufferSource();
+            this.bufferSource.buffer = buffer;
+            this.bufferSource.loop = true;
+            this.bufferSource.connect(this.output);
+        } catch (error) {
+            console.error('Error creating buffered pattern:', error);
+            this.createSimpleFallbackPattern();
+        }
+    }
+    
+    // Pattern generators for different Aleph types
+    createCountableInfinityPattern() {
+        // Countable infinity implementation (aleph-null)
+        // Creates a harmonic series with diminishing amplitudes
+        for (let i = 1; i <= 8; i++) {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            
+            // Harmonic series with golden ratio influence
+            const phi = (1 + Math.sqrt(5)) / 2;
+            osc.frequency.value = this.baseFrequency * (1 + (1/i) * phi);
+            osc.type = 'sine';
+            
+            // Diminishing gain by position
+            gain.gain.value = 0.7 / i;
+            
+            osc.connect(gain);
+            gain.connect(this.output);
+            
+            this.oscillators.push({ osc, gain });
+        }
+    }
+    
+    createUncountableInfinityPattern() {
+        // Create an FM synthesis pattern with irrational number relationships (aleph-one)
+        const carrier = this.ctx.createOscillator();
+        const modulator = this.ctx.createOscillator();
+        const modGain = this.ctx.createGain();
+        
+        carrier.frequency.value = this.baseFrequency;
+        modulator.frequency.value = this.baseFrequency * (Math.PI / 2); // Irrational relationship
+        
+        modGain.gain.value = 100; // FM depth
+        
+        modulator.connect(modGain);
+        modGain.connect(carrier.frequency);
+        carrier.connect(this.output);
+        
+        this.oscillators.push({ osc: carrier, type: 'carrier' });
+        this.oscillators.push({ osc: modulator, type: 'modulator', gain: modGain });
+    }
+    
+    createSimpleFallbackPattern() {
+        // Simple fallback pattern when other methods fail
+        // Uses a basic AM modulation
+        const carrier = this.ctx.createOscillator();
+        const modulator = this.ctx.createOscillator();
+        const modGain = this.ctx.createGain();
+        const masterGain = this.ctx.createGain();
+        
+        carrier.frequency.value = this.baseFrequency;
+        modulator.frequency.value = 7.83; // Schumann resonance
+        
+        carrier.connect(masterGain);
+        masterGain.connect(this.output);
+        
+        modulator.connect(modGain);
+        modGain.connect(masterGain.gain);
+        
+        modGain.gain.value = 0.5;
+        masterGain.gain.value = 0.7;
+        
+        this.oscillators.push({ osc: carrier, type: 'carrier' });
+        this.oscillators.push({ osc: modulator, type: 'modulator', gain: modGain });
+    }
+    
+    // Reduce pattern complexity if buffer overruns occur
+    reduceComplexity() {
+        if (this.workletLoaded && this.workletNode) {
+            this.workletNode.port.postMessage({
+                type: 'reduceComplexity',
+                factor: 0.7 // Reduce complexity by 30%
+            });
+        }
+    }
+    
+    // Start all oscillators in the pattern
+    start() {
+        try {
+            if (this.workletLoaded && this.workletNode) {
+                // Worklet is already running, just notify it to start
+                this.workletNode.port.postMessage({ type: 'start' });
+                return this;
+            }
+            
+            if (this.bufferSource) {
+                this.bufferSource.start();
+                return this;
+            }
+            
+            // Start all oscillators
+            this.oscillators.forEach(item => {
+                try {
+                    if (item.osc) {
+                        item.osc.start();
+                    }
+                } catch (e) {
+                    console.warn('Error starting oscillator in Aleph pattern:', e);
+                }
+            });
+        } catch (e) {
+            console.error('Error starting Aleph pattern:', e);
+        }
+        
+        return this;
+    }
+    
+    // Clean up all oscillators
+    clearOscillators() {
+        this.oscillators.forEach(item => {
+            try {
+                if (item.type === 'carrier' || item.type === 'modulator') {
+                    item.osc.stop();
+                    if (item.gain) item.gain.disconnect();
+                } else if (item.osc && item.gain) {
+                    item.osc.stop();
+                    item.gain.disconnect();
+                }
+            } catch (e) {
+                console.warn('Error clearing oscillator:', e);
+            }
+        });
+        this.oscillators = [];
+    }
+    
+    // Stop all oscillators
+    stop() {
+        try {
+            if (this.workletLoaded && this.workletNode) {
+                // Signal worklet to stop audio generation
+                this.workletNode.port.postMessage({ type: 'stop' });
+                return this;
+            }
+            
+            if (this.bufferSource) {
+                try {
+                    this.bufferSource.stop();
+                } catch (e) {
+                    console.warn('Error stopping buffer source:', e);
+                }
+                return this;
+            }
+            
+            this.clearOscillators();
+        } catch (e) {
+            console.error('Error stopping Aleph pattern:', e);
+        }
+        
+        return this;
+    }
+    
+    // Set volume of output
+    setVolume(vol, rampTime = 0.05) {
+        try {
+            const now = this.ctx.currentTime;
+            this.output.gain.cancelScheduledValues(now);
+            this.output.gain.setValueAtTime(this.output.gain.value, now);
+            this.output.gain.linearRampToValueAtTime(vol, now + rampTime);
+        } catch (e) {
+            console.warn('Error setting Aleph volume:', e);
+        }
+        return this;
+    }
+    
+    // Full cleanup
+    cleanup() {
+        try {
+            this.stop();
+            
+            if (this.workletNode) {
+                this.workletNode.disconnect();
+                this.workletNode = null;
+            }
+            
+            if (this.bufferSource) {
+                this.bufferSource.disconnect();
+                this.bufferSource = null;
+            }
+            
+            this.input.disconnect();
+            this.output.disconnect();
+            this.workletLoaded = false;
+            
+            return true;
+        } catch (e) {
+            console.error('Error during Aleph cleanup:', e);
+            return false;
+        }
+    }
+};
+
+// Precomputed pattern system for complex Aleph patterns
+AudioSystem.precomputedPatterns = {
+    buffers: {},
+    
+    async generatePatternBuffer(ctx, patternType, baseFreq, duration = 10) {
+        const sampleRate = ctx.sampleRate;
+        const bufferLength = sampleRate * duration;
+        const buffer = ctx.createBuffer(2, bufferLength, sampleRate);
+        
+        switch(patternType) {
+            case 'aleph-two':
+                // This pattern is very complex, so precompute it
+                const leftChannel = buffer.getChannelData(0);
+                const rightChannel = buffer.getChannelData(1);
+                
+                // Complex mathematical pattern generation
+                const primes = [2, 3, 5, 7, 11, 13, 17, 19, 23];
+                
+                for (let i = 0; i < bufferLength; i++) {
+                    let sampleL = 0;
+                    let sampleR = 0;
+                    
+                    // Generate extremely complex pattern based on prime relationships
+                    for (let p = 0; p < primes.length; p++) {
+                        for (let q = p + 1; q < primes.length; q++) {
+                            const ratio1 = primes[p] / primes[q];
+                            const ratio2 = primes[q] / primes[p];
+                            
+                            const freq1 = baseFreq * ratio1;
+                            const freq2 = baseFreq * ratio2;
+                            
+                            const amp = 0.05 / ((p + 1) * (q + 1));
+                            
+                            const phase1 = (i / sampleRate) * freq1 * Math.PI * 2;
+                            const phase2 = (i / sampleRate) * freq2 * Math.PI * 2;
+                            
+                            sampleL += Math.sin(phase1) * amp;
+                            sampleR += Math.sin(phase2) * amp;
+                        }
+                    }
+                    
+                    // Apply slight envelope to avoid clicks
+                    const envelope = Math.min(1, Math.min(i, bufferLength - i) / 1000);
+                    
+                    leftChannel[i] = sampleL * envelope;
+                    rightChannel[i] = sampleR * envelope;
+                }
+                break;
+                
+            // Other complex patterns...
+            default:
+                // Create a simpler pattern as fallback
+                const channel = buffer.getChannelData(0);
+                for (let i = 0; i < bufferLength; i++) {
+                    channel[i] = Math.sin(2 * Math.PI * baseFreq * i / sampleRate) * 0.5;
+                }
+                // Copy to second channel
+                buffer.copyToChannel(channel, 1);
+        }
+        
+        return buffer;
+    },
+    
+    async getPattern(ctx, type, baseFreq) {
+        const key = `${type}_${Math.round(baseFreq)}`;
+        
+        if (!this.buffers[key]) {
+            this.buffers[key] = await this.generatePatternBuffer(ctx, type, baseFreq);
+        }
+        
+        return this.buffers[key];
+    },
+    
+    // Clear cached buffers to save memory
+    clearBuffers() {
+        this.buffers = {};
+    }
+};
+
+// Export the module if in a module environment
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { 
+        AlephModule: AudioSystem.AudioModules.AlephModule,
+        precomputedPatterns: AudioSystem.precomputedPatterns
+    };
+}
+
+/**
+ * Frequency Data System
+ * Manages frequency data and user preferences
+ */
+
+// Frequency Data System
+const FrequencySystem = {
+    // Core frequency data
+    data: {
+        focus: [
+            {
+                id: 'deep-focus-40hz',
+                title: 'Deep Focus',
+                frequency: 40,
+                type: 'binaural',
+                category: 'gamma',
+                carrierFrequency: 200,
+                description: 'Enhance mental clarity and focus with gamma waves. Ideal for complex tasks, studying, or when you need peak cognitive performance.',
+                warning: null
+            },
+            {
+                id: 'flow-state-15hz',
+                title: 'Flow State',
+                frequency: 15,
+                type: 'binaural',
+                category: 'beta',
+                carrierFrequency: 200,
+                description: 'Enter a state of focused productivity. Perfect for sustained attention, problem-solving, and getting in the zone.',
+                warning: null
+            },
+            {
+                id: 'negativity-741hz',
+                title: 'Negativity Suppression',
+                frequency: 741,
+                type: 'solfeggio',
+                category: 'healing',
+                description: 'Remove toxins and solve problems. This frequency helps clear negative energy and promotes expression and solution-finding.',
+                warning: null
+            },
+            {
+                id: 'mental-clarity-852hz',
+                title: 'Mental Clarity',
+                frequency: 852,
+                type: 'solfeggio',
+                category: 'healing',
+                description: 'Awaken intuition and enhance clarity of thought. This frequency helps return to spiritual order and strengthens perception.',
+                warning: null
+            },
+            {
+                id: 'aleph-focus',
+                title: 'Aleph Clarity',
+                frequency: null,
+                type: 'special',
+                category: 'transcendental',
+                description: 'Using mathematical patterns based on Aleph-null to create sustained attention through infinite recursion principles.',
+                warning: 'Creates a unique cognitive state that may initially feel unfamiliar. Start with short sessions.'
+            }
+        ],
+        meditation: [
+            {
+                id: 'deep-meditation-6hz',
+                title: 'Deep Meditation',
+                frequency: 6,
+                type: 'binaural',
+                category: 'theta',
+                carrierFrequency: 200,
+                description: 'Access profound meditative states easily. Helps quiet mental chatter and access deeper awareness.',
+                warning: null
+            },
+            {
+                id: 'creative-insight-4.5hz',
+                title: 'Creative Insight',
+                frequency: 4.5,
+                type: 'binaural',
+                category: 'theta',
+                carrierFrequency: 200,
+                description: 'Unlock creative inspiration and intuitive insights. Perfect for brainstorming, artistic work, or problem-solving.',
+                warning: null
+            },
+            {
+                id: 'mindful-presence-7.83hz',
+                title: 'Earth Resonance',
+                frequency: 7.83,
+                type: 'special',
+                category: 'earth',
+                description: "Align with Earth's natural frequency for grounding and balance. Helps reduce stress and restore natural rhythms.",
+                warning: 'This subtle frequency works through resonance rather than direct hearing.'
+            },
+            {
+                id: 'spiritual-connection-963hz',
+                title: 'Crown Connection',
+                frequency: 963,
+                type: 'solfeggio',
+                category: 'healing',
+                description: 'Connect with higher awareness and spiritual insight. Creates a sense of oneness and transcendent peace.',
+                warning: null
+            },
+            {
+                id: 'aleph-infinity',
+                title: 'Aleph Consciousness',
+                frequency: null,
+                type: 'special',
+                category: 'transcendental',
+                description: 'Based on the concept of Aleph from set theory, representing infinite consciousness. This frequency pattern creates a mathematical approach to higher awareness states.',
+                warning: 'Not a single frequency but a complex pattern designed to evoke experiences of boundlessness and non-duality.'
+            }
+        ],
+        sleep: [
+            {
+                id: 'deep-sleep-2hz',
+                title: 'Sleep Sanctuary',
+                frequency: 2,
+                type: 'binaural',
+                category: 'delta',
+                carrierFrequency: 200,
+                description: 'Guide your brain into deep, restorative sleep patterns. Ideal for overcoming insomnia or enhancing sleep quality.',
+                warning: null
+            },
+            {
+                id: 'twilight-3.5hz',
+                title: 'Twilight Transition',
+                frequency: 3.5,
+                type: 'binaural',
+                category: 'delta',
+                carrierFrequency: 200,
+                description: 'Ease the transition from wakefulness to sleep. Perfect for power naps or preparing for deep rest.',
+                warning: null
+            },
+            {
+                id: 'sleep-harmony-639hz',
+                title: 'Connection & Harmony',
+                frequency: 639,
+                type: 'solfeggio',
+                category: 'healing',
+                description: 'Enhances relationships, connection, and harmony. Helps resolve conflicts and promotes peaceful sleep through balanced emotions.',
+                warning: null
+            },
+            {
+                id: 'emotional-release-396hz',
+                title: 'Emotional Freedom',
+                frequency: 396,
+                type: 'solfeggio',
+                category: 'healing',
+                description: 'Release emotional blockages and transform guilt into joy. Supports liberation from limiting patterns that may disturb sleep.',
+                warning: null
+            }
+        ],
+        relaxation: [
+            {
+                id: 'calm-clarity-10hz',
+                title: 'Calm Clarity',
+                frequency: 10,
+                type: 'binaural',
+                category: 'alpha',
+                carrierFrequency: 200,
+                description: 'Find your center with alert relaxation. Ideal for reading, light meditation, or unwinding while staying present.',
+                warning: null
+            },
+            {
+                id: 'stress-relief-432hz',
+                title: 'Harmonic Balance',
+                frequency: 432,
+                type: 'solfeggio',
+                category: 'healing',
+                description: 'Experience natural harmony and deep relaxation. Many find this frequency more pleasing than standard tuning.',
+                warning: null
+            },
+            {
+                id: 'peaceful-mind-417hz',
+                title: 'Change Facilitator',
+                frequency: 417,
+                type: 'solfeggio',
+                category: 'healing',
+                description: 'Facilitates change and breaks down energy blockages. Helps dissolve crystallized emotional patterns for deeper relaxation.',
+                warning: null
+            },
+            {
+                id: 'aleph-zero',
+                title: 'Aleph Foundation',
+                frequency: null,
+                type: 'special',
+                category: 'transcendental',
+                description: 'Working with the concept of countable infinity, this pattern helps establish a stable foundation for relaxation by balancing finite and infinite perspectives.',
+                warning: 'A gentle introduction to Aleph patterns, suitable for relaxation practices.'
+            }
+        ],
+        healing: [
+            {
+                id: 'cellular-harmony-528hz',
+                title: 'DNA Harmony',
+                frequency: 528,
+                type: 'solfeggio',
+                category: 'healing',
+                description: 'Known as the "miracle tone" for its potential cellular healing effects. Associated with transformation and repair.',
+                warning: null
+            },
+            {
+                id: 'pain-relief-174hz',
+                title: 'Gentle Relief',
+                frequency: 174,
+                type: 'special',
+                category: 'healing',
+                description: 'Natural frequency associated with pain reduction and muscle relaxation. Helps ease physical tension.',
+                warning: null
+            },
+            {
+                id: 'emotional-release-396hz',
+                title: 'Emotional Freedom',
+                frequency: 396,
+                type: 'solfeggio',
+                category: 'healing',
+                description: 'Release emotional blockages and transform guilt into joy. Supports liberation from limiting patterns.',
+                warning: null
+            },
+            {
+                id: 'spiritual-connection-963hz',
+                title: 'Crown Connection',
+                frequency: 963,
+                type: 'solfeggio',
+                category: 'healing',
+                description: 'Connect with higher awareness and spiritual insight. Creates a sense of oneness and transcendent peace.',
+                warning: null
+            },
+            {
+                id: 'intuition-852hz',
+                title: 'Third Eye Activation',
+                frequency: 852,
+                type: 'solfeggio',
+                category: 'healing',
+                description: 'Awakens intuition and inner wisdom. Helps return to spiritual order and strengthens the energy of the third eye chakra.',
+                warning: null
+            },
+            {
+                id: 'relationship-healing-639hz',
+                title: 'Relationship Harmony',
+                frequency: 639,
+                type: 'solfeggio',
+                category: 'healing',
+                description: 'Enhances communication, understanding, and harmonious connections. Balances emotions and relationships.',
+                warning: null
+            },
+            {
+                id: 'aleph-null',
+                title: 'Aleph Healing Matrix',
+                frequency: null,
+                type: 'special',
+                category: 'transcendental',
+                description: 'Using the mathematical concept of Aleph-null (smallest infinite cardinal), this matrix creates healing through complex frequency patterns that work on multiple dimensions simultaneously.',
+                warning: 'This is an advanced frequency pattern that may cause temporary disorientation as it works on multiple levels of consciousness.'
+            }
+        ],
+        transcendental: [
+            {
+                id: 'aleph-one',
+                title: 'Aleph Continuum',
+                frequency: null,
+                type: 'special',
+                category: 'transcendental',
+                description: 'Based on Cantor\'s first transfinite number, this frequency pattern works with the concept of uncountable infinity to expand awareness beyond conventional boundaries.',
+                warning: 'May temporarily alter perception of time and space. Use in a safe, comfortable environment.'
+            },
+            {
+                id: 'aleph-two',
+                title: 'Aleph Expansion',
+                frequency: null,
+                type: 'special',
+                category: 'transcendental',
+                description: 'Representing higher-order infinity, this pattern works with the mathematical concept of power sets to create exponential expansion of consciousness.',
+                warning: 'Advanced users only. May produce profound non-ordinary states of consciousness.'
+            },
+            {
+                id: 'aleph-integration',
+                title: 'Aleph Integration',
+                frequency: null,
+                type: 'special',
+                category: 'transcendental',
+                description: 'A balanced matrix of Aleph patterns designed to integrate transcendental experiences with everyday consciousness, helping to ground insights from non-ordinary states.',
+                warning: 'Best used as a closing practice after other Aleph sessions to integrate experiences.'
+            },
+            {
+                id: 'unified-field-infinity',
+                title: 'Unified Field',
+                frequency: null,
+                type: 'special',
+                category: 'transcendental',
+                description: 'Combines principles from all Solfeggio frequencies with Aleph mathematical patterns to create a unified field of consciousness that harmonizes all energy centers.',
+                warning: 'Our most advanced frequency matrix. Start with shorter sessions of 5-10 minutes.'
+            }
+        ]
+    },
+
+    // Frequency scales and definitions
+    reference: {
+        // Complete Solfeggio Frequency Scale
+        solfeggio: {
+            ut: 396, // Liberating guilt and fear
+            re: 417, // Undoing situations and facilitating change
+            mi: 528, // Transformation and miracles (DNA repair)
+            fa: 639, // Connecting/relationships
+            sol: 741, // Awakening intuition
+            la: 852, // Returning to spiritual order
+            si: 963  // Awakening perfect state/higher consciousness
+        },
+        
+        // Brainwave Frequencies
+        brainwaves: {
+            delta: '0.5-4 Hz', // Deep sleep, healing
+            theta: '4-8 Hz',   // Meditation, creativity
+            alpha: '8-13 Hz',  // Relaxation, learning
+            beta: '13-30 Hz',  // Active thinking, focus
+            gamma: '30-100 Hz' // Higher processing, insight
+        },
+        
+        // Aleph Frequency Information
+        aleph: {
+            description: "The Aleph frequencies are based on mathematical concepts of infinity from set theory. Unlike conventional frequencies measured in Hertz, Aleph patterns work with complex mathematical relationships to create experiences that transcend ordinary perception. These are not single tones but rather matrices of frequency relationships designed to evoke experiences of boundlessness and non-duality.",
+            types: [
+                {
+                    name: "Aleph-null (ℵ₀)",
+                    concept: "Countable infinity",
+                    application: "Foundation for expanded awareness"
+                },
+                {
+                    name: "Aleph-one (ℵ₁)",
+                    concept: "Uncountable infinity (continuum)",
+                    application: "Transcendence of conventional boundaries"
+                },
+                {
+                    name: "Aleph-two (ℵ₂)",
+                    concept: "Power set of continuum",
+                    application: "Exponential consciousness expansion"
+                }
+            ],
+            warning: "The Aleph series represents advanced consciousness technology and should be approached gradually. These are not conventional frequencies but rather mathematical patterns designed to evoke specific states of awareness."
+        }
+    },
+
+    init() {
+        this.loadPinnedFrequencies();
+        this.setupListeners();
+    },
+
+    setupListeners() {
+        EventSystem.on('frequencyPinned', ({ id, type }) => {
+            this.pinFrequency(id, type);
+            UISystem.render();
+        });
+
+        EventSystem.on('frequencyUnpinned', ({ id, type }) => {
+            this.unpinFrequency(id, type);
+            UISystem.render();
+        });
+    },
+
+    // Get all frequencies of a specific type
+    getFrequencies(type) {
+        return this.data[type] || [];
+    },
+
+    // Get a specific frequency by ID
+    getFrequency(id) {
+        // Search in all categories
+        for (const category of Object.keys(this.data)) {
+            const found = this.data[category].find(f => f.id === id);
+            if (found) return found;
+        }
+        return null;
+    },
+
+    // Search frequencies across all types
+    searchFrequencies(query) {
+        query = query.toLowerCase().trim();
+        const results = [];
+
+        Object.keys(this.data).forEach(type => {
+            this.data[type].forEach(freq => {
+                if (
+                    freq.title.toLowerCase().includes(query) ||
+                    freq.description.toLowerCase().includes(query) ||
+                    (freq.frequency && freq.frequency.toString().includes(query))
+                ) {
+                    results.push(freq);
+                }
+            });
+        });
+
+        return results;
+    },
+
+    // Pin management
+    pinFrequency(id, type) {
+        const freq = this.getFrequency(id);
+        if (!freq) return false;
+
+        // Find which category this frequency belongs to
+        let category;
+        for (const [cat, freqs] of Object.entries(this.data)) {
+            if (freqs.find(f => f.id === id)) {
+                category = cat;
+                break;
+            }
+        }
+
+        if (category && !AppState.frequencies.pinned[category].includes(id)) {
+            AppState.frequencies.pinned[category].push(id);
+            this.savePinnedFrequencies();
+            EventSystem.emit('pinsUpdated', AppState.frequencies.pinned);
+            return true;
+        }
+        return false;
+    },
+
+    unpinFrequency(id, type) {
+        // Find which category this frequency belongs to
+        let category;
+        for (const [cat, freqs] of Object.entries(this.data)) {
+            if (freqs.find(f => f.id === id)) {
+                category = cat;
+                break;
+            }
+        }
+
+        if (category) {
+            const index = AppState.frequencies.pinned[category].indexOf(id);
+            if (index > -1) {
+                AppState.frequencies.pinned[category].splice(index, 1);
+                this.savePinnedFrequencies();
+                EventSystem.emit('pinsUpdated', AppState.frequencies.pinned);
+                return true;
+            }
+        }
+        return false;
+    },
+
+    unpinAll() {
+        Object.keys(AppState.frequencies.pinned).forEach(type => {
+            AppState.frequencies.pinned[type] = [];
+        });
+        this.savePinnedFrequencies();
+        EventSystem.emit('pinsUpdated', AppState.frequencies.pinned);
+    },
+
+    // Get all pinned frequencies as full objects
+    getPinnedFrequencies() {
+        const pinned = {};
+        Object.keys(AppState.frequencies.pinned).forEach(category => {
+            pinned[category] = AppState.frequencies.pinned[category]
+                .map(id => this.getFrequency(id))
+                .filter(Boolean);
+        });
+        return pinned;
+    },
+
+    // Local storage management
+    savePinnedFrequencies() {
+        try {
+            localStorage.setItem('pinnedFrequencies', JSON.stringify(AppState.frequencies.pinned));
+        } catch (e) {
+            console.warn('Could not save pinned frequencies to localStorage:', e);
+        }
+    },
+
+    loadPinnedFrequencies() {
+        try {
+            const saved = localStorage.getItem('pinnedFrequencies');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                // Validate the structure
+                if (typeof parsed === 'object' && parsed !== null) {
+                    // Handle migration from old format if necessary
+                    if (parsed.binaural || parsed.solfeggio || parsed.special) {
+                        AppState.frequencies.pinned = {
+                            focus: [],
+                            meditation: [],
+                            sleep: [],
+                            relaxation: [],
+                            healing: []
+                        };
+                    } else {
+                        AppState.frequencies.pinned = {
+                            focus: Array.isArray(parsed.focus) ? parsed.focus : [],
+                            meditation: Array.isArray(parsed.meditation) ? parsed.meditation : [],
+                            sleep: Array.isArray(parsed.sleep) ? parsed.sleep : [],
+                            relaxation: Array.isArray(parsed.relaxation) ? parsed.relaxation : [],
+                            healing: Array.isArray(parsed.healing) ? parsed.healing : []
+                        };
+                        // Add transcendental category if it doesn't exist
+                        if (!parsed.transcendental) {
+                            AppState.frequencies.pinned.transcendental = [];
+                        } else {
+                            AppState.frequencies.pinned.transcendental = parsed.transcendental;
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error loading pinned frequencies:', error);
+            // Reset to default state
+            AppState.frequencies.pinned = {
+                focus: [],
+                meditation: [],
+                sleep: [],
+                relaxation: [],
+                healing: [],
+                transcendental: []
+            };
+        }
+    },
+
+    // Utility methods
+    getCategoryInfo(category) {
+        const categories = {
+            delta: { name: 'Delta', range: '0.5-4 Hz', description: 'Deep sleep, healing' },
+            theta: { name: 'Theta', range: '4-8 Hz', description: 'Meditation, creativity' },
+            alpha: { name: 'Alpha', range: '8-14 Hz', description: 'Relaxation, learning' },
+            beta: { name: 'Beta', range: '14-30 Hz', description: 'Focus, alertness' },
+            gamma: { name: 'Gamma', range: '30-100 Hz', description: 'Cognitive enhancement' },
+            healing: { name: 'Healing', range: 'Various', description: 'Traditional healing frequencies' },
+            earth: { name: 'Earth', range: 'Various', description: 'Natural Earth frequencies' },
+            transcendental: { name: 'Transcendental', range: 'Complex', description: 'Advanced consciousness patterns' }
+        };
+        return categories[category] || null;
+    },
+
+    getSectionDescription(type) {
+        const descriptions = {
+            focus: 'Enhance concentration, mental clarity, and cognitive performance for your most important work.',
+            meditation: 'Access deeper states of awareness, creativity, and inner peace with these consciousness-expanding frequencies.',
+            sleep: 'Improve your sleep quality with frequencies that guide your brain into natural sleep patterns.',
+            relaxation: 'Find balance between relaxation and alertness, perfect for unwinding while staying present.',
+            healing: 'Traditional frequencies associated with physical, emotional, and spiritual wellbeing.',
+            transcendental: 'Advanced mathematical patterns based on infinity concepts for exploring expanded states of consciousness.'
+        };
+        return descriptions[type] || '';
+    },
+    
+    // Clean up memory usage
+    cleanup() {
+        // Save pinned frequencies before cleanup
+        this.savePinnedFrequencies();
+        
+        // Remove event listeners
+        EventSystem.off('frequencyPinned');
+        EventSystem.off('frequencyUnpinned');
+    }
+};
+
+// Export the FrequencySystem object if in a module environment
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { FrequencySystem };
+}
+
+/**
+ * UI System
+ * Manages rendering and user interface interactions
+ */
+
+// UI Components System
+const UISystem = {
+    // Store DOM references to avoid repeated queries
+    domCache: new Map(),
+    activeListeners: [],
+
+    init() {
+        this.initializeControlBar();
+        this.setupEventListeners();
+        this.render();
+    },
+
+    // Cache DOM elements for better performance
+    getDOMElement(selector) {
+        if (!this.domCache.has(selector)) {
+            const element = document.querySelector(selector);
+            if (element) {
+                this.domCache.set(selector, element);
+            }
+            return element;
+        }
+        return this.domCache.get(selector);
+    },
+
+    // Clear DOM cache on major updates
+    clearDOMCache() {
+        this.domCache.clear();
+    },
+
+    initializeControlBar() {
+        const controlBar = this.getDOMElement('.control-bar');
+        const container = controlBar.querySelector('.container');
+
+        // Create control bar components
+        container.innerHTML = `
+            <div class="control-bar__section control-bar__volume">
+                <label for="volume" class="visually-hidden">Volume</label>
+                <input type="range"
+                    id="volume"
+                    class="volume-slider"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="${AppState.audio.volume}">
+                <span class="volume-display">${Math.round(AppState.audio.volume * 100)}%</span>
+            </div>
+
+            <div class="control-bar__section control-bar__search">
+                <div class="search-container">
+                    <input type="text"
+                        id="frequency-search"
+                        class="search-input"
+                        placeholder="Search frequencies..."
+                        value="${AppState.frequencies.filter}">
+                    <button class="search-clear ${AppState.frequencies.filter ? 'visible' : ''}" aria-label="Clear search">
+                        ×
+                    </button>
+                </div>
+            </div>
+
+            <div class="control-bar__section control-bar__actions">
+                <button class="action-button stop-all" disabled>
+                    <svg class="icon" viewBox="0 0 24 24" width="24" height="24">
+                        <rect x="6" y="6" width="12" height="12"/>
+                    </svg>
+                    Stop All
+                </button>
+                <button class="action-button unpin-all" disabled>
+                    <svg class="icon" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M12 2L2 12l10 10 10-10z"/>
+                    </svg>
+                    Unpin All
+                </button>
+            </div>
+
+            <div class="control-bar__section control-bar__active-tones">
+                <div class="active-tones-container">
+                    <!-- Active tones will be rendered here -->
+                </div>
+            </div>
+        `;
+    },
+
+    setupEventListeners() {
+        // Track all listeners for proper cleanup
+        const cleanupFns = [];
+
+        // Volume control
+        const volumeSlider = document.getElementById('volume');
+        const volumeListener = (e) => {
+            AudioSystem.setVolume(parseFloat(e.target.value));
+        };
+        volumeSlider.addEventListener('input', volumeListener);
+        cleanupFns.push(() => volumeSlider.removeEventListener('input', volumeListener));
+
+        // Search
+        const searchInput = document.getElementById('frequency-search');
+        const searchClear = document.querySelector('.search-clear');
+
+        const searchListener = (e) => {
+            const value = e.target.value;
+            AppState.frequencies.filter = value;
+            searchClear.classList.toggle('visible', value.length > 0);
+            this.render();
+        };
+        searchInput.addEventListener('input', searchListener);
+        cleanupFns.push(() => searchInput.removeEventListener('input', searchListener));
+
+        const clearListener = () => {
+            searchInput.value = '';
+            AppState.frequencies.filter = '';
+            searchClear.classList.remove('visible');
+            this.render();
+        };
+        searchClear.addEventListener('click', clearListener);
+        cleanupFns.push(() => searchClear.removeEventListener('click', clearListener));
+
+        // Action buttons
+        const stopAllButton = document.querySelector('.action-button.stop-all');
+        const stopAllListener = () => {
+            AudioSystem.stopAll();
+        };
+        stopAllButton.addEventListener('click', stopAllListener);
+        cleanupFns.push(() => stopAllButton.removeEventListener('click', stopAllListener));
+
+        const unpinAllButton = document.querySelector('.action-button.unpin-all');
+        const unpinAllListener = () => {
+            FrequencySystem.unpinAll();
+        };
+        unpinAllButton.addEventListener('click', unpinAllListener);
+        cleanupFns.push(() => unpinAllButton.removeEventListener('click', unpinAllListener));
+
+        // Info modal
+        const infoModal = document.getElementById('infoModal');
+        const showInfoBtn = document.getElementById('showInfo');
+        const closeInfoBtn = document.getElementById('closeInfo');
+
+        const showInfoListener = () => {
+            infoModal.classList.add('visible');
+        };
+        showInfoBtn.addEventListener('click', showInfoListener);
+        cleanupFns.push(() => showInfoBtn.removeEventListener('click', showInfoListener));
+
+        const closeInfoListener = () => {
+            infoModal.classList.remove('visible');
+        };
+        closeInfoBtn.addEventListener('click', closeInfoListener);
+        cleanupFns.push(() => closeInfoBtn.removeEventListener('click', closeInfoListener));
+
+        // Close modal on outside click
+        const modalOutsideClickListener = (e) => {
+            if (e.target === infoModal) {
+                infoModal.classList.remove('visible');
+            }
+        };
+        infoModal.addEventListener('click', modalOutsideClickListener);
+        cleanupFns.push(() => infoModal.removeEventListener('click', modalOutsideClickListener));
+
+        // Close modal on escape key
+        const escKeyListener = (e) => {
+            if (e.key === 'Escape' && infoModal.classList.contains('visible')) {
+                infoModal.classList.remove('visible');
+            }
+        };
+        document.addEventListener('keydown', escKeyListener);
+        cleanupFns.push(() => document.removeEventListener('keydown', escKeyListener));
+
+        // Theme toggle
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const themeToggleListener = () => {
+            ThemeSystem.toggleTheme();
+            themeToggleBtn.querySelector('.theme-toggle-icon').textContent =
+                AppState.ui.theme === 'light' ? '☀️' : '🌙';
+        };
+        themeToggleBtn.addEventListener('click', themeToggleListener);
+        cleanupFns.push(() => themeToggleBtn.removeEventListener('click', themeToggleListener));
+
+        // Set initial icon
+        themeToggleBtn.querySelector('.theme-toggle-icon').textContent =
+            AppState.ui.theme === 'light' ? '☀️' : '🌙';
+
+        // View toggle
+        const viewButtons = document.querySelectorAll('.view-toggle-button');
+        viewButtons.forEach(button => {
+            const viewToggleListener = () => {
+                const view = button.dataset.view;
+                AppState.ui.view = view;
+                localStorage.setItem('view', view);
+
+                // Update button states
+                viewButtons.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.view === view);
+                });
+
+                this.render();
+                EventSystem.emit('viewChanged', view);
+            };
+            button.addEventListener('click', viewToggleListener);
+            cleanupFns.push(() => button.removeEventListener('click', viewToggleListener));
+
+            // Set initial active state
+            button.classList.toggle('active', button.dataset.view === AppState.ui.view);
+        });
+
+        // Event subscriptions
+        const toneStartedHandler = () => this.updateControlState();
+        EventSystem.on('toneStarted', toneStartedHandler);
+        cleanupFns.push(() => EventSystem.off('toneStarted', toneStartedHandler));
+
+        const toneStoppedHandler = () => this.updateControlState();
+        EventSystem.on('toneStopped', toneStoppedHandler);
+        cleanupFns.push(() => EventSystem.off('toneStopped', toneStoppedHandler));
+
+        const pinsUpdatedHandler = () => this.updateControlState();
+        EventSystem.on('pinsUpdated', pinsUpdatedHandler);
+        cleanupFns.push(() => EventSystem.off('pinsUpdated', pinsUpdatedHandler));
+
+        const volumeChangedHandler = (volume) => {
+            volumeSlider.value = volume;
+            document.querySelector('.volume-display').textContent = `${Math.round(volume * 100)}%`;
+        };
+        EventSystem.on('volumeChanged', volumeChangedHandler);
+        cleanupFns.push(() => EventSystem.off('volumeChanged', volumeChangedHandler));
+
+        // Store all cleanup functions
+        this.activeListeners = cleanupFns;
+    },
+
+    updateControlState() {
+        // Update stop all button
+        const stopAllButton = document.querySelector('.action-button.stop-all');
+        stopAllButton.disabled = Object.keys(AppState.audio.oscillators).length === 0;
+
+        // Update unpin all button
+        const unpinAllButton = document.querySelector('.action-button.unpin-all');
+        const hasPinnedItems = Object.values(AppState.frequencies.pinned)
+            .some(arr => arr.length > 0);
+        unpinAllButton.disabled = !hasPinnedItems;
+
+        this.renderActiveTones();
+    },
+
+    renderActiveTones() {
+        const container = document.querySelector('.active-tones-container');
+        container.innerHTML = '';
+
+        Object.entries(AppState.audio.oscillators).forEach(([id]) => {
+            const frequency = FrequencySystem.getFrequency(id);
+            if (!frequency) return;
+
+            const toneElement = document.createElement('div');
+            toneElement.className = `active-tone active-tone--${frequency.type}`;
+            toneElement.innerHTML = `
+                <span class="active-tone__name">${frequency.title}</span>
+                <span class="active-tone__freq">${AudioSystem.formatFrequency(frequency.frequency)}</span>
+                <button class="active-tone__stop" aria-label="Stop ${frequency.title}">×</button>
+            `;
+
+            const stopButton = toneElement.querySelector('.active-tone__stop');
+            const stopListener = () => {
+                AudioSystem.stopTone(id);
+            };
+            stopButton.addEventListener('click', stopListener);
+
+            // Memory management - remove listener when container is cleared
+            const observerOptions = { childList: true };
+            const observer = new MutationObserver((mutationsList) => {
+                for (const mutation of mutationsList) {
+                    if (mutation.type === 'childList' && !container.contains(toneElement)) {
+                        stopButton.removeEventListener('click', stopListener);
+                        observer.disconnect();
+                        break;
+                    }
+                }
+            });
+            observer.observe(container, observerOptions);
+
+            container.appendChild(toneElement);
+        });
+    },
+
+    render() {
+        const mainContent = document.querySelector('.frequency-sections');
+        const fragment = document.createDocumentFragment(); // Use fragment for better performance
+
+        // First render pinned frequencies if any exist
+        const pinnedFreqs = FrequencySystem.getPinnedFrequencies();
+        const hasPinnedFreqs = Object.values(pinnedFreqs).some(arr => arr.length > 0);
+
+        if (hasPinnedFreqs) {
+            const pinnedSection = this.createSection({
+                title: 'Pinned Frequencies',
+                description: 'Your saved frequencies for quick access',
+                frequencies: Object.values(pinnedFreqs).flat()
+            });
+            fragment.appendChild(pinnedSection);
+        }
+
+        // Render each frequency type section
+        const sectionTypes = ['focus', 'meditation', 'sleep', 'relaxation', 'healing', 'transcendental'];
+
+        sectionTypes.forEach(type => {
+            let frequencies = FrequencySystem.getFrequencies(type);
+
+            // Apply search filter if exists
+            if (AppState.frequencies.filter) {
+                const query = AppState.frequencies.filter.toLowerCase();
+                frequencies = frequencies.filter(freq =>
+                    freq.title.toLowerCase().includes(query) ||
+                    freq.description.toLowerCase().includes(query) ||
+                    (freq.frequency && freq.frequency.toString().includes(query))
+                );
+            }
+
+            if (frequencies.length === 0) return; // Skip empty sections
+
+            const sectionTitle = type.charAt(0).toUpperCase() + type.slice(1);
+            const section = this.createSection({
+                title: `${sectionTitle} Frequencies`,
+                description: FrequencySystem.getSectionDescription(type),
+                frequencies
+            });
+            fragment.appendChild(section);
+        });
+
+        // Use a single DOM operation for better performance
+        mainContent.innerHTML = '';
+        mainContent.appendChild(fragment);
+
+        // Update control bar state
+        this.updateControlState();
+    },
+
+    createSection({ title, description, frequencies }) {
+        const section = document.createElement('section');
+        section.className = 'frequency-section';
+
+        section.innerHTML = `
+            <div class="frequency-section__header">
+                <h2 class="frequency-section__title">${title}</h2>
+                ${description ? `<p class="frequency-section__description">${description}</p>` : ''}
+            </div>
+            <div class="frequency-${AppState.ui.view === 'cards' ? 'grid' : 'list'}">
+                ${frequencies.map(freq =>
+                    AppState.ui.view === 'cards'
+                        ? this.createFrequencyCard(freq)
+                        : this.createFrequencyListItem(freq)
+                ).join('')}
+            </div>
+        `;
+
+        // Add event listeners to the frequency items
+        section.querySelectorAll('.btn--play').forEach(button => {
+            button.addEventListener('click', () => {
+                const { id, type } = button.dataset;
+                const isPlaying = button.classList.contains('playing');
+
+                if (isPlaying) {
+                    AudioSystem.stopTone(id);
+                    button.classList.remove('playing');
+                    button.innerHTML = `<span class="visually-hidden">Play</span>▶`;
+                } else {
+                    const freq = FrequencySystem.getFrequency(id);
+
+                    // Build options based on frequency type
+                    const options = {};
+
+                    if (freq.type === 'binaural') {
+                        options.isBinaural = true;
+                        options.carrierFrequency = freq.carrierFrequency || 200;
+                    } else if (freq.type === 'special' && freq.id.includes('aleph')) {
+                        options.isPattern = true;
+                        options.patternType = freq.id;
+                    }
+
+                    const success = AudioSystem.startTone(id, freq.frequency, options);
+
+                    if (success) {
+                        button.classList.add('playing');
+                        button.innerHTML = `<span class="visually-hidden">Stop</span>⏹`;
+                    }
+                }
+            });
+        });
+
+        section.querySelectorAll('.btn--pin').forEach(button => {
+            button.addEventListener('click', () => {
+                const { id, type } = button.dataset;
+                const isPinned = button.classList.contains('pinned');
+
+                if (isPinned) {
+                    EventSystem.emit('frequencyUnpinned', { id, type });
+                } else {
+                    EventSystem.emit('frequencyPinned', { id, type });
+                }
+            });
+        });
+
+        // Add event listeners for advanced feature toggles
+        section.querySelectorAll('.btn--advanced').forEach(button => {
+            button.addEventListener('click', () => {
+                const controlsContainer = button.nextElementSibling;
+                if (controlsContainer) {
+                    controlsContainer.classList.toggle('visible');
+                    button.textContent = controlsContainer.classList.contains('visible')
+                        ? 'Hide Advanced Options'
+                        : 'Show Advanced Options';
+                }
+            });
+        });
+
+        return section;
+    },
+
+    createFrequencyCard(freq) {
+        // Find if this frequency is pinned
+        let isPinned = false;
+        for (const category in AppState.frequencies.pinned) {
+            if (AppState.frequencies.pinned[category].includes(freq.id)) {
+                isPinned = true;
+                break;
+            }
+        }
+
+        const isPlaying = !!AppState.audio.oscillators[freq.id];
+        const categoryInfo = FrequencySystem.getCategoryInfo(freq.category);
+
+        // Create advanced options if appropriate
+        let advancedOptions = '';
+
+        // Only show advanced options button for frequencies that have modules available
+        if (freq.frequency || freq.type === 'special') {
+            advancedOptions = `
+                <button class="btn btn--advanced">Show Advanced Options</button>
+                <div class="frequency-card__advanced-controls">
+                    ${freq.frequency ? `
+                        <label class="feature-toggle">
+                            <input type="checkbox" class="feature-toggle__input" data-feature="binaural"
+                                ${freq.type === 'binaural' ? 'checked' : ''}>
+                            <span class="feature-toggle__label">Binaural</span>
+                        </label>
+
+                        <label class="feature-toggle">
+                            <input type="checkbox" class="feature-toggle__input" data-feature="solfeggio">
+                            <span class="feature-toggle__label">Solfeggio</span>
+                        </label>
+                    ` : ''}
+
+                    <label class="feature-toggle">
+                        <input type="checkbox" class="feature-toggle__input" data-feature="aleph" data-aleph-type="aleph-null">
+                        <span class="feature-toggle__label">Aleph</span>
+                    </label>
+                </div>
+            `;
+        }
+
+        return `
+            <article class="frequency-card" data-type="${freq.type}">
+                <header class="frequency-card__header">
+                    <h3 class="frequency-card__title">${freq.title}</h3>
+                    <span class="frequency-card__frequency">${AudioSystem.formatFrequency(freq.frequency)}</span>
+                </header>
+                <div class="frequency-card__body">
+                    <p class="frequency-card__description">${freq.description}</p>
+                    ${categoryInfo ? `
+                        <span class="category-badge">
+                            ${categoryInfo.name} (${categoryInfo.range})
+                        </span>
+                    ` : ''}
+                    ${freq.warning ? `
+                        <p class="frequency-card__warning">⚠️ ${freq.warning}</p>
+                    ` : ''}
+                    ${advancedOptions}
+                    <div class="frequency-card__actions">
+                        <button class="btn btn--play ${isPlaying ? 'playing' : ''}"
+                            data-id="${freq.id}"
+                            data-type="${freq.type}">
+                            <span class="visually-hidden">${isPlaying ? 'Stop' : 'Play'}</span>
+                            ${isPlaying ? '⏹' : '▶'}
+                        </button>
+                        <button class="btn btn--pin ${isPinned ? 'pinned' : ''}"
+                            data-id="${freq.id}"
+                            data-type="${freq.type}">
+                            <span class="visually-hidden">${isPinned ? 'Unpin' : 'Pin'}</span>
+                            ${isPinned ? '📍' : '📌'}
+                        </button>
+                    </div>
+                </div>
+            </article>
+        `;
+    },
+
+    createFrequencyListItem(freq) {
+        // Find if this frequency is pinned
+        let isPinned = false;
+        for (const category in AppState.frequencies.pinned) {
+            if (AppState.frequencies.pinned[category].includes(freq.id)) {
+                isPinned = true;
+                break;
+            }
+        }
+
+        const isPlaying = !!AppState.audio.oscillators[freq.id];
+        const categoryInfo = FrequencySystem.getCategoryInfo(freq.category);
+
+        // Create advanced options if appropriate
+        let advancedOptions = '';
+
+        // Only show advanced options button for frequencies that have modules available
+        if (freq.frequency || freq.type === 'special') {
+            advancedOptions = `
+                <button class="btn btn--advanced">Show Advanced Options</button>
+                <div class="frequency-item__advanced-controls">
+                    ${freq.frequency ? `
+                        <label class="feature-toggle">
+                            <input type="checkbox" class="feature-toggle__input" data-feature="binaural"
+                                ${freq.type === 'binaural' ? 'checked' : ''}>
+                            <span class="feature-toggle__label">Binaural</span>
+                        </label>
+
+                        <label class="feature-toggle">
+                            <input type="checkbox" class="feature-toggle__input" data-feature="solfeggio">
+                            <span class="feature-toggle__label">Solfeggio</span>
+                        </label>
+                    ` : ''}
+
+                    <label class="feature-toggle">
+                        <input type="checkbox" class="feature-toggle__input" data-feature="aleph" data-aleph-type="aleph-null">
+                        <span class="feature-toggle__label">Aleph</span>
+                    </label>
+                </div>
+            `;
+        }
+
+        return `
+            <article class="frequency-item" data-type="${freq.type}">
+                <header class="frequency-item__header">
+                    <h3 class="frequency-item__title">${freq.title}</h3>
+                    <span class="frequency-item__frequency">${AudioSystem.formatFrequency(freq.frequency)}</span>
+                    ${categoryInfo ? `
+                        <span class="category-badge">
+                            ${categoryInfo.name}
+                        </span>
+                    ` : ''}
+                </header>
+                <div class="frequency-item__body">
+                    <p class="frequency-item__description">
+                        ${freq.description}
+                        ${freq.warning ? `⚠️ ${freq.warning}` : ''}
+                    </p>
+                    ${advancedOptions}
+                </div>
+                <div class="frequency-item__actions">
+                    <button class="btn btn--play ${isPlaying ? 'playing' : ''}"
+                        data-id="${freq.id}"
+                        data-type="${freq.type}">
+                        <span class="visually-hidden">${isPlaying ? 'Stop' : 'Play'}</span>
+                        ${isPlaying ? '⏹' : '▶'}
+                    </button>
+                    <button class="btn btn--pin ${isPinned ? 'pinned' : ''}"
+                        data-id="${freq.id}"
+                        data-type="${freq.type}">
+                        <span class="visually-hidden">${isPinned ? 'Unpin' : 'Pin'}</span>
+                        ${isPinned ? '📍' : '📌'}
+                    </button>
+                </div>
+            </article>
+        `;
+    },
+
+    // Clean up event listeners and DOM references
+    cleanup() {
+        // Remove all active listeners
+        this.activeListeners.forEach(cleanup => cleanup());
+        this.activeListeners = [];
+
+        // Clear DOM cache
+        this.clearDOMCache();
+    }
+};
+
+// Export the UISystem object if in a module environment
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { UISystem };
+}
+/**
+ * UI Components
+ * Reusable UI component templates and utilities
+ */
+
+// UI Components - Reusable templates and utilities
+const UIComponents = {
+    // Create a button component
+    createButton({ text, className, icon, ariaLabel, dataAttributes = {} }) {
+        const dataAttrs = Object.entries(dataAttributes)
+            .map(([key, value]) => `data-${key}="${value}"`)
+            .join(' ');
+            
+        return `
+            <button class="${className}" ${ariaLabel ? `aria-label="${ariaLabel}"` : ''} ${dataAttrs}>
+                ${icon ? icon : ''}
+                ${text}
+            </button>
+        `;
+    },
+    
+    // Create a card component
+    createCard({ title, body, footer, className = '', dataAttributes = {} }) {
+        const dataAttrs = Object.entries(dataAttributes)
+            .map(([key, value]) => `data-${key}="${value}"`)
+            .join(' ');
+            
+        return `
+            <div class="card ${className}" ${dataAttrs}>
+                ${title ? `<div class="card__header">${title}</div>` : ''}
+                ${body ? `<div class="card__body">${body}</div>` : ''}
+                ${footer ? `<div class="card__footer">${footer}</div>` : ''}
+            </div>
+        `;
+    },
+    
+    // Create a badge component
+    createBadge({ text, type, className = '' }) {
+        return `<span class="badge badge--${type} ${className}">${text}</span>`;
+    },
+    
+    // Create a toast notification (requires additional JS to show/hide)
+    createToast({ message, type = 'info', duration = 3000 }) {
+        const id = `toast-${Date.now()}`;
+        const toast = document.createElement('div');
+        toast.id = id;
+        toast.className = `toast toast--${type}`;
+        toast.innerHTML = `
+            <div class="toast__content">${message}</div>
+            <button class="toast__close">×</button>
+        `;
+        
+        // Add to DOM
+        document.body.appendChild(toast);
+        
+        // Add event listener for close button
+        const closeBtn = toast.querySelector('.toast__close');
+        const closeHandler = () => {
+            toast.classList.add('toast--hiding');
+            setTimeout(() => {
+                toast.remove();
+            }, 300); // Match CSS transition time
+        };
+        closeBtn.addEventListener('click', closeHandler);
+        
+        // Auto-remove after duration
+        setTimeout(closeHandler, duration);
+        
+        return id;
+    },
+    
+    // Show a toast notification with message
+    showToast(message, type = 'info', duration = 3000) {
+        return this.createToast({ message, type, duration });
+    },
+    
+    // Create a modal dialog
+    createModal({ title, content, actions = [], id, className = '' }) {
+        const modal = document.createElement('div');
+        modal.id = id || `modal-${Date.now()}`;
+        modal.className = `modal ${className}`;
+        
+        modal.innerHTML = `
+            <div class="modal__overlay"></div>
+            <div class="modal__container">
+                <div class="modal__header">
+                    <h2 class="modal__title">${title}</h2>
+                    <button class="modal__close" aria-label="Close modal">×</button>
+                </div>
+                <div class="modal__content">
+                    ${content}
+                </div>
+                ${actions.length > 0 ? `
+                    <div class="modal__actions">
+                        ${actions.map(action => this.createButton(action)).join('')}
+                    </div>
+                ` : ''}
+            </div>
+        `;
+        
+        // Add to DOM but hidden
+        document.body.appendChild(modal);
+        
+        // Setup event handlers
+        const closeBtn = modal.querySelector('.modal__close');
+        const overlay = modal.querySelector('.modal__overlay');
+        
+        const closeModal = () => {
+            modal.classList.remove('modal--visible');
+            setTimeout(() => {
+                modal.remove();
+            }, 300); // Match CSS transition time
+        };
+        
+        closeBtn.addEventListener('click', closeModal);
+        overlay.addEventListener('click', closeModal);
+        
+        // Attach close method to modal
+        modal.close = closeModal;
+        
+        // Show method
+        modal.show = () => {
+            // Small delay to allow browser to process DOM addition
+            setTimeout(() => {
+                modal.classList.add('modal--visible');
+            }, 10);
+        };
+        
+        return modal;
+    },
+    
+    // Show a confirmation dialog
+    confirm({ title, message, confirmText = 'Confirm', cancelText = 'Cancel', onConfirm, onCancel }) {
+        const modal = this.createModal({
+            title,
+            content: `<p>${message}</p>`,
+            actions: [
+                {
+                    text: cancelText,
+                    className: 'btn btn--secondary',
+                    dataAttributes: { action: 'cancel' }
+                },
+                {
+                    text: confirmText,
+                    className: 'btn btn--primary',
+                    dataAttributes: { action: 'confirm' }
+                }
+            ],
+            className: 'modal--confirm'
+        });
+        
+        // Set up action handlers
+        const confirmBtn = modal.querySelector('[data-action="confirm"]');
+        const cancelBtn = modal.querySelector('[data-action="cancel"]');
+        
+        confirmBtn.addEventListener('click', () => {
+            if (onConfirm) onConfirm();
+            modal.close();
+        });
+        
+        cancelBtn.addEventListener('click', () => {
+            if (onCancel) onCancel();
+            modal.close();
+        });
+        
+        // Show the modal
+        modal.show();
+        
+        return modal;
+    }
+};
+
+// Export the UIComponents object if in a module environment
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { UIComponents };
+}
+
+/**
+ * Main Application Entry Point
+ * Initializes and coordinates all subsystems
+ */
+
+// Initialize Core Systems
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize systems in correct order
+    ThemeSystem.init();
+    FrequencySystem.init();
+    UISystem.init();
+
+
+    // Setup audio initialization on first user interaction
+    const initAudio = async () => {
+        try {
+            if (AudioSystem.init()) {
+                document.removeEventListener('click', initAudio);
+                document.removeEventListener('touchstart', initAudio);
+                EventSystem.emit('audioReady');
+            }
+        } catch (error) {
+            console.error('Error initializing audio:', error);
+        }
+    };
+
+    // Listen for user interactions that can initialize audio
+    document.addEventListener('click', initAudio);
+    document.addEventListener('touchstart', initAudio);
+
+    // Set up memory management and periodic cleanup
+    const performMemoryCleanup = () => {
+        // Check if we need to perform GC
+        if (window.performance && window.performance.memory) {
+            const memoryInfo = window.performance.memory;
+            const usedHeapPercentage = memoryInfo.usedJSHeapSize / memoryInfo.jsHeapSizeLimit;
+
+            // If memory usage is high, trigger cleanup
+            if (usedHeapPercentage > AppState.performance.memoryWarningThreshold) {
+                console.log('High memory usage detected, performing cleanup');
+
+                // Clear unnecessary caches
+                if (AudioSystem.precomputedPatterns) {
+                    AudioSystem.precomputedPatterns.clearBuffers();
+                }
+
+                // Clear UI DOM cache
+                UISystem.clearDOMCache();
+
+                // Force garbage collection if available
+                if (window.gc) window.gc();
+
+                // Reset warning flag after cleanup
+                AppState.performance.memoryStatus.warningIssued = false;
+            }
+        }
+    };
+
+    // Set up periodic checks
+    setInterval(performMemoryCleanup, 60000); // Check every minute
+
+    // Handle page visibility changes to manage resources
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+            // Suspend audio context if no tones are playing
+            if (AppState.audio.context &&
+                Object.keys(AppState.audio.oscillators).length === 0) {
+                AppState.audio.context.suspend().catch(err => {
+                    console.warn('Could not suspend audio context:', err);
+                });
+            }
+        } else if (document.visibilityState === 'visible') {
+            // Resume audio context if it was suspended
+            if (AppState.audio.context &&
+                AppState.audio.context.state === 'suspended') {
+                AppState.audio.context.resume().catch(err => {
+                    console.warn('Could not resume audio context:', err);
+                });
+            }
+        }
+    });
+
+    document.querySelector('.legacy-banner-close').addEventListener('click', function() {
+        document.querySelector('.legacy-version-banner').style.display = 'none';
+        localStorage.setItem('legacy-banner-dismissed', 'true');
+    });
+
+    // Only show the banner if it hasn't been dismissed
+    if (localStorage.getItem('legacy-banner-dismissed') !== 'true') {
+        document.querySelector('.legacy-version-banner').style.display = 'flex';
+    } else {
+        document.querySelector('.legacy-version-banner').style.display = 'none';
+    }
+
+    // Set up before unload handler to clean up resources
+    window.addEventListener('beforeunload', () => {
+        // Stop all audio
+        AudioSystem.stopAll();
+
+        // Save user preferences
+        FrequencySystem.savePinnedFrequencies();
+
+        // Clean up event listeners
+        UISystem.cleanup();
+        AudioSystem.cleanup();
+        ThemeSystem.cleanup();
+        EventSystem.cleanup();
+    });
+
+    // Emit ready event
+    EventSystem.emit('appReady');
+});
+
+
+</script>
+</body>
+</html>
