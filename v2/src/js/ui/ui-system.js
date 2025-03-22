@@ -402,6 +402,7 @@ const UISystem = {
         });
 
         // Add event listeners for advanced feature toggles
+        // (These buttons are now hidden by default)
         section.querySelectorAll('.btn--advanced').forEach(button => {
             button.addEventListener('click', () => {
                 const controlsContainer = button.nextElementSibling;
@@ -430,13 +431,15 @@ const UISystem = {
         const isPlaying = !!AppState.audio.oscillators[freq.id];
         const categoryInfo = FrequencySystem.getCategoryInfo(freq.category);
 
-        // Create advanced options if appropriate
+        // Hide advanced options button and controls by default
         let advancedOptions = '';
 
+        // Comment out the advanced options section until functionality is implemented
+        /*
         // Only show advanced options button for frequencies that have modules available
         if (freq.frequency || freq.type === 'special') {
             advancedOptions = `
-                <button class="btn btn--advanced">Show Advanced Options</button>
+                <button class="btn btn--advanced" style="display: none;">Show Advanced Options</button>
                 <div class="frequency-card__advanced-controls">
                     ${freq.frequency ? `
                         <label class="feature-toggle">
@@ -458,6 +461,7 @@ const UISystem = {
                 </div>
             `;
         }
+        */
 
         return `
             <article class="frequency-card" data-type="${freq.type}">
@@ -508,13 +512,15 @@ const UISystem = {
         const isPlaying = !!AppState.audio.oscillators[freq.id];
         const categoryInfo = FrequencySystem.getCategoryInfo(freq.category);
 
-        // Create advanced options if appropriate
+        // Hide advanced options button and controls by default
         let advancedOptions = '';
 
+        // Comment out the advanced options section until functionality is implemented
+        /*
         // Only show advanced options button for frequencies that have modules available
         if (freq.frequency || freq.type === 'special') {
             advancedOptions = `
-                <button class="btn btn--advanced">Show Advanced Options</button>
+                <button class="btn btn--advanced" style="display: none;">Show Advanced Options</button>
                 <div class="frequency-item__advanced-controls">
                     ${freq.frequency ? `
                         <label class="feature-toggle">
@@ -536,6 +542,7 @@ const UISystem = {
                 </div>
             `;
         }
+        */
 
         return `
             <article class="frequency-item" data-type="${freq.type}">
