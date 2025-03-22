@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Binaural Beats & Healing Frequencies</title>
-    
+
     <!-- Core Styles -->
     <style>
         /* Theme System - Base Tokens */
@@ -45,7 +45,7 @@
             --card-bg: var(--light-card-bg);
             --card-border: var(--light-card-border);
             --control-bg: var(--light-control-bg);
-            
+
             /* Functional Colors */
             --primary: hsl(var(--color-primary-h), var(--color-primary-s), var(--color-primary-l));
             --secondary: hsl(var(--color-secondary-h), var(--color-secondary-s), var(--color-secondary-l));
@@ -104,7 +104,7 @@
             font-family: var(--font-family);
             background-color: var(--bg);
             color: var(--text);
-            transition: 
+            transition:
                 background-color var(--transition-normal),
                 color var(--transition-normal);
             margin: 0;
@@ -740,7 +740,7 @@
             margin-bottom: var(--space-lg);
         }
 
-        .info-modal ul, 
+        .info-modal ul,
         .info-modal ol {
             color: var(--text);
             opacity: 0.9;
@@ -1015,7 +1015,7 @@
         // Event System
         const EventSystem = {
             handlers: {},
-            
+
             on(event, handler) {
                 if (!this.handlers[event]) {
                     this.handlers[event] = [];
@@ -1023,13 +1023,13 @@
                 this.handlers[event].push(handler);
                 return () => this.off(event, handler); // Return cleanup function
             },
-            
+
             off(event, handler) {
                 if (this.handlers[event]) {
                     this.handlers[event] = this.handlers[event].filter(h => h !== handler);
                 }
             },
-            
+
             emit(event, data) {
                 if (this.handlers[event]) {
                     this.handlers[event].forEach(handler => {
@@ -1092,9 +1092,9 @@
                         return this.initializeAudioContext();
                     } catch (error) {
                         console.error('Failed to initialize audio context:', error);
-                        EventSystem.emit('audioError', { 
-                            message: 'Failed to initialize audio system. Please ensure your browser supports Web Audio API.', 
-                            error 
+                        EventSystem.emit('audioError', {
+                            message: 'Failed to initialize audio system. Please ensure your browser supports Web Audio API.',
+                            error
                         });
                         return false;
                     }
@@ -1106,29 +1106,29 @@
                 try {
                     const AudioContext = window.AudioContext || window.webkitAudioContext;
                     const context = new AudioContext();
-                    
+
                     if (!context || typeof context.createGain !== 'function') {
                         throw new Error('Invalid Audio Context');
                     }
-                    
+
                     AppState.audio.context = context;
-                    
+
                     const masterGain = context.createGain();
                     if (!masterGain) {
                         throw new Error('Failed to create gain node');
                     }
-                    
+
                     AppState.audio.masterGain = masterGain;
                     AppState.audio.masterGain.gain.value = AppState.audio.volume;
                     AppState.audio.masterGain.connect(AppState.audio.context.destination);
-                    
+
                     // If context is suspended (common in some browsers), try to resume it
                     if (context.state === 'suspended') {
                         context.resume().catch(error => {
                             console.warn('Could not resume audio context:', error);
                         });
                     }
-                    
+
                     AppState.audio.isReady = true;
                     EventSystem.emit('audioReady');
                     return true;
@@ -1142,17 +1142,17 @@
                 try {
                     const oscillator = AppState.audio.context.createOscillator();
                     const gainNode = AppState.audio.context.createGain();
-                    
+
                     oscillator.type = type;
                     oscillator.frequency.value = frequency;
-                    
+
                     // Start with zero gain to prevent clicks
                     gainNode.gain.value = 0;
-                    
+
                     // Connect nodes
                     oscillator.connect(gainNode);
                     gainNode.connect(AppState.audio.masterGain);
-                    
+
                     return { oscillator, gainNode };
                 } catch (error) {
                     console.error('Error creating oscillator:', error);
@@ -1165,20 +1165,20 @@
                 try {
                     // Create merger for stereo output
                     const merger = AppState.audio.context.createChannelMerger(2);
-                    
+
                     // Create oscillators for left and right ears
                     const leftOsc = this.createOscillator(carrierFrequency);
                     const rightOsc = this.createOscillator(carrierFrequency + frequency);
-                    
+
                     if (!leftOsc || !rightOsc) return null;
-                    
+
                     // Reconnect to merger instead of master gain
                     leftOsc.gainNode.disconnect();
                     rightOsc.gainNode.disconnect();
                     leftOsc.gainNode.connect(merger, 0, 0);  // Left channel
                     rightOsc.gainNode.connect(merger, 0, 1); // Right channel
                     merger.connect(AppState.audio.masterGain);
-                    
+
                     return {
                         left: leftOsc,
                         right: rightOsc,
@@ -1210,10 +1210,10 @@
                     if (AppState.audio.context.state === 'suspended') {
                         AppState.audio.context.resume();
                     }
-                    
+
                     // Stop any existing tone with this ID
                     this.stopTone(id);
-                    
+
                     let nodes;
                     if (isBinaural) {
                         nodes = this.createBinauralBeat(frequency, carrierFrequency);
@@ -1282,7 +1282,7 @@
             stopAll() {
                 try {
                     const activeIds = Object.keys(AppState.audio.oscillators);
-                    
+
                     // Immediately stop and disconnect all oscillators
                     activeIds.forEach(id => {
                         const nodes = AppState.audio.oscillators[id];
@@ -1315,7 +1315,7 @@
 
                     // Reset oscillators state
                     AppState.audio.oscillators = {};
-                    
+
                     // Clear active tones container
                     const activeTones = document.querySelector('.active-tones-container');
                     if (activeTones) {
@@ -1335,11 +1335,11 @@
                 try {
                     const newVolume = Math.max(0, Math.min(1, value));
                     AppState.audio.volume = newVolume;
-                    
+
                     if (AppState.audio.masterGain) {
                         this.rampGain(AppState.audio.masterGain.gain, newVolume);
                     }
-                    
+
                     EventSystem.emit('volumeChanged', newVolume);
                     return true;
                 } catch (error) {
@@ -1373,139 +1373,331 @@
             // Core frequency data
             data: {
                 focus: [
-                    {
-                        id: 'deep-focus-40hz',
-                        title: 'Deep Focus',
-                        frequency: 40,
-                        type: 'binaural',
-                        category: 'gamma',
-                        carrierFrequency: 200,
-                        description: 'Enhance mental clarity and focus with gamma waves. Ideal for complex tasks, studying, or when you need peak cognitive performance.',
-                        warning: null
-                    },
-                    {
-                        id: 'flow-state-15hz',
-                        title: 'Flow State',
-                        frequency: 15,
-                        type: 'binaural',
-                        category: 'beta',
-                        carrierFrequency: 200,
-                        description: 'Enter a state of focused productivity. Perfect for sustained attention, problem-solving, and getting in the zone.',
-                        warning: null
-                    }
+                {
+                    id: 'deep-focus-40hz',
+                    title: 'Deep Focus',
+                    frequency: 40,
+                    type: 'binaural',
+                    category: 'gamma',
+                    carrierFrequency: 200,
+                    description: 'Enhance mental clarity and focus with gamma waves. Ideal for complex tasks, studying, or when you need peak cognitive performance.',
+                    warning: null
+                },
+                {
+                    id: 'flow-state-15hz',
+                    title: 'Flow State',
+                    frequency: 15,
+                    type: 'binaural',
+                    category: 'beta',
+                    carrierFrequency: 200,
+                    description: 'Enter a state of focused productivity. Perfect for sustained attention, problem-solving, and getting in the zone.',
+                    warning: null
+                },
+                {
+                    id: 'negativity-741hz',
+                    title: 'Negativity Suppression',
+                    frequency: 741,
+                    type: 'solfeggio',
+                    category: 'healing',
+                    description: 'Remove toxins and solve problems. This frequency helps clear negative energy and promotes expression and solution-finding.',
+                    warning: null
+                },
+                {
+                    id: 'mental-clarity-852hz',
+                    title: 'Mental Clarity',
+                    frequency: 852,
+                    type: 'solfeggio',
+                    category: 'healing',
+                    description: 'Awaken intuition and enhance clarity of thought. This frequency helps return to spiritual order and strengthens perception.',
+                    warning: null
+                },
+                {
+                    id: 'aleph-focus',
+                    title: 'Aleph Clarity',
+                    frequency: null,
+                    type: 'special',
+                    category: 'transcendental',
+                    description: 'Using mathematical patterns based on Aleph-null to create sustained attention through infinite recursion principles.',
+                    warning: 'Creates a unique cognitive state that may initially feel unfamiliar. Start with short sessions.'
+                }
                 ],
                 meditation: [
-                    {
-                        id: 'deep-meditation-6hz',
-                        title: 'Deep Meditation',
-                        frequency: 6,
-                        type: 'binaural',
-                        category: 'theta',
-                        carrierFrequency: 200,
-                        description: 'Access profound meditative states easily. Helps quiet mental chatter and access deeper awareness.',
-                        warning: null
-                    },
-                    {
-                        id: 'creative-insight-4.5hz',
-                        title: 'Creative Insight',
-                        frequency: 4.5,
-                        type: 'binaural',
-                        category: 'theta',
-                        carrierFrequency: 200,
-                        description: 'Unlock creative inspiration and intuitive insights. Perfect for brainstorming, artistic work, or problem-solving.',
-                        warning: null
-                    },
-                    {
-                        id: 'mindful-presence-7.83hz',
-                        title: 'Earth Resonance',
-                        frequency: 7.83,
-                        type: 'special',
-                        category: 'earth',
-                        description: "Align with Earth's natural frequency for grounding and balance. Helps reduce stress and restore natural rhythms.",
-                        warning: 'This subtle frequency works through resonance rather than direct hearing.'
-                    }
+                {
+                    id: 'deep-meditation-6hz',
+                    title: 'Deep Meditation',
+                    frequency: 6,
+                    type: 'binaural',
+                    category: 'theta',
+                    carrierFrequency: 200,
+                    description: 'Access profound meditative states easily. Helps quiet mental chatter and access deeper awareness.',
+                    warning: null
+                },
+                {
+                    id: 'creative-insight-4.5hz',
+                    title: 'Creative Insight',
+                    frequency: 4.5,
+                    type: 'binaural',
+                    category: 'theta',
+                    carrierFrequency: 200,
+                    description: 'Unlock creative inspiration and intuitive insights. Perfect for brainstorming, artistic work, or problem-solving.',
+                    warning: null
+                },
+                {
+                    id: 'mindful-presence-7.83hz',
+                    title: 'Earth Resonance',
+                    frequency: 7.83,
+                    type: 'special',
+                    category: 'earth',
+                    description: "Align with Earth's natural frequency for grounding and balance. Helps reduce stress and restore natural rhythms.",
+                    warning: 'This subtle frequency works through resonance rather than direct hearing.'
+                },
+                {
+                    id: 'spiritual-connection-963hz',
+                    title: 'Crown Connection',
+                    frequency: 963,
+                    type: 'solfeggio',
+                    category: 'healing',
+                    description: 'Connect with higher awareness and spiritual insight. Creates a sense of oneness and transcendent peace.',
+                    warning: null
+                },
+                {
+                    id: 'aleph-infinity',
+                    title: 'Aleph Consciousness',
+                    frequency: null,
+                    type: 'special',
+                    category: 'transcendental',
+                    description: 'Based on the concept of Aleph from set theory, representing infinite consciousness. This frequency pattern creates a mathematical approach to higher awareness states.',
+                    warning: 'Not a single frequency but a complex pattern designed to evoke experiences of boundlessness and non-duality.'
+                }
                 ],
                 sleep: [
-                    {
-                        id: 'deep-sleep-2hz',
-                        title: 'Sleep Sanctuary',
-                        frequency: 2,
-                        type: 'binaural',
-                        category: 'delta',
-                        carrierFrequency: 200,
-                        description: 'Guide your brain into deep, restorative sleep patterns. Ideal for overcoming insomnia or enhancing sleep quality.',
-                        warning: null
-                    },
-                    {
-                        id: 'twilight-3.5hz',
-                        title: 'Twilight Transition',
-                        frequency: 3.5,
-                        type: 'binaural',
-                        category: 'delta',
-                        carrierFrequency: 200,
-                        description: 'Ease the transition from wakefulness to sleep. Perfect for power naps or preparing for deep rest.',
-                        warning: null
-                    }
+                {
+                    id: 'deep-sleep-2hz',
+                    title: 'Sleep Sanctuary',
+                    frequency: 2,
+                    type: 'binaural',
+                    category: 'delta',
+                    carrierFrequency: 200,
+                    description: 'Guide your brain into deep, restorative sleep patterns. Ideal for overcoming insomnia or enhancing sleep quality.',
+                    warning: null
+                },
+                {
+                    id: 'twilight-3.5hz',
+                    title: 'Twilight Transition',
+                    frequency: 3.5,
+                    type: 'binaural',
+                    category: 'delta',
+                    carrierFrequency: 200,
+                    description: 'Ease the transition from wakefulness to sleep. Perfect for power naps or preparing for deep rest.',
+                    warning: null
+                },
+                {
+                    id: 'sleep-harmony-639hz',
+                    title: 'Connection & Harmony',
+                    frequency: 639,
+                    type: 'solfeggio',
+                    category: 'healing',
+                    description: 'Enhances relationships, connection, and harmony. Helps resolve conflicts and promotes peaceful sleep through balanced emotions.',
+                    warning: null
+                },
+                {
+                    id: 'emotional-release-396hz',
+                    title: 'Emotional Freedom',
+                    frequency: 396,
+                    type: 'solfeggio',
+                    category: 'healing',
+                    description: 'Release emotional blockages and transform guilt into joy. Supports liberation from limiting patterns that may disturb sleep.',
+                    warning: null
+                }
                 ],
                 relaxation: [
-                    {
-                        id: 'calm-clarity-10hz',
-                        title: 'Calm Clarity',
-                        frequency: 10,
-                        type: 'binaural',
-                        category: 'alpha',
-                        carrierFrequency: 200,
-                        description: 'Find your center with alert relaxation. Ideal for reading, light meditation, or unwinding while staying present.',
-                        warning: null
-                    },
-                    {
-                        id: 'stress-relief-432hz',
-                        title: 'Harmonic Balance',
-                        frequency: 432,
-                        type: 'solfeggio',
-                        category: 'healing',
-                        description: 'Experience natural harmony and deep relaxation. Many find this frequency more pleasing than standard tuning.',
-                        warning: null
-                    }
+                {
+                    id: 'calm-clarity-10hz',
+                    title: 'Calm Clarity',
+                    frequency: 10,
+                    type: 'binaural',
+                    category: 'alpha',
+                    carrierFrequency: 200,
+                    description: 'Find your center with alert relaxation. Ideal for reading, light meditation, or unwinding while staying present.',
+                    warning: null
+                },
+                {
+                    id: 'stress-relief-432hz',
+                    title: 'Harmonic Balance',
+                    frequency: 432,
+                    type: 'solfeggio',
+                    category: 'healing',
+                    description: 'Experience natural harmony and deep relaxation. Many find this frequency more pleasing than standard tuning.',
+                    warning: null
+                },
+                {
+                    id: 'peaceful-mind-417hz',
+                    title: 'Change Facilitator',
+                    frequency: 417,
+                    type: 'solfeggio',
+                    category: 'healing',
+                    description: 'Facilitates change and breaks down energy blockages. Helps dissolve crystallized emotional patterns for deeper relaxation.',
+                    warning: null
+                },
+                {
+                    id: 'aleph-zero',
+                    title: 'Aleph Foundation',
+                    frequency: null,
+                    type: 'special',
+                    category: 'transcendental',
+                    description: 'Working with the concept of countable infinity, this pattern helps establish a stable foundation for relaxation by balancing finite and infinite perspectives.',
+                    warning: 'A gentle introduction to Aleph patterns, suitable for relaxation practices.'
+                }
                 ],
                 healing: [
-                    {
-                        id: 'cellular-harmony-528hz',
-                        title: 'DNA Harmony',
-                        frequency: 528,
-                        type: 'solfeggio',
-                        category: 'healing',
-                        description: 'Known as the "miracle tone" for its potential cellular healing effects. Associated with transformation and repair.',
-                        warning: null
-                    },
-                    {
-                        id: 'pain-relief-174hz',
-                        title: 'Gentle Relief',
-                        frequency: 174,
-                        type: 'special',
-                        category: 'healing',
-                        description: 'Natural frequency associated with pain reduction and muscle relaxation. Helps ease physical tension.',
-                        warning: null
-                    },
-                    {
-                        id: 'emotional-release-396hz',
-                        title: 'Emotional Freedom',
-                        frequency: 396,
-                        type: 'solfeggio',
-                        category: 'healing',
-                        description: 'Release emotional blockages and transform guilt into joy. Supports liberation from limiting patterns.',
-                        warning: null
-                    },
-                    {
-                        id: 'spiritual-connection-963hz',
-                        title: 'Crown Connection',
-                        frequency: 963,
-                        type: 'solfeggio',
-                        category: 'healing',
-                        description: 'Connect with higher awareness and spiritual insight. Creates a sense of oneness and transcendent peace.',
-                        warning: null
-                    }
+                {
+                    id: 'cellular-harmony-528hz',
+                    title: 'DNA Harmony',
+                    frequency: 528,
+                    type: 'solfeggio',
+                    category: 'healing',
+                    description: 'Known as the "miracle tone" for its potential cellular healing effects. Associated with transformation and repair.',
+                    warning: null
+                },
+                {
+                    id: 'pain-relief-174hz',
+                    title: 'Gentle Relief',
+                    frequency: 174,
+                    type: 'special',
+                    category: 'healing',
+                    description: 'Natural frequency associated with pain reduction and muscle relaxation. Helps ease physical tension.',
+                    warning: null
+                },
+                {
+                    id: 'emotional-release-396hz',
+                    title: 'Emotional Freedom',
+                    frequency: 396,
+                    type: 'solfeggio',
+                    category: 'healing',
+                    description: 'Release emotional blockages and transform guilt into joy. Supports liberation from limiting patterns.',
+                    warning: null
+                },
+                {
+                    id: 'spiritual-connection-963hz',
+                    title: 'Crown Connection',
+                    frequency: 963,
+                    type: 'solfeggio',
+                    category: 'healing',
+                    description: 'Connect with higher awareness and spiritual insight. Creates a sense of oneness and transcendent peace.',
+                    warning: null
+                },
+                {
+                    id: 'intuition-852hz',
+                    title: 'Third Eye Activation',
+                    frequency: 852,
+                    type: 'solfeggio',
+                    category: 'healing',
+                    description: 'Awakens intuition and inner wisdom. Helps return to spiritual order and strengthens the energy of the third eye chakra.',
+                    warning: null
+                },
+                {
+                    id: 'relationship-healing-639hz',
+                    title: 'Relationship Harmony',
+                    frequency: 639,
+                    type: 'solfeggio',
+                    category: 'healing',
+                    description: 'Enhances communication, understanding, and harmonious connections. Balances emotions and relationships.',
+                    warning: null
+                },
+                {
+                    id: 'aleph-null',
+                    title: 'Aleph Healing Matrix',
+                    frequency: null,
+                    type: 'special',
+                    category: 'transcendental',
+                    description: 'Using the mathematical concept of Aleph-null (smallest infinite cardinal), this matrix creates healing through complex frequency patterns that work on multiple dimensions simultaneously.',
+                    warning: 'This is an advanced frequency pattern that may cause temporary disorientation as it works on multiple levels of consciousness.'
+                }
+                ],
+                transcendental: [
+                {
+                    id: 'aleph-one',
+                    title: 'Aleph Continuum',
+                    frequency: null,
+                    type: 'special',
+                    category: 'transcendental',
+                    description: 'Based on Cantor\'s first transfinite number, this frequency pattern works with the concept of uncountable infinity to expand awareness beyond conventional boundaries.',
+                    warning: 'May temporarily alter perception of time and space. Use in a safe, comfortable environment.'
+                },
+                {
+                    id: 'aleph-two',
+                    title: 'Aleph Expansion',
+                    frequency: null,
+                    type: 'special',
+                    category: 'transcendental',
+                    description: 'Representing higher-order infinity, this pattern works with the mathematical concept of power sets to create exponential expansion of consciousness.',
+                    warning: 'Advanced users only. May produce profound non-ordinary states of consciousness.'
+                },
+                {
+                    id: 'aleph-integration',
+                    title: 'Aleph Integration',
+                    frequency: null,
+                    type: 'special',
+                    category: 'transcendental',
+                    description: 'A balanced matrix of Aleph patterns designed to integrate transcendental experiences with everyday consciousness, helping to ground insights from non-ordinary states.',
+                    warning: 'Best used as a closing practice after other Aleph sessions to integrate experiences.'
+                },
+                {
+                    id: 'unified-field-infinity',
+                    title: 'Unified Field',
+                    frequency: null,
+                    type: 'special',
+                    category: 'transcendental',
+                    description: 'Combines principles from all Solfeggio frequencies with Aleph mathematical patterns to create a unified field of consciousness that harmonizes all energy centers.',
+                    warning: 'Our most advanced frequency matrix. Start with shorter sessions of 5-10 minutes.'
+                }
                 ]
+            },
+
+            // Frequency scales and definitions
+            reference: {
+                // Complete Solfeggio Frequency Scale
+                solfeggio: {
+                ut: 396, // Liberating guilt and fear
+                re: 417, // Undoing situations and facilitating change
+                mi: 528, // Transformation and miracles (DNA repair)
+                fa: 639, // Connecting/relationships
+                sol: 741, // Awakening intuition
+                la: 852, // Returning to spiritual order
+                si: 963  // Awakening perfect state/higher consciousness
+                },
+
+                // Brainwave Frequencies
+                brainwaves: {
+                delta: '0.5-4 Hz', // Deep sleep, healing
+                theta: '4-8 Hz',   // Meditation, creativity
+                alpha: '8-13 Hz',  // Relaxation, learning
+                beta: '13-30 Hz',  // Active thinking, focus
+                gamma: '30-100 Hz' // Higher processing, insight
+                },
+
+                // Aleph Frequency Information
+                aleph: {
+                description: "The Aleph frequencies are based on mathematical concepts of infinity from set theory. Unlike conventional frequencies measured in Hertz, Aleph patterns work with complex mathematical relationships to create experiences that transcend ordinary perception. These are not single tones but rather matrices of frequency relationships designed to evoke experiences of boundlessness and non-duality.",
+                types: [
+                    {
+                    name: "Aleph-null (ℵ₀)",
+                    concept: "Countable infinity",
+                    application: "Foundation for expanded awareness"
+                    },
+                    {
+                    name: "Aleph-one (ℵ₁)",
+                    concept: "Uncountable infinity (continuum)",
+                    application: "Transcendence of conventional boundaries"
+                    },
+                    {
+                    name: "Aleph-two (ℵ₂)",
+                    concept: "Power set of continuum",
+                    application: "Exponential consciousness expansion"
+                    }
+                ],
+                warning: "The Aleph series represents advanced consciousness technology and should be approached gradually. These are not conventional frequencies but rather mathematical patterns designed to evoke specific states of awareness."
+                }
             },
 
             init() {
@@ -1544,7 +1736,7 @@
             searchFrequencies(query) {
                 query = query.toLowerCase().trim();
                 const results = [];
-                
+
                 Object.keys(this.data).forEach(type => {
                     this.data[type].forEach(freq => {
                         if (
@@ -1556,7 +1748,7 @@
                         }
                     });
                 });
-                
+
                 return results;
             },
 
@@ -1706,26 +1898,26 @@
             initializeControlBar() {
                 const controlBar = document.querySelector('.control-bar');
                 const container = controlBar.querySelector('.container');
-                
+
                 // Create control bar components
                 container.innerHTML = `
                     <div class="control-bar__section control-bar__volume">
                         <label for="volume" class="visually-hidden">Volume</label>
-                        <input type="range" 
-                            id="volume" 
-                            class="volume-slider" 
-                            min="0" 
-                            max="1" 
-                            step="0.01" 
+                        <input type="range"
+                            id="volume"
+                            class="volume-slider"
+                            min="0"
+                            max="1"
+                            step="0.01"
                             value="${AppState.audio.volume}">
                         <span class="volume-display">${Math.round(AppState.audio.volume * 100)}%</span>
                     </div>
 
                     <div class="control-bar__section control-bar__search">
                         <div class="search-container">
-                            <input type="text" 
-                                id="frequency-search" 
-                                class="search-input" 
+                            <input type="text"
+                                id="frequency-search"
+                                class="search-input"
                                 placeholder="Search frequencies..."
                                 value="${AppState.frequencies.filter}">
                             <button class="search-clear ${AppState.frequencies.filter ? 'visible' : ''}" aria-label="Clear search">
@@ -1951,7 +2143,7 @@
                 // Search
                 const searchInput = document.getElementById('frequency-search');
                 const searchClear = document.querySelector('.search-clear');
-                
+
                 searchInput.addEventListener('input', (e) => {
                     const value = e.target.value;
                     AppState.frequencies.filter = value;
@@ -2033,7 +2225,7 @@
                 // First render pinned frequencies if any exist
                 const pinnedFreqs = FrequencySystem.getPinnedFrequencies();
                 const hasPinnedFreqs = Object.values(pinnedFreqs).some(arr => arr.length > 0);
-                
+
                 if (hasPinnedFreqs) {
                     const pinnedSection = this.createSection({
                         title: 'Pinned Frequencies',
@@ -2046,11 +2238,11 @@
                 // Render each frequency type section
                 ['focus', 'meditation', 'sleep', 'relaxation', 'healing'].forEach(type => {
                     let frequencies = FrequencySystem.getFrequencies(type);
-                    
+
                     // Apply search filter if exists
                     if (AppState.frequencies.filter) {
                         const query = AppState.frequencies.filter.toLowerCase();
-                        frequencies = frequencies.filter(freq => 
+                        frequencies = frequencies.filter(freq =>
                             freq.title.toLowerCase().includes(query) ||
                             freq.description.toLowerCase().includes(query) ||
                             freq.frequency.toString().includes(query)
@@ -2075,16 +2267,16 @@
             createSection({ title, description, frequencies }) {
                 const section = document.createElement('section');
                 section.className = 'frequency-section';
-                
+
                 section.innerHTML = `
                     <div class="frequency-section__header">
                         <h2 class="frequency-section__title">${title}</h2>
                         ${description ? `<p class="frequency-section__description">${description}</p>` : ''}
                     </div>
                     <div class="frequency-${AppState.ui.view === 'cards' ? 'grid' : 'list'}">
-                        ${frequencies.map(freq => 
-                            AppState.ui.view === 'cards' 
-                                ? this.createFrequencyCard(freq) 
+                        ${frequencies.map(freq =>
+                            AppState.ui.view === 'cards'
+                                ? this.createFrequencyCard(freq)
                                 : this.createFrequencyListItem(freq)
                         ).join('')}
                     </div>
@@ -2095,7 +2287,7 @@
                     button.addEventListener('click', () => {
                         const { id, type } = button.dataset;
                         const isPlaying = button.classList.contains('playing');
-                        
+
                         if (isPlaying) {
                             AudioSystem.stopTone(id);
                             button.classList.remove('playing');
@@ -2106,7 +2298,7 @@
                                 isBinaural: type === 'binaural',
                                 carrierFrequency: freq.carrierFrequency
                             });
-                            
+
                             if (success) {
                                 button.classList.add('playing');
                                 button.innerHTML = `<span class="visually-hidden">Stop</span>⏹`;
@@ -2119,7 +2311,7 @@
                     button.addEventListener('click', () => {
                         const { id, type } = button.dataset;
                         const isPinned = button.classList.contains('pinned');
-                        
+
                         if (isPinned) {
                             EventSystem.emit('frequencyUnpinned', { id, type });
                         } else {
@@ -2228,7 +2420,7 @@
             ThemeSystem.init();
             FrequencySystem.init();
             UISystem.init();
-            
+
             // Setup audio initialization on first user interaction
             const initAudio = async () => {
                 try {
@@ -2241,11 +2433,11 @@
                     console.error('Error initializing audio:', error);
                 }
             };
-            
+
             // Listen for user interactions that can initialize audio
             document.addEventListener('click', initAudio);
             document.addEventListener('touchstart', initAudio);
-            
+
             // Emit ready event
             EventSystem.emit('appReady');
 
@@ -2258,11 +2450,11 @@
             const themeToggleBtn = document.getElementById('themeToggle');
             themeToggleBtn.addEventListener('click', () => {
                 ThemeSystem.toggleTheme();
-                themeToggleBtn.querySelector('.theme-toggle-icon').textContent = 
+                themeToggleBtn.querySelector('.theme-toggle-icon').textContent =
                     AppState.ui.theme === 'light' ? '🌙' : '☀️';
             });
             // Set initial icon
-            themeToggleBtn.querySelector('.theme-toggle-icon').textContent = 
+            themeToggleBtn.querySelector('.theme-toggle-icon').textContent =
                 AppState.ui.theme === 'light' ? '☀️' : '🌙';
 
             // View toggle
@@ -2272,12 +2464,12 @@
                     const view = button.dataset.view;
                     AppState.ui.view = view;
                     localStorage.setItem('view', view);
-                    
+
                     // Update button states
                     viewButtons.forEach(btn => {
                         btn.classList.toggle('active', btn.dataset.view === view);
                     });
-                    
+
                     UISystem.render();
                     EventSystem.emit('viewChanged', view);
                 });
@@ -2307,4 +2499,4 @@
         });
     </script>
 </body>
-</html> 
+</html>
