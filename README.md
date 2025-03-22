@@ -15,12 +15,16 @@ A web-based application for generating binaural beats, solfeggio frequencies, al
 - 🔄 Stackable audio modules
 - 🎧 Real-time frequency monitoring
 - 🔋 Memory-efficient for long sessions
+- 🔄 Works across all modern browsers
+- 🔊 Built-in audio clipping prevention
+- 📊 Automatic device capability detection
+- 🚀 Dynamic performance adjustments
 
 ## Getting Started
 
 ### Running Locally
 
-1. **Desktop**: Simply drag `index.html` into Chrome/Edge
+1. **Desktop**: Simply drag `index.html` into any modern browser (Chrome, Firefox, Safari, Edge)
 2. **iOS**: Save to Files app and open with Safari
 3. **Android**: Open with Chrome from Downloads
 
@@ -65,6 +69,7 @@ For binaural beats to work effectively, stereo headphones are required. The effe
 - **Aleph Frequencies**: Experience mathematical infinity patterns
 - **Solfeggio Tuning**: Traditional healing frequency system
 - **Resource Management**: Optimized for long listening sessions
+- **Dynamic Quality**: Automatically adjusts based on your device capabilities
 
 ## Technical Architecture
 
@@ -80,10 +85,16 @@ The application uses a modular architecture with several key systems:
 - **UISystem**: Handles interface rendering and interaction
 - **EventSystem**: Coordinates communication between components
 - **Build System**: Combines modules into a single deployable file
+- **Memory Management**: Optimizes resource usage and prevents audio glitches
 
-### For AudioWorklet Users
+## Browser Compatibility
 
-The application uses AudioWorklet for advanced pattern generation. This provides better performance and more complex patterns but requires a modern browser.
+The application is designed for maximum compatibility across browsers:
+- Chrome/Edge: Full support
+- Firefox: Full support
+- Safari: Full support
+- Mobile browsers: Full support with adaptive quality
+- Older browsers: Basic functionality supported if Web Audio API is available
 
 ## Development
 
@@ -107,8 +118,6 @@ src/
 │   │   │   ├── binaural.js        # Binaural beat generator
 │   │   │   ├── solfeggio.js       # Solfeggio frequency system
 │   │   │   └── aleph.js           # Mathematical pattern generator
-│   │   └── worklets/
-│   │       └── aleph-processor.js # Advanced pattern processor
 │   ├── data/
 │   │   └── frequency-system.js    # Frequency data management
 │   └── ui/
@@ -139,7 +148,7 @@ MIT License - See LICENSE file for details
 
 ## Acknowledgments
 
-- Web Audio API and AudioWorklet
+- Web Audio API
 - Modern browser capabilities
 - Scientific research on brainwave entrainment
 - Traditional healing frequency systems

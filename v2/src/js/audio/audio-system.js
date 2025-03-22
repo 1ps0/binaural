@@ -1,18 +1,16 @@
 /**
  * Audio System
  * Core audio processing and management
+ * Enhanced for maximum compatibility and memory management
  */
 
 // Audio System
 const AudioSystem = {
-    // Worklet management
-    workletModulesLoaded: false,
-    workletPromises: {},
-
     // Resource management
     resourceManagement: {
         activeNodes: new Map(),
         maxActiveTones: 8, // Hard limit for simultaneous tones
+        memoryCheckInterval: null,
 
         registerChain(id, chain) {
             this.activeNodes.set(id, {
@@ -21,10 +19,111 @@ const AudioSystem = {
             });
 
             this.enforceResourceLimits();
+            
+            // Start memory monitoring if not already running
+            if (!this.memoryCheckInterval) {
+                this.startMemoryMonitoring();
+            }
         },
 
         unregisterChain(id) {
             this.activeNodes.delete(id);
+            
+            // If no active nodes, stop memory monitoring
+            if (this.activeNodes.size === 0) {
+                this.stopMemoryMonitoring();
+            }
+            
+            // Update last tone stopped time for buffer cleanup timing
+            AppState.audio.lastToneStoppedTime = Date.now();
+        },
+        
+        // Start periodic memory monitoring
+        startMemoryMonitoring() {
+            if (this.memoryCheckInterval) {
+                clearInterval(this.memoryCheckInterval);
+            }
+            
+            this.memoryCheckInterval = setInterval(() => {
+                this.checkMemoryUsage();
+            }, 10000); // Check every 10 seconds when active
+        },
+        
+        // Stop memory monitoring when not needed
+        stopMemoryMonitoring() {
+            if (this.memoryCheckInterval) {
+                clearInterval(this.memoryCheckInterval);
+                this.memoryCheckInterval = null;
+            }
+        },
+        
+        // Monitor memory usage and take action if needed
+        checkMemoryUsage() {
+            if (window.performance && window.performance.memory) {
+                const memInfo = window.performance.memory;
+                const usedHeapPercentage = memInfo.usedJSHeapSize / memInfo.jsHeapSizeLimit;
+                
+                // Critical memory pressure - take immediate action
+                if (usedHeapPercentage > 0.85) {
+                    console.warn("Critical memory pressure detected");
+                    
+                    // Stop oldest tones if we have more than 2
+                    if (this.activeNodes.size > 2) {
+                        // Sort by creation time
+                        const entries = Array.from(this.activeNodes.entries())
+                            .sort((a, b) => a[1].createdAt - b[1].createdAt);
+                            
+                        // Stop oldest 50% of tones
+                        const stopCount = Math.ceil(entries.length / 2);
+                        for (let i = 0; i < stopCount; i++) {
+                            const [id, data] = entries[i];
+                            console.log(`Emergency stopping tone ${id} due to memory pressure`);
+                            AudioSystem.stopTone(id);
+                            this.activeNodes.delete(id);
+                            EventSystem.emit('resourceLimitReached', {
+                                id,
+                                message: 'High memory usage detected. Some tones have been stopped automatically.'
+                            });
+                        }
+                    }
+                    
+                    // Clean precomputed patterns
+                    if (AudioSystem.precomputedPatterns) {
+                        AudioSystem.precomputedPatterns.clearBuffers();
+                    }
+                    
+                    // Force garbage collection if available
+                    if (window.gc) window.gc();
+                }
+                // High memory pressure - reduce complexity
+                else if (usedHeapPercentage > 0.7) {
+                    console.warn("High memory pressure detected");
+                    
+                    // If multiple aleph patterns are running, stop the oldest
+                    let alephPatternCount = 0;
+                    let oldestAlephId = null;
+                    let oldestTime = Date.now();
+                    
+                    this.activeNodes.forEach((data, id) => {
+                        if (id.includes('aleph')) {
+                            alephPatternCount++;
+                            if (data.createdAt < oldestTime) {
+                                oldestTime = data.createdAt;
+                                oldestAlephId = id;
+                            }
+                        }
+                    });
+                    
+                    if (alephPatternCount > 1 && oldestAlephId) {
+                        console.log(`Stopping oldest aleph pattern ${oldestAlephId} due to memory pressure`);
+                        AudioSystem.stopTone(oldestAlephId);
+                        EventSystem.emit('resourceLimitReached', {
+                            id: oldestAlephId,
+                            message: 'Multiple complex patterns detected. Oldest pattern stopped to conserve memory.'
+                        });
+                    }
+                }
+            }
         },
 
         // Enforce resource limits by stopping oldest tones if needed
@@ -59,12 +158,12 @@ const AudioSystem = {
 
             AppState.audio.lastResourceCheck = now;
 
-            // Check for long-running tones (over 1 hour) and clean them up
+            // Check for long-running tones (over 30 minutes) and clean them up
             let cleanupNeeded = false;
 
             this.activeNodes.forEach((data, id) => {
-                // Check if node has been active for more than an hour
-                if (now - data.createdAt > 3600000) {
+                // Check if node has been active for more than 30 minutes
+                if (now - data.createdAt > 1800000) {
                     console.log(`Cleaning up long-running tone ${id}`);
                     AudioSystem.stopTone(id);
                     this.activeNodes.delete(id);
@@ -72,6 +171,21 @@ const AudioSystem = {
                     EventSystem.emit('autoCleanup', { id, reason: 'long-running' });
                 }
             });
+            
+            // Check for unused buffer resources
+            if (AudioSystem.precomputedPatterns) {
+                // If no tones playing for 5 minutes, clear all buffers
+                if (this.activeNodes.size === 0 && 
+                    AppState.audio.lastToneStoppedTime && 
+                    now - AppState.audio.lastToneStoppedTime > 300000) {
+                    AudioSystem.precomputedPatterns.clearBuffers();
+                    cleanupNeeded = true;
+                } else {
+                    // Otherwise just clean unused buffers
+                    const cleared = AudioSystem.precomputedPatterns.cleanUnusedBuffers();
+                    if (cleared > 0) cleanupNeeded = true;
+                }
+            }
 
             if (cleanupNeeded) {
                 // Attempt to trigger garbage collection
@@ -96,7 +210,7 @@ const AudioSystem = {
     // Buffer management
     bufferManagement: {
         defaultSize: 1024,
-        maxSize: 16384,
+        maxSize: 8192, // Reduced from 16384 for better compatibility
         currentSize: 1024,
 
         // Calculate optimal buffer size based on complexity
@@ -105,11 +219,11 @@ const AudioSystem = {
             let size = this.defaultSize;
 
             // Increase for module count
-            size += moduleCount * 256;
+            size += moduleCount * 128; // Reduced from 256
 
-            // Significantly increase for Aleph patterns
+            // Moderately increase for Aleph patterns (less than before)
             if (hasAleph) {
-                size += 2048;
+                size += 1024; // Reduced from 2048
             }
 
             // Cap at maximum
@@ -139,7 +253,11 @@ const AudioSystem = {
     initializeAudioContext() {
         try {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
-            const context = new AudioContext();
+            const context = new AudioContext({
+                // Use conservative settings for better compatibility
+                latencyHint: 'playback',
+                sampleRate: this.getSafeSampleRate()
+            });
 
             if (!context || typeof context.createGain !== 'function') {
                 throw new Error('Invalid Audio Context');
@@ -152,9 +270,21 @@ const AudioSystem = {
                 throw new Error('Failed to create gain node');
             }
 
+            // Add a master compressor to prevent audio clipping
+            const compressor = context.createDynamicsCompressor();
+            compressor.threshold.value = -15;
+            compressor.knee.value = 30;
+            compressor.ratio.value = 12;
+            compressor.attack.value = 0.003;
+            compressor.release.value = 0.25;
+            
             AppState.audio.masterGain = masterGain;
+            AppState.audio.masterCompressor = compressor;
+            
+            // Connect chain: masterGain -> compressor -> destination
             AppState.audio.masterGain.gain.value = AppState.audio.volume;
-            AppState.audio.masterGain.connect(AppState.audio.context.destination);
+            AppState.audio.masterGain.connect(compressor);
+            compressor.connect(AppState.audio.context.destination);
 
             // If context is suspended (common in some browsers), try to resume it
             if (context.state === 'suspended') {
@@ -164,6 +294,10 @@ const AudioSystem = {
             }
 
             AppState.audio.isReady = true;
+            
+            // Add lastToneStoppedTime for buffer management
+            AppState.audio.lastToneStoppedTime = Date.now();
+            
             EventSystem.emit('audioReady');
 
             // Set up periodic resource checks
@@ -176,6 +310,35 @@ const AudioSystem = {
             console.error('Error initializing audio context:', error);
             return false;
         }
+    },
+    
+    // Get a safe sample rate based on device capabilities
+    getSafeSampleRate() {
+        // Default to 44.1kHz for compatibility
+        const defaultRate = 44100;
+        
+        try {
+            // Check if AudioContext is available
+            if (window.AudioContext || window.webkitAudioContext) {
+                // Create a temporary context to check supported sample rate
+                const tempContext = new (window.AudioContext || window.webkitAudioContext)();
+                const deviceRate = tempContext.sampleRate;
+                
+                // Clean up temp context
+                if (tempContext.close) {
+                    tempContext.close();
+                }
+                
+                // Use device rate if it's reasonable (between 22.05kHz and 48kHz)
+                if (deviceRate >= 22050 && deviceRate <= 48000) {
+                    return deviceRate;
+                }
+            }
+        } catch (e) {
+            console.warn('Error checking sample rate:', e);
+        }
+        
+        return defaultRate;
     },
 
     // Create a basic oscillator
@@ -233,7 +396,7 @@ const AudioSystem = {
         }
     },
 
-    // Add this function to the AudioSystem object near the startTone function:
+    // Create a standard Aleph pattern using oscillators (no worklet)
     startAlephPattern(id, patternType, options = {}) {
         try {
             // Ensure audio context is initialized and resumed
@@ -252,13 +415,13 @@ const AudioSystem = {
 
             // Create Aleph module
             const ctx = AppState.audio.context;
-            const alephModule = new this.AudioModules.AlephModule(ctx, patternType);
-
+            
             // Create a carrier to base the pattern on
             const baseFreq = 432; // Default base frequency
             const carrier = new this.AudioModules.CarrierModule(ctx, baseFreq);
-
-            // Apply the Aleph pattern to the carrier
+            
+            // Create Aleph module and apply to carrier
+            const alephModule = new this.AudioModules.AlephModule(ctx, patternType);
             alephModule.apply(carrier);
 
             // Create master gain
@@ -304,7 +467,7 @@ const AudioSystem = {
         }
     },
 
-    // Add this function to handle stopping Aleph patterns
+    // Handle stopping Aleph patterns
     stopPatternTone(id) {
         try {
             const pattern = AppState.audio.patternOscillators[id];
@@ -494,6 +657,9 @@ const AudioSystem = {
                 activeTones.innerHTML = '';
             }
 
+            // Update last tone stopped time
+            AppState.audio.lastToneStoppedTime = Date.now();
+            
             EventSystem.emit('allTonesStopped');
         } catch (error) {
             console.error('Error in stopAll:', error);
@@ -561,8 +727,23 @@ const AudioSystem = {
             }
 
             // Clear references to allow garbage collection
+            if (AppState.audio.masterCompressor) {
+                AppState.audio.masterCompressor.disconnect();
+            }
+            
             if (AppState.audio.masterGain) {
                 AppState.audio.masterGain.disconnect();
+            }
+            
+            // If precomputed patterns exist, clear them
+            if (this.precomputedPatterns) {
+                this.precomputedPatterns.clearBuffers();
+            }
+            
+            // Stop any memory monitoring
+            if (this.resourceManagement.memoryCheckInterval) {
+                clearInterval(this.resourceManagement.memoryCheckInterval);
+                this.resourceManagement.memoryCheckInterval = null;
             }
 
             EventSystem.emit('audioCleanup');
@@ -573,6 +754,9 @@ const AudioSystem = {
         }
     }
 };
+
+// Initialize AudioModules namespace
+AudioSystem.AudioModules = {};
 
 // Export the AudioSystem object
 if (typeof module !== 'undefined' && module.exports) {

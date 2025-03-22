@@ -30,9 +30,8 @@ const config = {
       'js/ui/ui-system.js',
       'js/ui/components.js',
       'js/main.js'
-    ],
-    // Place this in separate file so AudioWorklet can load it
-    worklet: 'js/audio/worklets/aleph-processor.js'
+    ]
+    // AudioWorklet removed - no longer needed as we're using standard oscillators
   },
   minify: process.env.NODE_ENV === 'production'
 };
@@ -67,11 +66,7 @@ async function bundleCSS() {
 async function bundleJS() {
   let js = '';
   
-  // Special handling for AudioWorklet processor
-  const workletCode = readFile(config.entry.worklet);
-  fs.writeFileSync(path.join(config.distDir, 'aleph-processor.js'), workletCode);
-  
-  // Bundle main JavaScript
+  // Bundle main JavaScript (includes aleph-processor code directly in aleph.js)
   for (const file of config.entry.js) {
     js += readFile(file) + '\n';
   }

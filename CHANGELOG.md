@@ -1,4 +1,41 @@
 # Changelog
+
+## Version 2.0.1 (March 22, 2025)
+
+### Major Changes
+- Removed AudioWorklet dependency for maximum browser compatibility
+- Implemented advanced memory management system to prevent audio glitches
+- Added automatic device capability detection for better performance on low-end devices
+- Improved audio buffer management with dynamic allocation based on available memory
+- Enhanced audio quality with master compressor to prevent clipping
+- Consolidated all audio processing into standard Web Audio API nodes
+
+### Compatibility Improvements
+- Now works on all browsers that support basic Web Audio API
+- Safari compatibility fixed by removing AudioWorklet dependency
+- Improved performance on low-end devices and mobile browsers
+- Added adaptive quality settings based on device capabilities
+
+### Memory Management
+- Added dynamic buffer size adjustment based on device memory
+- Implemented automatic cleanup of unused audio resources
+- Added monitoring and early warning system for memory pressure
+- Reduced maximum simultaneous tones for better stability
+- Added automatic recovery from out-of-memory conditions
+
+### Audio Quality Improvements
+- Added master compressor to prevent audio clipping
+- Improved oscillator initialization to prevent audio spikes
+- Enhanced fade-in/fade-out envelope for smoother sound transitions
+- Optimized complex pattern generation for better performance
+
+### Bug Fixes
+- Fixed memory leak in long-running sessions
+- Fixed audio glitches when switching between multiple Aleph patterns
+- Fixed high CPU usage with complex Aleph patterns
+- Resolved Safari compatibility issues
+- Fixed audio context suspension handling
+
 ## [2.0.0] - 2025-03-22
 ### Added
 - Complete modular architecture for better maintainability and extensibility
