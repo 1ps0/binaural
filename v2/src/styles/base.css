@@ -1,0 +1,166 @@
+/* Theme System - Base Tokens */
+:root {
+    /* Base Colors - HSL for easier manipulation */
+    --color-primary-h: 220;
+    --color-primary-s: 100%;
+    --color-primary-l: 62%;
+    --color-secondary-h: 260;
+    --color-secondary-s: 84%;
+    --color-secondary-l: 57%;
+    --color-success-h: 160;
+    --color-success-s: 95%;
+    --color-success-l: 43%;
+    --color-danger-h: 358;
+    --color-danger-s: 85%;
+    --color-danger-l: 54%;
+
+    /* Light Theme Defaults */
+    --light-bg: hsl(0, 0%, 100%);
+    --light-text: hsl(0, 0%, 20%);
+    --light-card-bg: hsl(210, 17%, 98%);
+    --light-card-border: hsl(210, 14%, 89%);
+    --light-control-bg: hsla(0, 0%, 100%, 0.95);
+
+    /* Dark Theme Values */
+    --dark-bg: hsl(0, 0%, 10%);
+    --dark-text: hsl(0, 0%, 90%);
+    --dark-card-bg: hsl(0, 0%, 18%);
+    --dark-card-border: hsl(0, 0%, 25%);
+    --dark-control-bg: hsla(0, 0%, 10%, 0.95);
+
+    /* Active Theme Values - Default to Light */
+    --bg: var(--light-bg);
+    --text: var(--light-text);
+    --card-bg: var(--light-card-bg);
+    --card-border: var(--light-card-border);
+    --control-bg: var(--light-control-bg);
+
+    /* Functional Colors */
+    --primary: hsl(var(--color-primary-h), var(--color-primary-s), var(--color-primary-l));
+    --secondary: hsl(var(--color-secondary-h), var(--color-secondary-s), var(--color-secondary-l));
+    --success: hsl(var(--color-success-h), var(--color-success-s), var(--color-success-l));
+    --danger: hsl(var(--color-danger-h), var(--color-danger-s), var(--color-danger-l));
+
+    /* Spacing System */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+
+    /* Typography */
+    --font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-size-base: 16px;
+    --line-height-base: 1.5;
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-normal: 300ms ease;
+    --transition-slow: 500ms ease;
+
+    /* Z-index Layers */
+    --z-control-bar: 1000;
+    --z-modal: 2000;
+    --z-tooltip: 3000;
+
+    /* Add dark variants for hover states */
+    --primary-dark: hsl(var(--color-primary-h), var(--color-primary-s), 52%);
+    --success-dark: hsl(var(--color-success-h), var(--color-success-s), 33%);
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+    --bg: var(--dark-bg);
+    --text: var(--dark-text);
+    --card-bg: var(--dark-card-bg);
+    --card-border: var(--dark-card-border);
+    --control-bg: var(--dark-control-bg);
+}
+
+/* Base Styles */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg);
+    color: var(--text);
+    transition:
+        background-color var(--transition-normal),
+        color var(--transition-normal);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Layout */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-md);
+}
+
+/* Utility Classes */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Main Content Area */
+.main-content {
+    flex: 1;
+    padding: var(--space-xl) 0;
+    margin-bottom: 100px; /* Space for control bar */
+}
+
+/* Legacy Banner */
+
+.legacy-version-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--primary);
+    color: white;
+    padding: 8px 16px;
+    text-align: center;
+    z-index: var(--z-control-bar);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.legacy-version-banner a {
+    color: white;
+    text-decoration: underline;
+    font-weight: bold;
+    margin: 0 8px;
+}
+
+.legacy-banner-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 8px;
+    margin-left: 16px;
+}

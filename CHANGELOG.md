@@ -1,6 +1,33 @@
 # Changelog
+## [2.0.0] - 2025-03-22
+### Added
+- Complete modular architecture for better maintainability and extensibility
+- Aleph frequency patterns based on mathematical set theory concepts
+- Advanced modular audio engine supporting component stacking
+- AudioWorklet implementation for complex pattern generation
+- Feature toggle system for combining different audio techniques
+- Transcendental frequency category for non-standard patterns
+- Improved memory management and resource monitoring
+- Build system for single-file deployment
+- Extended Solfeggio frequency support with proper categorization
 
-## [4.2.0] - In Progress
+### Changed
+- Refactored entire codebase to use modular component structure
+- Enhanced audio system with better resource management
+- Improved event handling system with proper cleanup
+- Updated UI to support advanced frequency options
+- Optimized performance for long-running sessions
+- Enhanced mobile experience with better controls
+
+### Fixed
+- Memory leaks in audio processing chain
+- Tone stopping and cleanup issues
+- Performance degradation during extended use
+- Eliminated buffer overruns for complex patterns
+- Improved initialization flow for better reliability
+- Enhanced error recovery for audio system failures
+
+## [1.2.0] - In Progress
 ### Added
 - Frequency management modal with create, edit, and import/export functionality
 - Custom frequency creation form
@@ -21,7 +48,7 @@
 - Pin/unpin system reliability
 - Mobile layout issues
 
-## [4.1.0] - 2024-03-03
+## [1.1.0] - 2025-03-03
 ### Added
 - Version information display in info modal
 - Build number tracking
@@ -57,7 +84,7 @@
 - Info modal
 - Responsive design foundation
 
-## [v3.0.0] - 2023-06-15
+## [1.0.0] - 2025-02-15
 
 ### Added
 - Card/list view toggle for different ways to browse frequencies
@@ -101,7 +128,7 @@
 - In list view, the title, Hz indicator, and pin button text visually collide
 - Pin button placement should be reconsidered in list view (possibly next to play/pause button)
 
-## [v2.0.0] - 2023-05-03
+## [0.0.2] - 2025-02-03
 
 ### Added
 - Support for mixing multiple frequencies simultaneously
@@ -121,7 +148,7 @@
 - Improved visual hierarchy and information display
 - Enhanced binaural beat generation for more accurate frequencies
 
-## [v1.0.0] - 2023-04-15
+## [0.0.1] - 2025-02-02
 
 ### Added
 - Initial release with basic frequency playback
@@ -129,4 +156,4 @@
 - Solfeggio frequencies
 - Special healing frequencies
 - Volume control
-- Basic documentation 
+- Basic documentation

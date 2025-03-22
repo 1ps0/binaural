@@ -1,0 +1,132 @@
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .frequency-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .frequency-item {
+        grid-template-columns: 120px minmax(0, 1fr) auto;
+    }
+
+    .frequency-item__actions {
+        min-width: 100px;
+    }
+
+    .btn--play {
+        min-width: 80px;
+        padding: 8px;
+    }
+
+    .control-bar {
+        padding: var(--space-sm);
+    }
+
+    .control-bar .container {
+        gap: var(--space-sm);
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .control-bar__section {
+        margin: 0;
+        width: 100%;
+    }
+
+    .search-container {
+        width: 100%;
+    }
+
+    .control-bar__actions {
+        justify-content: space-between;
+    }
+
+    /* Compact layout for mobile */
+    .control-bar__volume {
+        flex: 0 0 auto;
+    }
+
+    .control-bar__view-toggle {
+        flex: 0 0 auto;
+    }
+
+    .control-bar__search {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .control-bar__actions {
+        flex: 0 0 auto;
+    }
+
+    .volume-slider {
+        width: 80px;
+    }
+
+    .volume-display {
+        display: none;
+    }
+
+    .search-input {
+        padding: 6px 28px 6px 8px;
+        font-size: 0.85rem;
+    }
+
+    .action-button {
+        padding: 6px 8px;
+        font-size: 0.85rem;
+    }
+
+    .action-button svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    /* Adjust spacing for active tones */
+    .active-tones-container {
+        gap: 4px;
+        padding: 4px 0;
+    }
+
+    .active-tone {
+        padding: 2px 6px 2px 8px;
+        font-size: 0.85rem;
+    }
+
+    .active-tone__stop {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .frequency-item {
+        grid-template-columns: 100px minmax(0, 1fr) auto;
+    }
+
+    .frequency-item__actions {
+        min-width: 90px;
+        padding: 6px;
+    }
+
+    .btn {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+    }
+
+    .control-bar {
+        padding: var(--space-xs);
+    }
+
+    .control-bar .container {
+        gap: var(--space-xs);
+    }
+
+    .volume-slider {
+        width: 60px;
+    }
+
+    .btn {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+    }
+}

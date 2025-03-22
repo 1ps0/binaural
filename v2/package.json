@@ -1,0 +1,15 @@
+{
+  "name": "binaural-beats-app",
+  "version": "4.1.0",
+  "description": "Binaural Beats & Healing Frequencies Web Application",
+  "private": true,
+  "scripts": {
+    "build": "node build.js",
+    "build:prod": "NODE_ENV=production node build.js"
+  },
+  "devDependencies": {
+    "cssnano": "^5.1.15",
+    "postcss": "^8.4.24",
+    "terser": "^5.17.7"
+  }
+}

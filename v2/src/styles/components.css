@@ -1,0 +1,724 @@
+/* Header */
+.app-header {
+    background-color: var(--primary);
+    color: white;
+    padding: var(--space-lg) 0;
+    box-shadow: 0 2px 4px hsla(0, 0%, 0%, 0.1);
+}
+
+.app-title {
+    font-size: 2rem;
+    margin: 0;
+}
+
+.app-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-top: var(--space-sm);
+}
+
+/* Header Actions */
+.app-header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+}
+
+.theme-toggle-button,
+.view-toggle-button {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    color: white;
+    transition: all var(--transition-fast);
+}
+
+.theme-toggle-button:hover,
+.view-toggle-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* View Toggle Group */
+.view-toggle-group {
+    display: flex;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.view-toggle-button {
+    border: none;
+    border-radius: 0;
+    padding: 6px 8px;
+}
+
+.view-toggle-button:first-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.view-toggle-button.active {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.view-toggle-button svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+}
+
+.theme-toggle-icon {
+    font-size: 1.2rem;
+}
+
+/* Control Bar */
+.control-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--control-bg);
+    padding: var(--space-md);
+    box-shadow: 0 -2px 10px hsla(0, 0%, 0%, 0.1);
+    z-index: var(--z-control-bar);
+    transition: transform var(--transition-normal);
+}
+
+.control-bar .container {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+}
+
+.control-bar.minimized {
+    transform: translateY(calc(100% - 40px));
+}
+
+.control-bar.top {
+    top: 0;
+    bottom: auto;
+    box-shadow: 0 2px 10px hsla(0, 0%, 0%, 0.1);
+}
+
+/* Control Bar Components */
+.control-bar__section {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.volume-slider {
+    width: 100px;
+    height: 6px;
+    -webkit-appearance: none;
+    background: var(--card-border);
+    border-radius: 3px;
+    outline: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--primary);
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.volume-display {
+    min-width: 3em;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Search */
+.search-container {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 8px 32px 8px 12px;
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.9rem;
+    transition: border-color var(--transition-fast);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.search-clear {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-fast);
+}
+
+.search-clear.visible {
+    opacity: 0.5;
+    pointer-events: auto;
+}
+
+.search-clear:hover {
+    opacity: 1;
+}
+
+/* Action Buttons */
+.action-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background: var(--primary);
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.action-button:hover:not(:disabled) {
+    background: var(--primary-dark);
+}
+
+.action-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.action-button svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+.action-button.stop-all {
+    background: var(--danger);
+}
+
+/* Active Tones */
+.active-tones-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 32px;
+}
+
+.active-tone {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px 4px 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.active-tone--binaural { border-color: var(--primary); }
+.active-tone--solfeggio { border-color: var(--secondary); }
+.active-tone--special { border-color: var(--success); }
+
+.active-tone__name {
+    font-weight: 500;
+    color: var(--text);
+}
+
+.active-tone__freq {
+    color: var(--text);
+    opacity: 0.7;
+    font-variant-numeric: tabular-nums;
+}
+
+.active-tone__stop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: var(--card-border);
+    color: var(--text);
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.active-tone__stop:hover {
+    background: var(--danger);
+    color: white;
+}
+
+/* Frequency Sections */
+.frequency-section {
+    margin-bottom: var(--space-xl);
+}
+
+.frequency-section__header {
+    margin-bottom: var(--space-lg);
+}
+
+.frequency-section__title {
+    font-size: 1.5rem;
+    color: var(--text);
+    margin: 0 0 var(--space-sm);
+}
+
+.frequency-section__description {
+    color: var(--text);
+    opacity: 0.8;
+    margin: 0;
+}
+
+/* Card View */
+.frequency-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-md);
+}
+
+.frequency-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all var(--transition-normal);
+}
+
+.frequency-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.frequency-card__header {
+    padding: var(--space-md);
+    position: relative;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.frequency-card__title {
+    font-size: 1.2rem;
+    margin: 0;
+    padding-right: 80px; /* Space for frequency badge */
+    color: var(--text);
+}
+
+.frequency-card__frequency {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    background: var(--bg);
+    color: var(--text);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.frequency-card__body {
+    padding: var(--space-md);
+}
+
+.frequency-card__description {
+    margin: 0 0 var(--space-md);
+    color: var(--text);
+    opacity: 0.8;
+    font-size: 0.95rem;
+}
+
+.frequency-card__warning {
+    margin: var(--space-sm) 0;
+    padding: var(--space-sm);
+    background: var(--warning);
+    color: var(--dark);
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.frequency-card__actions {
+    display: flex;
+    gap: 0;
+    margin: var(--space-md) calc(var(--space-md) * -1) calc(var(--space-md) * -1);
+    border-top: 1px solid var(--card-border);
+}
+
+.frequency-card .btn {
+    flex: 1;
+    border-radius: 0;
+    padding: var(--space-md);
+    justify-content: center;
+}
+
+.frequency-card .btn:first-child {
+    border-right: 1px solid var(--card-border);
+}
+
+/* List View */
+.frequency-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.frequency-item {
+    display: grid;
+    grid-template-columns: minmax(150px, 180px) minmax(0, 1fr) auto;
+    gap: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: background-color var(--transition-fast);
+}
+
+.frequency-item:hover {
+    background: var(--bg);
+}
+
+.frequency-item__header {
+    padding: var(--space-md);
+    background: var(--card-bg);
+    border-right: 1px solid var(--card-border);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    justify-content: center;
+}
+
+.frequency-item__title {
+    font-size: 1rem;
+    margin: 0;
+    color: var(--text);
+}
+
+.frequency-item__frequency {
+    font-size: 0.9rem;
+    color: var(--text);
+    opacity: 0.8;
+    font-variant-numeric: tabular-nums;
+    font-family: var(--font-family-mono, monospace);
+    background: var(--bg);
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    border: 1px solid var(--card-border);
+}
+
+.frequency-item__body {
+    padding: var(--space-md);
+    display: flex;
+    align-items: center;
+    min-width: 0;
+}
+
+.frequency-item__description {
+    margin: 0;
+    color: var(--text);
+    opacity: 0.8;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.frequency-item__actions {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+    min-width: 120px;
+    border-left: 1px solid var(--card-border);
+}
+
+.frequency-item .btn {
+    flex: 1;
+    border-radius: 0;
+    padding: var(--space-md);
+    justify-content: center;
+}
+
+.frequency-item .btn:first-child {
+    border-right: 1px solid var(--card-border);
+}
+
+.frequency-item .category-badge {
+    margin-top: 2px;
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    background: var(--bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    color: var(--text);
+    opacity: 0.8;
+    display: inline-block;
+    max-width: fit-content;
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    background: var(--primary);
+    color: white;
+}
+
+.btn:hover:not(:disabled) {
+    background: var(--primary-dark);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn--icon {
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.btn--play {
+    min-width: 100px;
+}
+
+.btn--play.playing {
+    background: var(--success);
+}
+
+.btn--play.playing:hover {
+    background: var(--success-dark);
+}
+
+.btn--pin {
+    background: transparent;
+    border: 1px solid var(--card-border);
+    color: var(--text);
+}
+
+.btn--pin:hover {
+    background: var(--card-bg);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.btn--pin.pinned {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+/* Feature Toggles */
+.frequency-card__advanced-controls,
+.frequency-item__advanced-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: var(--space-sm);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--card-border);
+}
+
+.feature-toggle {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.feature-toggle__input {
+    margin: 0;
+}
+
+.feature-toggle__label {
+    color: var(--text);
+    opacity: 0.9;
+}
+
+/* Advanced button to show/hide toggles */
+.btn--advanced {
+    background: transparent;
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    margin-top: var(--space-sm);
+    opacity: 0.7;
+}
+
+.btn--advanced:hover {
+    background: var(--card-bg);
+    opacity: 1;
+}
+
+/* When advanced options are shown */
+.frequency-card__advanced-controls.visible,
+.frequency-item__advanced-controls.visible {
+    display: flex;
+}
+
+.frequency-card__advanced-controls:not(.visible),
+.frequency-item__advanced-controls:not(.visible) {
+    display: none;
+}
+
+/* Category Badges */
+.category-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: var(--card-bg);
+    color: var(--text);
+    opacity: 0.8;
+}
+
+/* Type-specific styles */
+.frequency-card[data-type="binaural"],
+.frequency-item[data-type="binaural"] {
+    --type-color: var(--primary);
+}
+
+.frequency-card[data-type="solfeggio"],
+.frequency-item[data-type="solfeggio"] {
+    --type-color: var(--secondary);
+}
+
+.frequency-card[data-type="special"],
+.frequency-item[data-type="special"] {
+    --type-color: var(--success);
+}
+
+/* Info Button */
+.btn--info {
+    margin-top: var(--space-md);
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.btn--info:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Info Modal */
+.info-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: var(--z-modal);
+    padding: var(--space-md);
+    overflow-y: auto;
+}
+
+.info-modal.visible {
+    display: block;
+}
+
+.info-modal__content {
+    background: var(--bg);
+    max-width: 800px;
+    margin: var(--space-xl) auto;
+    padding: var(--space-xl);
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+.info-modal__close {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text);
+    cursor: pointer;
+    padding: var(--space-sm);
+    border-radius: 50%;
+    line-height: 1;
+    transition: all var(--transition-fast);
+}
+
+.info-modal__close:hover {
+    background: var(--card-bg);
+}
+
+.info-modal h2 {
+    margin: 0 0 var(--space-lg);
+    color: var(--text);
+}
+
+.info-modal h3 {
+    color: var(--text);
+    margin: var(--space-lg) 0 var(--space-sm);
+}
+
+.info-modal p {
+    color: var(--text);
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+.info-modal section {
+    margin-bottom: var(--space-lg);
+}
+
+.info-modal ul,
+.info-modal ol {
+    color: var(--text);
+    opacity: 0.9;
+    line-height: 1.6;
+    margin: var(--space-sm) 0;
+    padding-left: var(--space-lg);
+}
+
+.info-modal li {
+    margin: var(--space-xs) 0;
+}
+
+/* Version info */
+.version-info {
+    font-family: var(--font-family-mono, monospace);
+    background: var(--card-bg);
+    padding: var(--space-sm);
+    border-radius: 6px;
+    display: inline-block;
+}

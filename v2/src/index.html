@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Binaural Beats & Healing Frequencies</title>
+
+    <!-- STYLES_PLACEHOLDER -->
+</head>
+<body>
+    <header class="app-header">
+        <div class="container">
+            <h1 class="app-title">Binaural Beats & Healing Frequencies</h1>
+            <div class="legacy-version-banner">
+                <p>Looking for the previous version? <a href="1ps0.github.io/v1/index.html">Click here to use v1</a></p>
+                <button class="legacy-banner-close" aria-label="Close banner">×</button>
+            </div>
+            <p class="app-subtitle">Brainwave Entrainment, Solfeggio Tones & Sound Therapy</p>
+            <div class="app-header__actions">
+                <button class="theme-toggle-button" id="themeToggle" aria-label="Toggle theme">
+                    <span class="theme-toggle-icon">🌓</span>
+                </button>
+                <div class="view-toggle-group">
+                    <button class="view-toggle-button" data-view="cards">
+                        <svg class="icon" viewBox="0 0 24 24" width="24" height="24">
+                            <rect x="3" y="3" width="7" height="7" rx="1"/>
+                            <rect x="14" y="3" width="7" height="7" rx="1"/>
+                            <rect x="3" y="14" width="7" height="7" rx="1"/>
+                            <rect x="14" y="14" width="7" height="7" rx="1"/>
+                        </svg>
+                        <span class="visually-hidden">Card View</span>
+                    </button>
+                    <button class="view-toggle-button" data-view="list">
+                        <svg class="icon" viewBox="0 0 24 24" width="24" height="24">
+                            <line x1="3" y1="6" x2="21" y2="6" stroke-width="2"/>
+                            <line x1="3" y1="12" x2="21" y2="12" stroke-width="2"/>
+                            <line x1="3" y1="18" x2="21" y2="18" stroke-width="2"/>
+                        </svg>
+                        <span class="visually-hidden">List View</span>
+                    </button>
+                </div>
+                <button class="btn btn--info" id="showInfo">ℹ️ About Sound Frequencies</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="info-modal" id="infoModal">
+        <div class="info-modal__content">
+            <button class="info-modal__close" id="closeInfo">×</button>
+            <h2>About Therapeutic Frequencies</h2>
+            <section>
+                <h3>What are Binaural Beats?</h3>
+                <p>Binaural beats are created when slightly different frequencies are played in each ear. Your brain perceives the difference between these frequencies as a beat, which can help entrain your brainwaves to specific states.</p>
+            </section>
+            <section>
+                <h3>What are Solfeggio Frequencies?</h3>
+                <p>Solfeggio frequencies are a set of ancient musical tones said to have various healing properties. These frequencies were traditionally used in sacred music and are believed to affect different aspects of well-being.</p>
+            </section>
+            <section>
+                <h3>How Therapeutic Frequencies Work</h3>
+                <p>Different frequencies affect your brain and body in unique ways. These scientifically-studied frequencies can help create optimal mental states for different activities:</p>
+                <ul>
+                    <li><strong>Focus & Productivity:</strong> Beta and Gamma frequencies help sharpen attention and enhance cognitive performance</li>
+                    <li><strong>Meditation & Mindfulness:</strong> Theta frequencies facilitate deep meditative states and creative flow</li>
+                    <li><strong>Sleep & Recovery:</strong> Delta frequencies support restorative sleep and physical healing</li>
+                    <li><strong>Relaxation & Calm:</strong> Alpha frequencies promote relaxation while maintaining alertness</li>
+                    <li><strong>Healing & Wellbeing:</strong> Solfeggio and special frequencies traditionally associated with physical and emotional healing</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Getting the Best Results</h3>
+                <ol>
+                    <li>Use quality headphones for binaural beats to work effectively</li>
+                    <li>Start with shorter sessions (15-30 minutes) and observe how you respond</li>
+                    <li>Choose frequencies based on your current needs and desired state</li>
+                    <li>Keep volume at a comfortable level - louder isn't better</li>
+                    <li>Create favorites lists for different activities using the pin feature</li>
+                </ol>
+            </section>
+            <section>
+                <h3>Important Notes</h3>
+                <ul>
+                    <li>Always use comfortable volume levels</li>
+                    <li>If you experience any discomfort, stop using immediately</li>
+                    <li>This is not a substitute for medical treatment</li>
+                    <li>Some frequencies may be below human hearing range but can still have effects</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Open Source</h3>
+                <p>This project is open source and available on GitHub. Feel free to contribute or report issues:</p>
+                <p><a href="https://github.com/1ps0/binaural" target="_blank" rel="noopener noreferrer" style="color: var(--primary);">github.com/1ps0/binaural</a></p>
+                <p>You can also run this app locally:</p>
+                <ul>
+                    <li><strong>Desktop:</strong> Simply drag index.html into Chrome/Edge</li>
+                    <li><strong>iOS:</strong> Save to Files app and open with Safari</li>
+                    <li><strong>Android:</strong> Open with Chrome from Downloads</li>
+                </ul>
+                <p>See the README for detailed setup instructions.</p>
+            </section>
+            <section>
+                <h3>Version Information</h3>
+                <p class="version-info">
+                    Version: 4.1.0<br>
+                    Build: 20250303.1<br>
+                    Last Updated: March 3, 2025
+                </p>
+            </section>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="frequency-sections">
+                <!-- Sections will be dynamically populated -->
+            </div>
+        </div>
+    </main>
+
+    <div class="control-bar">
+        <div class="container">
+            <!-- Controls will be dynamically populated -->
+        </div>
+    </div>
+
+    <!-- SCRIPTS_PLACEHOLDER -->
+</body>
+</html>
