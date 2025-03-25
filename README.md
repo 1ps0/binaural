@@ -1,11 +1,10 @@
-# Binaural Beats & Healing Frequencies
+# Binaural Beats & Tones
 
 A web-based application for generating binaural beats, solfeggio frequencies, aleph patterns, and other therapeutic tones. Built with modular JavaScript and the Web Audio API.
 
 ## Features
 
-- 🎵 Generate binaural beats and healing frequencies
-- 🧠 Advanced mathematical Aleph patterns
+- 🎵 Generate binaural beats and Tones
 - 🌓 Light/Dark theme support
 - 📱 Responsive design for all devices
 - 🎚️ Precise volume control
@@ -18,6 +17,7 @@ A web-based application for generating binaural beats, solfeggio frequencies, al
 - 🔄 Works across all modern browsers
 - 🔊 Built-in audio clipping prevention
 - 📊 Automatic device capability detection
+- 🧠 Advanced mathematical Aleph patterns
 - 🚀 Dynamic performance adjustments
 
 ## Getting Started
@@ -128,15 +128,25 @@ src/
 
 ### Roadmap
 
-See [BLUEPRINT.md](BLUEPRINT.md) for detailed development plans.
+See [ROADMAP.md](ROADMAP.md) for detailed development plans.
 
 ### Contributing
 
-1. Check the [BLUEPRINT.md](BLUEPRINT.md) for planned features
-2. Review current issues in the Issues tab
-3. Fork the repository and create a feature branch
-4. Make your changes and run the build process
-5. Submit a Pull Request with your changes
+This project is an exercise in AI-assisted development with a focus on carefully crafted, high-quality contributions. Before contributing, please read our:
+
+- [Contributing Guidelines](CONTRIBUTING.md) for detailed instructions on the contribution process
+- [Code of Conduct](CODE_OF_CONDUCT.md) for community standards
+
+Key contribution steps:
+
+1. Review [BLUEPRINT.md](v2/BLUEPRINT.md) for planned features and current priorities
+2. Check existing issues in the Issues tab for tasks that need attention
+3. Fork the repository and create a descriptive feature branch
+4. Make your changes following our code standards and architecture
+5. Thoroughly test across multiple browsers and devices
+6. Submit a Pull Request with comprehensive documentation of your changes
+
+We welcome contributions that align with our project philosophy of purposeful, AI-assisted development with human oversight.
 
 ## Version History
 

@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 2.0.1 (March 22, 2025)
+## [2.0.1] 2025-03-22
 
 ### Major Changes
 - Removed AudioWorklet dependency for maximum browser compatibility
@@ -64,7 +64,7 @@
 - Improved initialization flow for better reliability
 - Enhanced error recovery for audio system failures
 
-## [1.2.0] - In Progress
+## [1.2.0] - 2025-03-05
 ### Added
 - Frequency management modal with create, edit, and import/export functionality
 - Custom frequency creation form
@@ -191,6 +191,6 @@
 - Initial release with basic frequency playback
 - Binaural beats for different brain states
 - Solfeggio frequencies
-- Special healing frequencies
+- Special tonal frequencies
 - Volume control
 - Basic documentation
