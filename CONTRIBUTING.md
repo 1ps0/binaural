@@ -52,7 +52,7 @@ Contributions should focus on:
 
 ### Reporting Bugs
 
-1. Search GitHub Issues to ensure the bug hasn't already been reported
+1. Search GitHub Issues, and [ROADMAP.md](ROADMAP.md), to ensure the bug hasn't already been reported
 2. Create a new issue with:
    - A clear, descriptive title
    - Detailed reproduction steps
@@ -63,7 +63,7 @@ Contributions should focus on:
 
 ### Suggesting Enhancements
 
-1. Review [BLUEPRINT.md](BLUEPRINT.md) and [ROADMAP.md](ROADMAP.md) to ensure alignment
+1. Review [BLUEPRINT.md](v2/BLUEPRINT.md) and [ROADMAP.md](ROADMAP.md) to ensure alignment
 2. Open an issue with:
    - A clear title and problem statement
    - Description of current limitations or pain points
@@ -116,7 +116,7 @@ Contributions should focus on:
 
 Before contributing, thoroughly familiarize yourself with:
 
-- The modular component structure in `/js` directories
+- The modular component structure in `v*/src/js` directories
 - Event-based communication patterns used throughout
 - Resource management practices in the audio system
 - UI rendering and state management approaches

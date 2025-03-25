@@ -13,3 +13,4 @@
 13. bug: aleph really only has one frequency that "works"
 14. bug: certain sizes of permabar force the search to expand on a new row
 15. bug: frequency notes do not denote if a particular item is a binaural effect or on some other scale as a pure tone or progression.
+16. bug: semi-persistent warbling and downres of audio playing in other contexts
