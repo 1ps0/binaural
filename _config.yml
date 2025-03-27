@@ -1,4 +1,4 @@
-include: [".well-known", "_headers"]
+include: ["_headers"]
 
 # Set security headers for Web Audio API
 webrick:
