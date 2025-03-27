@@ -1,0 +1,7 @@
+include: [".well-known", "_headers"]
+
+# Set security headers for Web Audio API
+webrick:
+  headers:
+    "Cross-Origin-Opener-Policy": "same-origin"
+    "Cross-Origin-Embedder-Policy": "require-corp"
