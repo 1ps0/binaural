@@ -1130,8 +1130,8 @@ body {
             <section>
                 <h3>Version Information</h3>
                 <p class="version-info">
-                    Version: 2.0.1<br>
-                    Last Updated: March 25, 2025
+                    Version: 2.0.2<br>
+                    Last Updated: March 27, 2025
                 </p>
             </section>
         </div>
@@ -1476,7 +1476,7 @@ const AudioSystem = {
             });
 
             this.enforceResourceLimits();
-            
+
             // Start memory monitoring if not already running
             if (!this.memoryCheckInterval) {
                 this.startMemoryMonitoring();
@@ -1485,27 +1485,27 @@ const AudioSystem = {
 
         unregisterChain(id) {
             this.activeNodes.delete(id);
-            
+
             // If no active nodes, stop memory monitoring
             if (this.activeNodes.size === 0) {
                 this.stopMemoryMonitoring();
             }
-            
+
             // Update last tone stopped time for buffer cleanup timing
             AppState.audio.lastToneStoppedTime = Date.now();
         },
-        
+
         // Start periodic memory monitoring
         startMemoryMonitoring() {
             if (this.memoryCheckInterval) {
                 clearInterval(this.memoryCheckInterval);
             }
-            
+
             this.memoryCheckInterval = setInterval(() => {
                 this.checkMemoryUsage();
             }, 10000); // Check every 10 seconds when active
         },
-        
+
         // Stop memory monitoring when not needed
         stopMemoryMonitoring() {
             if (this.memoryCheckInterval) {
@@ -1513,23 +1513,23 @@ const AudioSystem = {
                 this.memoryCheckInterval = null;
             }
         },
-        
+
         // Monitor memory usage and take action if needed
         checkMemoryUsage() {
             if (window.performance && window.performance.memory) {
                 const memInfo = window.performance.memory;
                 const usedHeapPercentage = memInfo.usedJSHeapSize / memInfo.jsHeapSizeLimit;
-                
+
                 // Critical memory pressure - take immediate action
                 if (usedHeapPercentage > 0.85) {
                     console.warn("Critical memory pressure detected");
-                    
+
                     // Stop oldest tones if we have more than 2
                     if (this.activeNodes.size > 2) {
                         // Sort by creation time
                         const entries = Array.from(this.activeNodes.entries())
                             .sort((a, b) => a[1].createdAt - b[1].createdAt);
-                            
+
                         // Stop oldest 50% of tones
                         const stopCount = Math.ceil(entries.length / 2);
                         for (let i = 0; i < stopCount; i++) {
@@ -1543,24 +1543,24 @@ const AudioSystem = {
                             });
                         }
                     }
-                    
+
                     // Clean precomputed patterns
                     if (AudioSystem.precomputedPatterns) {
                         AudioSystem.precomputedPatterns.clearBuffers();
                     }
-                    
+
                     // Force garbage collection if available
                     if (window.gc) window.gc();
                 }
                 // High memory pressure - reduce complexity
                 else if (usedHeapPercentage > 0.7) {
                     console.warn("High memory pressure detected");
-                    
+
                     // If multiple aleph patterns are running, stop the oldest
                     let alephPatternCount = 0;
                     let oldestAlephId = null;
                     let oldestTime = Date.now();
-                    
+
                     this.activeNodes.forEach((data, id) => {
                         if (id.includes('aleph')) {
                             alephPatternCount++;
@@ -1570,7 +1570,7 @@ const AudioSystem = {
                             }
                         }
                     });
-                    
+
                     if (alephPatternCount > 1 && oldestAlephId) {
                         console.log(`Stopping oldest aleph pattern ${oldestAlephId} due to memory pressure`);
                         AudioSystem.stopTone(oldestAlephId);
@@ -1628,12 +1628,12 @@ const AudioSystem = {
                     EventSystem.emit('autoCleanup', { id, reason: 'long-running' });
                 }
             });
-            
+
             // Check for unused buffer resources
             if (AudioSystem.precomputedPatterns) {
                 // If no tones playing for 5 minutes, clear all buffers
-                if (this.activeNodes.size === 0 && 
-                    AppState.audio.lastToneStoppedTime && 
+                if (this.activeNodes.size === 0 &&
+                    AppState.audio.lastToneStoppedTime &&
                     now - AppState.audio.lastToneStoppedTime > 300000) {
                     AudioSystem.precomputedPatterns.clearBuffers();
                     cleanupNeeded = true;
@@ -1709,52 +1709,98 @@ const AudioSystem = {
     // Initialize the Audio Context
     initializeAudioContext() {
         try {
+            // First approach: standard AudioContext creation
             const AudioContext = window.AudioContext || window.webkitAudioContext;
-            const context = new AudioContext({
-                // Use conservative settings for better compatibility
-                latencyHint: 'playback',
-                sampleRate: this.getSafeSampleRate()
-            });
+            let context = null;
 
+            try {
+                context = new AudioContext({
+                    latencyHint: 'playback',
+                    sampleRate: this.getSafeSampleRate()
+                });
+            } catch (e) {
+                console.warn("Standard AudioContext creation failed, trying fallback:", e);
+                // Fallback to basic constructor without options
+                context = new AudioContext();
+            }
+
+            // Verify context has required methods
             if (!context || typeof context.createGain !== 'function') {
-                throw new Error('Invalid Audio Context');
+                throw new Error('AudioContext missing required methods');
             }
 
             AppState.audio.context = context;
 
-            const masterGain = context.createGain();
-            if (!masterGain) {
-                throw new Error('Failed to create gain node');
+            // Create masterGain with additional error handling
+            let masterGain = null;
+            try {
+                masterGain = context.createGain();
+            } catch (e) {
+                console.warn("CreateGain failed, trying deprecated method:", e);
+                // Try legacy method if available
+                if (typeof context.createGainNode === 'function') {
+                    masterGain = context.createGainNode();
+                    // Add polyfill
+                    context.createGain = context.createGainNode;
+                } else {
+                    throw new Error('Could not create gain node');
+                }
             }
 
-            // Add a master compressor to prevent audio clipping
-            const compressor = context.createDynamicsCompressor();
-            compressor.threshold.value = -15;
-            compressor.knee.value = 30;
-            compressor.ratio.value = 12;
-            compressor.attack.value = 0.003;
-            compressor.release.value = 0.25;
-            
+            // Create compressor with fallback
+            let compressor = null;
+            try {
+                compressor = context.createDynamicsCompressor();
+                compressor.threshold.value = -15;
+                compressor.knee.value = 30;
+                compressor.ratio.value = 12;
+                compressor.attack.value = 0.003;
+                compressor.release.value = 0.25;
+            } catch (e) {
+                console.warn("Compressor creation failed, using direct output:", e);
+                // Create a pass-through node instead
+                compressor = context.createGain();
+                compressor.gain.value = 1.0;
+            }
+
             AppState.audio.masterGain = masterGain;
             AppState.audio.masterCompressor = compressor;
-            
-            // Connect chain: masterGain -> compressor -> destination
-            AppState.audio.masterGain.gain.value = AppState.audio.volume;
-            AppState.audio.masterGain.connect(compressor);
-            compressor.connect(AppState.audio.context.destination);
 
-            // If context is suspended (common in some browsers), try to resume it
+            // Connect chain with additional error handling
+            try {
+                AppState.audio.masterGain.gain.value = AppState.audio.volume;
+                AppState.audio.masterGain.connect(compressor);
+                compressor.connect(AppState.audio.context.destination);
+            } catch (e) {
+                console.error("Connection chain failed:", e);
+                // Try direct connection as fallback
+                try {
+                    AppState.audio.masterGain.connect(AppState.audio.context.destination);
+                } catch (innerError) {
+                    throw new Error('Could not establish audio processing chain');
+                }
+            }
+
+            // Resume context if suspended
             if (context.state === 'suspended') {
-                context.resume().catch(error => {
-                    console.warn('Could not resume audio context:', error);
-                });
+                // Use both promise and callback approach for maximum compatibility
+                if (typeof context.resume === 'function') {
+                    try {
+                        const resumePromise = context.resume();
+                        if (resumePromise && typeof resumePromise.then === 'function') {
+                            resumePromise.catch(error => {
+                                console.warn('Could not resume audio context:', error);
+                            });
+                        }
+                    } catch (e) {
+                        console.warn('Error during context resume:', e);
+                    }
+                }
             }
 
             AppState.audio.isReady = true;
-            
-            // Add lastToneStoppedTime for buffer management
             AppState.audio.lastToneStoppedTime = Date.now();
-            
+
             EventSystem.emit('audioReady');
 
             // Set up periodic resource checks
@@ -1765,27 +1811,31 @@ const AudioSystem = {
             return true;
         } catch (error) {
             console.error('Error initializing audio context:', error);
+            EventSystem.emit('audioError', {
+                message: 'Failed to initialize audio system. Please try refreshing the page or using a different browser.',
+                error
+            });
             return false;
         }
     },
-    
+
     // Get a safe sample rate based on device capabilities
     getSafeSampleRate() {
         // Default to 44.1kHz for compatibility
         const defaultRate = 44100;
-        
+
         try {
             // Check if AudioContext is available
             if (window.AudioContext || window.webkitAudioContext) {
                 // Create a temporary context to check supported sample rate
                 const tempContext = new (window.AudioContext || window.webkitAudioContext)();
                 const deviceRate = tempContext.sampleRate;
-                
+
                 // Clean up temp context
                 if (tempContext.close) {
                     tempContext.close();
                 }
-                
+
                 // Use device rate if it's reasonable (between 22.05kHz and 48kHz)
                 if (deviceRate >= 22050 && deviceRate <= 48000) {
                     return deviceRate;
@@ -1794,7 +1844,7 @@ const AudioSystem = {
         } catch (e) {
             console.warn('Error checking sample rate:', e);
         }
-        
+
         return defaultRate;
     },
 
@@ -1856,8 +1906,12 @@ const AudioSystem = {
     // Create a standard Aleph pattern using oscillators (no worklet)
     startAlephPattern(id, patternType, options = {}) {
         try {
+
             // Ensure audio context is initialized and resumed
-            if (!this.init()) {
+            if (this.init()) {
+                UIComponents.showToast('Audio system ready', 'success', 3000);
+            } else {
+                UIComponents.showToast('Could not initialize audio. Please try clicking the play button again or refresh the page.', 'error', 5000);
                 EventSystem.emit('audioError', { message: 'Audio system not ready. Please try again.' });
                 return false;
             }
@@ -1872,11 +1926,11 @@ const AudioSystem = {
 
             // Create Aleph module
             const ctx = AppState.audio.context;
-            
+
             // Create a carrier to base the pattern on
             const baseFreq = 432; // Default base frequency
             const carrier = new this.AudioModules.CarrierModule(ctx, baseFreq);
-            
+
             // Create Aleph module and apply to carrier
             const alephModule = new this.AudioModules.AlephModule(ctx, patternType);
             alephModule.apply(carrier);
@@ -1969,8 +2023,12 @@ const AudioSystem = {
         } = options;
 
         try {
+
             // Ensure audio context is initialized and resumed
-            if (!this.init()) {
+            if (this.init()) {
+                UIComponents.showToast('Audio system ready', 'success', 3000);
+            } else {
+                UIComponents.showToast('Could not initialize audio. Please try clicking the play button again or refresh the page.', 'error', 5000);
                 EventSystem.emit('audioError', { message: 'Audio system not ready. Please try again.' });
                 return false;
             }
@@ -2116,7 +2174,7 @@ const AudioSystem = {
 
             // Update last tone stopped time
             AppState.audio.lastToneStoppedTime = Date.now();
-            
+
             EventSystem.emit('allTonesStopped');
         } catch (error) {
             console.error('Error in stopAll:', error);
@@ -2187,16 +2245,16 @@ const AudioSystem = {
             if (AppState.audio.masterCompressor) {
                 AppState.audio.masterCompressor.disconnect();
             }
-            
+
             if (AppState.audio.masterGain) {
                 AppState.audio.masterGain.disconnect();
             }
-            
+
             // If precomputed patterns exist, clear them
             if (this.precomputedPatterns) {
                 this.precomputedPatterns.clearBuffers();
             }
-            
+
             // Stop any memory monitoring
             if (this.resourceManagement.memoryCheckInterval) {
                 clearInterval(this.resourceManagement.memoryCheckInterval);
