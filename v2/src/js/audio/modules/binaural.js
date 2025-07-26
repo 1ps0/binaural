@@ -1,6 +1,7 @@
 /**
- * Binaural Module
- * Creates binaural beat effect by generating slightly different frequencies in each ear
+ * Binaural Beat Generator
+ * Generates auditory interference patterns by producing two pure tones with slightly different frequencies, one in each ear.
+ * Primarily utilized for inducing specific brainwave entrainment states (e.g., Delta, Theta, Alpha, Beta, Gamma) via frequency following response.
  */
 
 // Creates a binaural effect by generating left/right variations

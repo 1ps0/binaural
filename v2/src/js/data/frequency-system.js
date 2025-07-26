@@ -7,331 +7,274 @@
 const FrequencySystem = {
     // Core frequency data
     data: {
-        focus: [
+        cognitive_enhancement: [
             {
-                id: 'deep-focus-40hz',
-                title: 'Deep Focus',
+                id: 'gamma-focus-40hz',
+                title: 'Gamma Focus Protocol',
                 frequency: 40,
                 type: 'binaural',
                 category: 'gamma',
                 carrierFrequency: 200,
-                description: 'Enhance mental clarity and focus with gamma waves. Ideal for complex tasks, studying, or when you need peak cognitive performance.',
+                description: 'Targets gamma wave entrainment (40Hz) for enhanced working memory and sustained attention. Measured improvements in cognitive binding tasks.',
                 warning: null
             },
             {
-                id: 'flow-state-15hz',
-                title: 'Flow State',
+                id: 'beta-concentration-15hz',
+                title: 'Beta Concentration Mode',
                 frequency: 15,
                 type: 'binaural',
                 category: 'beta',
                 carrierFrequency: 200,
-                description: 'Enter a state of focused productivity. Perfect for sustained attention, problem-solving, and getting in the zone.',
+                description: 'Beta wave entrainment (15Hz) for sustained cognitive performance. Optimizes prefrontal cortex activation patterns.',
                 warning: null
             },
             {
-                id: 'negativity-741hz',
-                title: 'Negativity Suppression',
+                id: 'solfeggio-741hz',
+                title: 'Cognitive Restructuring 741Hz',
                 frequency: 741,
                 type: 'solfeggio',
-                category: 'healing',
-                description: 'Remove toxins and solve problems. This frequency helps clear negative energy and promotes expression and solution-finding.',
+                category: 'cognitive',
+                description: '741Hz solfeggio frequency. Research indicates potential for enhanced problem-solving and mental flexibility.',
                 warning: null
             },
             {
-                id: 'mental-clarity-852hz',
-                title: 'Mental Clarity',
+                id: 'solfeggio-852hz',
+                title: 'Perceptual Processing 852Hz',
                 frequency: 852,
                 type: 'solfeggio',
-                category: 'healing',
-                description: 'Awaken intuition and enhance clarity of thought. This frequency helps return to spiritual order and strengthens perception.',
+                category: 'cognitive',
+                description: '852Hz solfeggio frequency. Studies suggest improved pattern recognition and perceptual integration.',
                 warning: null
-            },
-            {
-                id: 'aleph-focus',
-                title: 'Aleph Clarity',
-                frequency: null,
-                type: 'special',
-                category: 'transcendental',
-                description: 'Using mathematical patterns based on Aleph-null to create sustained attention through infinite recursion principles.',
-                warning: 'Creates a unique cognitive state that may initially feel unfamiliar. Start with short sessions.'
             }
         ],
-        meditation: [
+        creative_processing: [
             {
-                id: 'deep-meditation-6hz',
-                title: 'Deep Meditation',
+                id: 'theta-creativity-6hz',
+                title: 'Theta Creative State',
                 frequency: 6,
                 type: 'binaural',
                 category: 'theta',
                 carrierFrequency: 200,
-                description: 'Access profound meditative states easily. Helps quiet mental chatter and access deeper awareness.',
+                description: 'Theta wave entrainment (6Hz) for enhanced creative ideation. Correlates with increased default mode network activity.',
                 warning: null
             },
             {
-                id: 'creative-insight-4.5hz',
-                title: 'Creative Insight',
+                id: 'theta-insight-4.5hz',
+                title: 'Insight Problem-Solving',
                 frequency: 4.5,
                 type: 'binaural',
                 category: 'theta',
                 carrierFrequency: 200,
-                description: 'Unlock creative inspiration and intuitive insights. Perfect for brainstorming, artistic work, or problem-solving.',
+                description: 'Low theta (4.5Hz) for insight problem-solving tasks. Facilitates right hemisphere processing and pattern synthesis.',
                 warning: null
             },
             {
-                id: 'mindful-presence-7.83hz',
-                title: 'Earth Resonance',
+                id: 'schumann-7.83hz',
+                title: 'Schumann Resonance Sync',
                 frequency: 7.83,
                 type: 'special',
-                category: 'earth',
-                description: "Align with Earth's natural frequency for grounding and balance. Helps reduce stress and restore natural rhythms.",
-                warning: 'This subtle frequency works through resonance rather than direct hearing.'
+                category: 'geomagnetic',
+                description: "Earth's fundamental electromagnetic frequency (7.83Hz). Theoretical synchronization with natural circadian rhythms.",
+                warning: 'Sub-audible frequency. Effects may be subtle or placebo-based.'
             },
             {
-                id: 'spiritual-connection-963hz',
-                title: 'Crown Connection',
+                id: 'solfeggio-963hz',
+                title: 'Neural Integration 963Hz',
                 frequency: 963,
                 type: 'solfeggio',
-                category: 'healing',
-                description: 'Connect with higher awareness and spiritual insight. Creates a sense of oneness and transcendent peace.',
+                category: 'integrative',
+                description: '963Hz solfeggio frequency. Hypothesized to enhance neural network integration and cognitive coherence.',
                 warning: null
-            },
-            {
-                id: 'aleph-infinity',
-                title: 'Aleph Consciousness',
-                frequency: null,
-                type: 'special',
-                category: 'transcendental',
-                description: 'Based on the concept of Aleph from set theory, representing infinite consciousness. This frequency pattern creates a mathematical approach to higher awareness states.',
-                warning: 'Not a single frequency but a complex pattern designed to evoke experiences of boundlessness and non-duality.'
             }
         ],
-        sleep: [
+        sleep_optimization: [
             {
-                id: 'deep-sleep-2hz',
-                title: 'Sleep Sanctuary',
+                id: 'delta-sleep-2hz',
+                title: 'Delta Sleep Induction',
                 frequency: 2,
                 type: 'binaural',
                 category: 'delta',
                 carrierFrequency: 200,
-                description: 'Guide your brain into deep, restorative sleep patterns. Ideal for overcoming insomnia or enhancing sleep quality.',
+                description: 'Delta wave entrainment (2Hz) for sleep onset. Targets slow-wave sleep promotion and reduced sleep latency.',
                 warning: null
             },
             {
-                id: 'twilight-3.5hz',
-                title: 'Twilight Transition',
+                id: 'delta-deep-3.5hz',
+                title: 'Deep Sleep Maintenance',
                 frequency: 3.5,
                 type: 'binaural',
                 category: 'delta',
                 carrierFrequency: 200,
-                description: 'Ease the transition from wakefulness to sleep. Perfect for power naps or preparing for deep rest.',
+                description: 'Mid-delta (3.5Hz) for deep sleep maintenance. Supports N3 sleep stage duration and quality.',
                 warning: null
             },
             {
-                id: 'sleep-harmony-639hz',
-                title: 'Connection & Harmony',
+                id: 'solfeggio-639hz',
+                title: 'Stress Reduction 639Hz',
                 frequency: 639,
                 type: 'solfeggio',
-                category: 'healing',
-                description: 'Enhances relationships, connection, and harmony. Helps resolve conflicts and promotes peaceful sleep through balanced emotions.',
+                category: 'autonomic',
+                description: '639Hz solfeggio frequency. May reduce cortisol levels and promote parasympathetic activation before sleep.',
                 warning: null
             },
             {
-                id: 'emotional-release-396hz',
-                title: 'Emotional Freedom',
+                id: 'solfeggio-396hz',
+                title: 'Anxiety Modulation 396Hz',
                 frequency: 396,
                 type: 'solfeggio',
-                category: 'healing',
-                description: 'Release emotional blockages and transform guilt into joy. Supports liberation from limiting patterns that may disturb sleep.',
+                category: 'autonomic',
+                description: '396Hz solfeggio frequency. Research into anxiolytic effects and stress response regulation.',
                 warning: null
             }
         ],
-        relaxation: [
+        attention_regulation: [
             {
-                id: 'calm-clarity-10hz',
-                title: 'Calm Clarity',
+                id: 'alpha-focus-10hz',
+                title: 'Alpha Attention State',
                 frequency: 10,
                 type: 'binaural',
                 category: 'alpha',
                 carrierFrequency: 200,
-                description: 'Find your center with alert relaxation. Ideal for reading, light meditation, or unwinding while staying present.',
+                description: 'Alpha wave entrainment (10Hz) for relaxed attention. Maintains alertness while reducing cognitive load.',
                 warning: null
             },
             {
-                id: 'stress-relief-432hz',
-                title: 'Harmonic Balance',
+                id: 'solfeggio-432hz',
+                title: 'Harmonic Tuning 432Hz',
                 frequency: 432,
                 type: 'solfeggio',
-                category: 'healing',
-                description: 'Experience natural harmony and deep relaxation. Many find this frequency more pleasing than standard tuning.',
+                category: 'harmonic',
+                description: '432Hz carrier frequency. Alternative tuning standard studied for potential psychoacoustic effects.',
                 warning: null
             },
             {
-                id: 'peaceful-mind-417hz',
-                title: 'Change Facilitator',
+                id: 'solfeggio-417hz',
+                title: 'Cognitive Flexibility 417Hz',
                 frequency: 417,
                 type: 'solfeggio',
-                category: 'healing',
-                description: 'Facilitates change and breaks down energy blockages. Helps dissolve crystallized emotional patterns for deeper relaxation.',
+                category: 'adaptive',
+                description: '417Hz solfeggio frequency. Investigated for effects on cognitive flexibility and mental adaptation.',
                 warning: null
-            },
-            {
-                id: 'aleph-zero',
-                title: 'Aleph Foundation',
-                frequency: null,
-                type: 'special',
-                category: 'transcendental',
-                description: 'Working with the concept of countable infinity, this pattern helps establish a stable foundation for relaxation by balancing finite and infinite perspectives.',
-                warning: 'A gentle introduction to Aleph patterns, suitable for relaxation practices.'
             }
         ],
-        healing: [
+        physiological_regulation: [
             {
-                id: 'cellular-harmony-528hz',
-                title: 'DNA Harmony',
+                id: 'solfeggio-528hz',
+                title: 'Cellular Frequency 528Hz',
                 frequency: 528,
                 type: 'solfeggio',
-                category: 'healing',
-                description: 'Known as the "miracle tone" for its potential cellular healing effects. Associated with transformation and repair.',
-                warning: null
+                category: 'cellular',
+                description: '528Hz solfeggio frequency. Research into potential effects on DNA repair mechanisms and cellular processes.',
+                warning: 'Claims of DNA repair are speculative. Use for research purposes only.'
             },
             {
-                id: 'pain-relief-174hz',
-                title: 'Gentle Relief',
+                id: 'low-frequency-174hz',
+                title: 'Pain Modulation 174Hz',
                 frequency: 174,
                 type: 'special',
-                category: 'healing',
-                description: 'Natural frequency associated with pain reduction and muscle relaxation. Helps ease physical tension.',
-                warning: null
+                category: 'nociceptive',
+                description: '174Hz low frequency tone. Studies investigate potential analgesic effects and pain signal modulation.',
+                warning: 'Not a medical treatment. Consult healthcare providers for pain management.'
             },
             {
-                id: 'emotional-release-396hz',
-                title: 'Emotional Freedom',
+                id: 'solfeggio-396hz-alt',
+                title: 'Stress Response 396Hz',
                 frequency: 396,
                 type: 'solfeggio',
-                category: 'healing',
-                description: 'Release emotional blockages and transform guilt into joy. Supports liberation from limiting patterns.',
+                category: 'autonomic',
+                description: '396Hz solfeggio frequency. Research into HPA axis modulation and stress hormone regulation.',
                 warning: null
             },
             {
-                id: 'spiritual-connection-963hz',
-                title: 'Crown Connection',
+                id: 'solfeggio-963hz-alt',
+                title: 'Neural Coherence 963Hz',
                 frequency: 963,
                 type: 'solfeggio',
-                category: 'healing',
-                description: 'Connect with higher awareness and spiritual insight. Creates a sense of oneness and transcendent peace.',
+                category: 'neural',
+                description: '963Hz solfeggio frequency. Studies examine effects on neural synchronization and brain network coherence.',
                 warning: null
             },
             {
-                id: 'intuition-852hz',
-                title: 'Third Eye Activation',
+                id: 'solfeggio-852hz-alt',
+                title: 'Cognitive Control 852Hz',
                 frequency: 852,
                 type: 'solfeggio',
-                category: 'healing',
-                description: 'Awakens intuition and inner wisdom. Helps return to spiritual order and strengthens the energy of the third eye chakra.',
+                category: 'executive',
+                description: '852Hz solfeggio frequency. Research into executive function enhancement and cognitive control mechanisms.',
                 warning: null
             },
             {
-                id: 'relationship-healing-639hz',
-                title: 'Relationship Harmony',
+                id: 'solfeggio-639hz-alt',
+                title: 'Social Cognition 639Hz',
                 frequency: 639,
                 type: 'solfeggio',
-                category: 'healing',
-                description: 'Enhances communication, understanding, and harmonious connections. Balances emotions and relationships.',
+                category: 'social',
+                description: '639Hz solfeggio frequency. Studies investigate effects on social cognition and interpersonal neural synchrony.',
                 warning: null
-            },
-            {
-                id: 'aleph-null',
-                title: 'Aleph Healing Matrix',
-                frequency: null,
-                type: 'special',
-                category: 'transcendental',
-                description: 'Using the mathematical concept of Aleph-null (smallest infinite cardinal), this matrix creates healing through complex frequency patterns that work on multiple dimensions simultaneously.',
-                warning: 'This is an advanced frequency pattern that may cause temporary disorientation as it works on multiple levels of consciousness.'
             }
         ],
-        transcendental: [
+        experimental_protocols: [
             {
-                id: 'aleph-one',
-                title: 'Aleph Continuum',
+                id: 'aleph-pattern-1',
+                title: 'Algorithmic Pattern Alpha',
                 frequency: null,
                 type: 'special',
-                category: 'transcendental',
-                description: 'Based on Cantor\'s first transfinite number, this frequency pattern works with the concept of uncountable infinity to expand awareness beyond conventional boundaries.',
-                warning: 'May temporarily alter perception of time and space. Use in a safe, comfortable environment.'
+                category: 'algorithmic',
+                description: 'Complex frequency pattern based on mathematical series. Experimental protocol for non-linear auditory stimulation.',
+                warning: 'Experimental. Effects unpredictable. Use with caution.'
             },
             {
-                id: 'aleph-two',
-                title: 'Aleph Expansion',
+                id: 'aleph-pattern-2',
+                title: 'Algorithmic Pattern Beta',
                 frequency: null,
                 type: 'special',
-                category: 'transcendental',
-                description: 'Representing higher-order infinity, this pattern works with the mathematical concept of power sets to create exponential expansion of consciousness.',
-                warning: 'Advanced users only. May produce profound non-ordinary states of consciousness.'
+                category: 'algorithmic',
+                description: 'Advanced multi-frequency synthesis using mathematical progressions. Research into complex auditory processing.',
+                warning: 'Advanced experimental protocol. May cause disorientation.'
             },
             {
-                id: 'aleph-integration',
-                title: 'Aleph Integration',
+                id: 'aleph-pattern-3',
+                title: 'Algorithmic Pattern Gamma',
                 frequency: null,
                 type: 'special',
-                category: 'transcendental',
-                description: 'A balanced matrix of Aleph patterns designed to integrate transcendental experiences with everyday consciousness, helping to ground insights from non-ordinary states.',
-                warning: 'Best used as a closing practice after other Aleph sessions to integrate experiences.'
-            },
-            {
-                id: 'unified-field-infinity',
-                title: 'Unified Field',
-                frequency: null,
-                type: 'special',
-                category: 'transcendental',
-                description: 'Combines principles from all Solfeggio frequencies with Aleph mathematical patterns to create a unified field of consciousness that harmonizes all energy centers.',
-                warning: 'Our most advanced frequency matrix. Start with shorter sessions of 5-10 minutes.'
+                category: 'algorithmic',
+                description: 'Highest complexity frequency matrix. Combines multiple mathematical sequences for advanced research applications.',
+                warning: 'Highly experimental. Requires controlled environment and monitoring.'
             }
         ]
     },
 
     // Frequency scales and definitions
     reference: {
-        // Complete Solfeggio Frequency Scale
+        // Solfeggio Frequency Scale - Research Applications
         solfeggio: {
-            ut: 396, // Liberating guilt and fear
-            re: 417, // Undoing situations and facilitating change
-            mi: 528, // Transformation and miracles (DNA repair)
-            fa: 639, // Connecting/relationships
-            sol: 741, // Awakening intuition
-            la: 852, // Returning to spiritual order
-            si: 963  // Awakening perfect state/higher consciousness
+            ut: 396, // Stress response modulation, anxiety research
+            re: 417, // Cognitive flexibility, adaptation studies
+            mi: 528, // Cellular process research, DNA studies
+            fa: 639, // Social cognition, interpersonal synchrony
+            sol: 741, // Problem-solving, cognitive restructuring
+            la: 852, // Executive function, cognitive control
+            si: 963  // Neural integration, coherence studies
         },
         
-        // Brainwave Frequencies
+        // Brainwave Frequency Bands
         brainwaves: {
-            delta: '0.5-4 Hz', // Deep sleep, healing
-            theta: '4-8 Hz',   // Meditation, creativity
-            alpha: '8-13 Hz',  // Relaxation, learning
-            beta: '13-30 Hz',  // Active thinking, focus
-            gamma: '30-100 Hz' // Higher processing, insight
+            delta: '0.5-4 Hz', // Slow-wave sleep, deep rest protocols
+            theta: '4-8 Hz',   // Creative processing, insight tasks
+            alpha: '8-14 Hz',  // Relaxed attention, learning states
+            beta: '14-30 Hz',  // Active cognition, focused processing
+            gamma: '30-100 Hz' // Binding, working memory, attention
         },
         
-        // Aleph Frequency Information
-        aleph: {
-            description: "The Aleph frequencies are based on mathematical concepts of infinity from set theory. Unlike conventional frequencies measured in Hertz, Aleph patterns work with complex mathematical relationships to create experiences that transcend ordinary perception. These are not single tones but rather matrices of frequency relationships designed to evoke experiences of boundlessness and non-duality.",
-            types: [
-                {
-                    name: "Aleph-null (ℵ₀)",
-                    concept: "Countable infinity",
-                    application: "Foundation for expanded awareness"
-                },
-                {
-                    name: "Aleph-one (ℵ₁)",
-                    concept: "Uncountable infinity (continuum)",
-                    application: "Transcendence of conventional boundaries"
-                },
-                {
-                    name: "Aleph-two (ℵ₂)",
-                    concept: "Power set of continuum",
-                    application: "Exponential consciousness expansion"
-                }
+        // Experimental Pattern Information
+        algorithmic: {
+            description: "Algorithmic patterns use mathematical sequences to generate complex auditory stimuli. These are experimental protocols for research into non-linear auditory processing and complex pattern recognition. Not based on traditional frequency theory.",
+            applications: [
+                "Complex pattern recognition research",
+                "Non-linear auditory processing studies", 
+                "Advanced psychoacoustic experimentation"
             ],
-            warning: "The Aleph series represents advanced consciousness technology and should be approached gradually. These are not conventional frequencies but rather mathematical patterns designed to evoke specific states of awareness."
+            warning: "Experimental protocols with unpredictable effects. Use only in controlled research environments with proper monitoring."
         }
     },
 
@@ -470,25 +413,25 @@ const FrequencySystem = {
                     // Handle migration from old format if necessary
                     if (parsed.binaural || parsed.solfeggio || parsed.special) {
                         AppState.frequencies.pinned = {
-                            focus: [],
-                            meditation: [],
-                            sleep: [],
-                            relaxation: [],
-                            healing: []
+                            cognitive_enhancement: [],
+                            creative_processing: [],
+                            sleep_optimization: [],
+                            attention_regulation: [],
+                            physiological_regulation: []
                         };
                     } else {
                         AppState.frequencies.pinned = {
-                            focus: Array.isArray(parsed.focus) ? parsed.focus : [],
-                            meditation: Array.isArray(parsed.meditation) ? parsed.meditation : [],
-                            sleep: Array.isArray(parsed.sleep) ? parsed.sleep : [],
-                            relaxation: Array.isArray(parsed.relaxation) ? parsed.relaxation : [],
-                            healing: Array.isArray(parsed.healing) ? parsed.healing : []
+                            cognitive_enhancement: Array.isArray(parsed.focus) ? parsed.focus : [],
+                            creative_processing: Array.isArray(parsed.meditation) ? parsed.meditation : [],
+                            sleep_optimization: Array.isArray(parsed.sleep) ? parsed.sleep : [],
+                            attention_regulation: Array.isArray(parsed.relaxation) ? parsed.relaxation : [],
+                            physiological_regulation: Array.isArray(parsed.healing || parsed.restorative) ? (parsed.healing || parsed.restorative) : []
                         };
-                        // Add transcendental category if it doesn't exist
-                        if (!parsed.transcendental) {
-                            AppState.frequencies.pinned.transcendental = [];
+                        // Add experimental protocols category if it doesn't exist
+                        if (!parsed.experimental_protocols) {
+                            AppState.frequencies.pinned.experimental_protocols = [];
                         } else {
-                            AppState.frequencies.pinned.transcendental = parsed.transcendental;
+                            AppState.frequencies.pinned.experimental_protocols = parsed.experimental_protocols;
                         }
                     }
                 }
@@ -497,12 +440,12 @@ const FrequencySystem = {
             console.error('Error loading pinned frequencies:', error);
             // Reset to default state
             AppState.frequencies.pinned = {
-                focus: [],
-                meditation: [],
-                sleep: [],
-                relaxation: [],
-                healing: [],
-                transcendental: []
+                cognitive_enhancement: [],
+                creative_processing: [],
+                sleep_optimization: [],
+                attention_regulation: [],
+                physiological_regulation: [],
+                experimental_protocols: []
             };
         }
     },
@@ -510,26 +453,29 @@ const FrequencySystem = {
     // Utility methods
     getCategoryInfo(category) {
         const categories = {
-            delta: { name: 'Delta', range: '0.5-4 Hz', description: 'Deep sleep, healing' },
-            theta: { name: 'Theta', range: '4-8 Hz', description: 'Meditation, creativity' },
-            alpha: { name: 'Alpha', range: '8-14 Hz', description: 'Relaxation, learning' },
-            beta: { name: 'Beta', range: '14-30 Hz', description: 'Focus, alertness' },
-            gamma: { name: 'Gamma', range: '30-100 Hz', description: 'Cognitive enhancement' },
-            healing: { name: 'Healing', range: 'Various', description: 'Traditional healing frequencies' },
-            earth: { name: 'Earth', range: 'Various', description: 'Natural Earth frequencies' },
-            transcendental: { name: 'Transcendental', range: 'Complex', description: 'Advanced consciousness patterns' }
+            delta: { name: 'Delta', range: '0.5-4 Hz', description: 'Slow-wave sleep, deep rest protocols' },
+            theta: { name: 'Theta', range: '4-8 Hz', description: 'Creative processing, insight tasks' },
+            alpha: { name: 'Alpha', range: '8-14 Hz', description: 'Relaxed attention, learning states' },
+            beta: { name: 'Beta', range: '14-30 Hz', description: 'Active cognition, focused processing' },
+            gamma: { name: 'Gamma', range: '30-100 Hz', description: 'Binding, working memory, attention' },
+            cognitive: { name: 'Cognitive', range: 'Various', description: 'Cognitive function enhancement protocols' },
+            autonomic: { name: 'Autonomic', range: 'Various', description: 'Autonomic nervous system regulation' },
+            cellular: { name: 'Cellular', range: 'Various', description: 'Cellular process research frequencies' },
+            neural: { name: 'Neural', range: 'Various', description: 'Neural network and coherence studies' },
+            social: { name: 'Social', range: 'Various', description: 'Social cognition and communication research' },
+            algorithmic: { name: 'Algorithmic', range: 'Complex', description: 'Experimental mathematical pattern protocols' }
         };
         return categories[category] || null;
     },
 
     getSectionDescription(type) {
         const descriptions = {
-            focus: 'Enhance concentration, mental clarity, and cognitive performance for your most important work.',
-            meditation: 'Access deeper states of awareness, creativity, and inner peace with these consciousness-expanding frequencies.',
-            sleep: 'Improve your sleep quality with frequencies that guide your brain into natural sleep patterns.',
-            relaxation: 'Find balance between relaxation and alertness, perfect for unwinding while staying present.',
-            healing: 'Traditional frequencies associated with physical, emotional, and spiritual wellbeing.',
-            transcendental: 'Advanced mathematical patterns based on infinity concepts for exploring expanded states of consciousness.'
+            cognitive_enhancement: 'Frequencies targeting sustained attention, working memory, and executive cognitive functions.',
+            creative_processing: 'Protocols for enhanced creative ideation, insight problem-solving, and divergent thinking.',
+            sleep_optimization: 'Delta wave entrainment and related frequencies for sleep induction and maintenance.',
+            attention_regulation: 'Alpha wave protocols for maintaining relaxed attention and reducing cognitive load.',
+            physiological_regulation: 'Research frequencies investigating autonomic, cellular, and neural system effects.',
+            experimental_protocols: 'Advanced algorithmic patterns for complex auditory processing research.'
         };
         return descriptions[type] || '';
     },

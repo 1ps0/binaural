@@ -1,6 +1,7 @@
 /**
- * Carrier Module
- * Base audio generation module for standard oscillators
+ * Carrier Waveform Generator
+ * Base module for generating fundamental audio waveforms (sine, square, sawtooth, triangle) at specified frequencies.
+ * Serves as the primary sound source for subsequent modulation or processing by other audio modules.
  */
 
 // Initialize AudioModules namespace if it doesn't exist

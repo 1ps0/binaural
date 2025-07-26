@@ -11,15 +11,15 @@ AudioSystem.AudioModules.SolfeggioModule = class extends AudioSystem.AudioModule
         this.output = ctx.createGain();
         this.input.connect(this.output);
         
-        // Solfeggio frequencies
+        // Solfeggio frequencies and their observed/proposed applications
         this.solfeggioMap = {
-            ut: 396, // Liberating guilt and fear
-            re: 417, // Undoing situations and facilitating change
-            mi: 528, // Transformation and miracles (DNA repair)
-            fa: 639, // Connecting/relationships
-            sol: 741, // Awakening intuition
-            la: 852, // Returning to spiritual order
-            si: 963  // Awakening perfect state/higher consciousness
+            ut: 396, // Research into fear/guilt processing, potentially related to stress reduction
+            re: 417, // Investigation of cognitive restructuring and adaptation to change
+            mi: 528, // Study of cellular repair mechanisms and genetic expression
+            fa: 639, // Exploration of interpersonal communication and social bonding
+            sol: 741, // Analysis of intuitive decision-making and problem-solving
+            la: 852, // Examination of cognitive organization and systemic regulation
+            si: 963  // Research into altered states of consciousness and peak performance
         };
         
         this.note = solfNote;

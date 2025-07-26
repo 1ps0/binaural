@@ -1,7 +1,7 @@
 /**
- * Aleph Module
- * Implements complex mathematical pattern generation based on aleph infinity concepts
- * WITHOUT AudioWorklet dependency for maximum browser compatibility
+ * Aleph Signal Pattern Generator
+ * Implements advanced algorithmic synthesis of complex, non-repeating audio patterns based on set-theoretic principles (countable and uncountable infinities).
+ * Utilized for generating diverse and novel auditory stimuli for psychoacoustic research and experimental sound design.
  */
 
 // Creates Aleph pattern variations based on set theory infinity concepts
@@ -167,8 +167,8 @@ AudioSystem.AudioModules.AlephModule = class extends AudioSystem.AudioModules.Ba
     
     // Pattern generators for different Aleph types
     createCountableInfinityPattern() {
-        // Countable infinity implementation (aleph-null)
-        // Create a harmonic series with diminishing amplitudes
+        // Generates a harmonic series with diminishing amplitudes.
+        // Employs a golden ratio influence on frequency progression for specific spectral characteristics.
         
         // Determine safe number of oscillators based on device capabilities
         const maxOscillators = this.estimateSafeOscillatorCount();
@@ -197,8 +197,8 @@ AudioSystem.AudioModules.AlephModule = class extends AudioSystem.AudioModules.Ba
     }
     
     createUncountableInfinityPattern() {
-        // More sophisticated implementation (aleph-one)
-        // Create a multi-layered FM synthesis
+        // Generates a multi-layered Frequency Modulation (FM) synthesis.
+        // Utilizes irrational number relationships for complex, non-repeating sonic textures.
         const carrier = this.ctx.createOscillator();
         const masterGain = this.ctx.createGain();
         masterGain.gain.value = 0.7;
