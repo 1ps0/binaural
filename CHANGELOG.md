@@ -1,6 +1,11 @@
 # Changelog
 
-## [2.2.0] 2026-09-10
+## [2.2.1] 2026-09-10
+
+- Banner offers both previous versions: `v2.0.2/index.html` (the exact file that was live before 2.2.0, its v1 link repointed) and `v1/`.
+- Banner dismissal is keyed per release (`legacy-banner-dismissed-<version>`), so it shows once after each deploy instead of staying hidden from an old dismissal.
+- `test/template.test.js` keeps `package.json`, the template version string, the banner, and the snapshot consistent.
+- Browser smoke: `resume()` wait raised to 8 s after one local Firefox flake.
 
 ### Audio
 - Level is applied once: per-tone gain fades 0→1, the slider drives `masterGain`. Fixes silent tones started at volume 0 and the volume² curve.

@@ -1,6 +1,6 @@
 {
   "name": "binaural",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Binaural beat, tone, and pattern generator on the Web Audio API",
   "private": true,
   "scripts": {

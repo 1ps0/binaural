@@ -909,8 +909,8 @@ html.no-svg .icon__fallback { display: inline; }
 <body>
     <header class="app-header">
         <div class="container">
-            <div class="legacy-version-banner" hidden>
-                <p>Previous version: <a href="v1/index.html">open v1</a></p>
+            <div class="legacy-version-banner" data-version="2.2.1" hidden>
+                <p>Previous versions: <a href="v2.0.2/index.html">2.0.2</a> · <a href="v1/index.html">v1</a></p>
                 <button class="legacy-banner-close" aria-label="Dismiss">×</button>
             </div>
             <h1 class="app-title">Binaural beat generator</h1>
@@ -968,7 +968,7 @@ html.no-svg .icon__fallback { display: inline; }
             </section>
             <section>
                 <h3>Version</h3>
-                <p class="version-info">2.2.0 · 2026-09-10</p>
+                <p class="version-info">2.2.1 · 2026-09-10</p>
             </section>
         </div>
     </div>
@@ -2207,12 +2207,14 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (AudioSystem.activeIds().length) AudioSystem.resume();
     });
 
+    // Dismissal is per release so the banner reappears once after each deploy.
     const banner = document.querySelector('.legacy-version-banner');
     if (banner) {
-        banner.hidden = localStorage.getItem('legacy-banner-dismissed') === 'true';
+        const key = `legacy-banner-dismissed-${banner.dataset.version || 'unversioned'}`;
+        banner.hidden = localStorage.getItem(key) === 'true';
         banner.querySelector('.legacy-banner-close').addEventListener('click', () => {
             banner.hidden = true;
-            localStorage.setItem('legacy-banner-dismissed', 'true');
+            localStorage.setItem(key, 'true');
         });
     }
 

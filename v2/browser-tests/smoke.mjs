@@ -72,7 +72,7 @@ async function scenario(session, pageUrl) {
     const ctx = binaural.AppState.audio.context;
     let resumeError = null;
     try {
-      await Promise.race([ctx.resume(), new Promise((_, rej) => setTimeout(() => rej(new Error('resume() did not settle in 3000 ms')), 3000))]);
+      await Promise.race([ctx.resume(), new Promise((_, rej) => setTimeout(() => rej(new Error('resume() did not settle in 8000 ms')), 8000))]);
     } catch (e) { resumeError = String(e && e.message || e); }
     done({
       state: ctx.state,

@@ -29,12 +29,14 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (AudioSystem.activeIds().length) AudioSystem.resume();
     });
 
+    // Dismissal is per release so the banner reappears once after each deploy.
     const banner = document.querySelector('.legacy-version-banner');
     if (banner) {
-        banner.hidden = localStorage.getItem('legacy-banner-dismissed') === 'true';
+        const key = `legacy-banner-dismissed-${banner.dataset.version || 'unversioned'}`;
+        banner.hidden = localStorage.getItem(key) === 'true';
         banner.querySelector('.legacy-banner-close').addEventListener('click', () => {
             banner.hidden = true;
-            localStorage.setItem('legacy-banner-dismissed', 'true');
+            localStorage.setItem(key, 'true');
         });
     }
 
