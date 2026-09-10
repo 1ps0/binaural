@@ -86,13 +86,25 @@ async function scenario(session) {
   return { ua: page.ua, sampleRate: after.sampleRate, state: after.state, activation: after.activation, left: dsp.left, right: dsp.right };
 }
 
+// Under GitHub Actions also emit workflow-command annotations, which are readable through
+// the REST API (check-runs/{job}/annotations) when raw logs are not reachable.
+const onActions = !!process.env.GITHUB_ACTIONS;
+function report(status, name, detail) {
+  const line = `${status} ${name}: ${detail}`;
+  console.log(line);
+  if (onActions) {
+    const level = status === 'FAIL' ? 'error' : 'notice';
+    console.log(`::${level} title=browser smoke ${name}::${line.replace(/\r?\n/g, ' ').slice(0, 900)}`);
+  }
+}
+
 let failed = 0;
 let port = 4460;
 for (const name of wanted) {
   const spec = BROWSERS[name];
-  if (!spec) { console.log(`FAIL ${name}: unknown browser`); failed++; continue; }
+  if (!spec) { report('FAIL', name, 'unknown browser'); failed++; continue; }
   if (!spec.available()) {
-    console.log(`${strict ? 'FAIL' : 'SKIP'} ${name}: ${spec.missing}`);
+    report(strict ? 'FAIL' : 'SKIP', name, `${spec.missing} [driver=${spec.driver}, PATH lookup and store checked]`);
     if (strict) failed++;
     continue;
   }
@@ -101,10 +113,10 @@ for (const name of wanted) {
     driver = await startDriver(name, port++);
     session = await Session.create(driver.base, spec.capabilities());
     const result = await scenario(session);
-    console.log(`PASS ${name}: ${JSON.stringify(result)}`);
+    report('PASS', name, JSON.stringify(result));
   } catch (e) {
     failed++;
-    console.log(`FAIL ${name}: ${e.message}`);
+    report('FAIL', name, e.message);
   } finally {
     if (session) await session.quit().catch(() => {});
     if (driver) driver.proc.kill();
