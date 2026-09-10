@@ -1,6 +1,6 @@
 # binaural — state of play
 
-Updated 2026-09-10 on branch `v2.2` (pushed). `main` fast-forwards to it; GitHub Pages builds from `main`, so pushing `main` publishes 2.2.0.
+Updated 2026-09-10. `v2.2` and `main` are identical at 2.2.1 and pushed; GitHub Pages (source: `main`, `/`) serves 2.2.1 at https://1ps0.info/binaural. [ran: curl → version-info 2.2.1; banner links 2.0.2 and v1]
 
 ## What is real
 
@@ -11,9 +11,9 @@ Updated 2026-09-10 on branch `v2.2` (pushed). `main` fast-forwards to it; GitHub
 - **Safari locally needs one toggle.** `safaridriver` is enabled but session creation on this Mac returns "You must enable the 'Allow Remote Automation' option in Safari's Develop menu". Flip it once, then `node browser-tests/smoke.mjs --browser=safari`. In CI Safari passes. [ran: local smoke → that message; CI → PASS safari]
 - **Bundle is 76 KB unminified** (was 165 KB). [ran: wc -c]
 
-## What the live site shows until the next push
+## Live site
 
-`https://1ps0.info/binaural` still serves 2.0.2 with "Healing & Wellbeing" sections. [src: fetched 2026-08-18] Pages source is `main` at `/` [ran: gh api repos/1ps0/binaural/pages]; nothing here is live until `main` is pushed.
+2.2.1 is live. The previous production build is preserved at `v2.0.2/index.html` (the exact pre-rewrite file) and linked from the banner alongside `v1/`; the banner's dismissal is keyed per release.
 
 ## Where things live
 
