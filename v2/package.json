@@ -1,11 +1,14 @@
 {
-  "name": "binaural-beats-app",
-  "version": "4.1.0",
-  "description": "Binaural Beats & Healing Frequencies Web Application",
+  "name": "binaural",
+  "version": "2.2.0",
+  "description": "Binaural beat, tone, and pattern generator on the Web Audio API",
   "private": true,
   "scripts": {
     "build": "node build.js",
-    "build:prod": "NODE_ENV=production node build.js"
+    "build:prod": "NODE_ENV=production node build.js",
+    "deploy": "node build.js --deploy",
+    "test": "node --test test/",
+    "check": "npm test && npm run deploy && git -C .. diff --exit-code --stat -- index.html v2/dist/index.html"
   },
   "devDependencies": {
     "cssnano": "^5.1.15",

@@ -1,5 +1,32 @@
 # Changelog
 
+## [2.2.0] 2026-09-10
+
+### Audio
+- Level is applied once: per-tone gain fades 0→1, the slider drives `masterGain`. Fixes silent tones started at volume 0 and the volume² curve.
+- One AudioContext per session, created inside the first play click. The sample-rate probe context is gone.
+- All start/stop scheduling on the AudioContext clock; no `setTimeout` in the audio path.
+- Pattern entries map to the three implemented algorithms; unknown ids throw. FM carrier now sits at the base frequency. Prime-ratio buffer is rendered synchronously, looped, and never replaced mid-play.
+- Removed: 30-minute tone cutoff, `performance.memory` heuristics, unused Carrier/Binaural/Solfeggio module classes.
+
+### Catalog and language
+- Three sections by what is synthesised: binaural beats, pure tones, generated patterns.
+- Descriptions are derived from the spec (ear frequencies, beat, band, algorithm constants). No effect claims; a test rejects claim vocabulary.
+- Duplicate solfeggio entries removed; 7.83 Hz is a beat, not an inaudible pure tone; 440 Hz reference added.
+- Pins are a flat id list; every historical id (v1, v2.0.x, v2.1) migrates.
+
+### UI
+- Inline SVG icons with emoji fallback under `html.no-svg`.
+- Follows `prefers-color-scheme` until toggled; honours `prefers-reduced-motion`; visible focus rings.
+- Control bar height published as `--control-bar-height` so content never hides under it.
+- Toasts styled; debounced search; event-delegated buttons; legacy banner in flow.
+
+### Project
+- `node --test` suite (30 tests) with a fake AudioContext; `npm run check` fails if root `index.html` drifts from `v2/src`.
+- `npm run deploy` copies the build to the root; GitHub Actions runs test + check.
+- Removed `_headers` and `_config.yml` (never honoured by GitHub Pages); added `.nojekyll`.
+
+
 ## [2.0.1] 2025-03-22
 
 ### Major Changes

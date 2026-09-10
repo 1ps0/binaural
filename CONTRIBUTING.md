@@ -63,7 +63,7 @@ Contributions should focus on:
 
 ### Suggesting Enhancements
 
-1. Review [BLUEPRINT.md](v2/BLUEPRINT.md) and [ROADMAP.md](ROADMAP.md) to ensure alignment
+1. Review [ROADMAP.md](ROADMAP.md) and the specs in [specs/](specs/) to ensure alignment
 2. Open an issue with:
    - A clear title and problem statement
    - Description of current limitations or pain points
@@ -75,7 +75,7 @@ Contributions should focus on:
 ### Pull Request Process
 
 1. **Select a well-defined task**:
-   - Choose from open issues, BLUEPRINT.md, or ROADMAP.md
+   - Choose from open issues or ROADMAP.md
    - Confirm your intent to work on it by commenting on the issue
 
 2. **Fork and branch appropriately**:

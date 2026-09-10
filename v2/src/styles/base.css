@@ -1,83 +1,77 @@
-/* Theme System - Base Tokens */
+/* Tokens */
 :root {
-    /* Base Colors - HSL for easier manipulation */
-    --color-primary-h: 220;
-    --color-primary-s: 100%;
-    --color-primary-l: 62%;
-    --color-secondary-h: 260;
-    --color-secondary-s: 84%;
-    --color-secondary-l: 57%;
-    --color-success-h: 160;
-    --color-success-s: 95%;
-    --color-success-l: 43%;
-    --color-danger-h: 358;
-    --color-danger-s: 85%;
-    --color-danger-l: 54%;
+    color-scheme: light dark;
 
-    /* Light Theme Defaults */
-    --light-bg: hsl(0, 0%, 100%);
-    --light-text: hsl(0, 0%, 20%);
-    --light-card-bg: hsl(210, 17%, 98%);
-    --light-card-border: hsl(210, 14%, 89%);
-    --light-control-bg: hsla(0, 0%, 100%, 0.95);
+    --primary: hsl(220 100% 55%);
+    --primary-dark: hsl(220 100% 45%);
+    --secondary: hsl(260 84% 57%);
+    --success: hsl(160 95% 34%);
+    --success-dark: hsl(160 95% 26%);
+    --danger: hsl(358 85% 52%);
+    --warning: hsl(40 95% 45%);
 
-    /* Dark Theme Values */
-    --dark-bg: hsl(0, 0%, 10%);
-    --dark-text: hsl(0, 0%, 90%);
-    --dark-card-bg: hsl(0, 0%, 18%);
-    --dark-card-border: hsl(0, 0%, 25%);
-    --dark-control-bg: hsla(0, 0%, 10%, 0.95);
+    --bg: hsl(0 0% 100%);
+    --text: hsl(0 0% 14%);
+    --text-muted: hsl(0 0% 40%);
+    --card-bg: hsl(210 17% 98%);
+    --card-border: hsl(210 14% 87%);
+    --control-bg: hsl(0 0% 100% / 0.96);
+    --note-bg: hsl(40 100% 94%);
+    --note-text: hsl(30 60% 24%);
+    --on-primary: #fff;
 
-    /* Active Theme Values - Default to Light */
-    --bg: var(--light-bg);
-    --text: var(--light-text);
-    --card-bg: var(--light-card-bg);
-    --card-border: var(--light-card-border);
-    --control-bg: var(--light-control-bg);
-
-    /* Functional Colors */
-    --primary: hsl(var(--color-primary-h), var(--color-primary-s), var(--color-primary-l));
-    --secondary: hsl(var(--color-secondary-h), var(--color-secondary-s), var(--color-secondary-l));
-    --success: hsl(var(--color-success-h), var(--color-success-s), var(--color-success-l));
-    --danger: hsl(var(--color-danger-h), var(--color-danger-s), var(--color-danger-l));
-
-    /* Spacing System */
     --space-xs: 0.25rem;
     --space-sm: 0.5rem;
     --space-md: 1rem;
     --space-lg: 1.5rem;
     --space-xl: 2rem;
 
-    /* Typography */
     --font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     --font-size-base: 16px;
     --line-height-base: 1.5;
+    --radius: 8px;
 
-    /* Transitions */
     --transition-fast: 150ms ease;
     --transition-normal: 300ms ease;
-    --transition-slow: 500ms ease;
 
-    /* Z-index Layers */
     --z-control-bar: 1000;
     --z-modal: 2000;
-    --z-tooltip: 3000;
+    --z-toast: 3000;
 
-    /* Add dark variants for hover states */
-    --primary-dark: hsl(var(--color-primary-h), var(--color-primary-s), 52%);
-    --success-dark: hsl(var(--color-success-h), var(--color-success-s), 33%);
+    /* Overwritten at runtime from the control bar's measured height. */
+    --control-bar-height: 100px;
 }
 
-/* Dark Theme */
-[data-theme="dark"] {
-    --bg: var(--dark-bg);
-    --text: var(--dark-text);
-    --card-bg: var(--dark-card-bg);
-    --card-border: var(--dark-card-border);
-    --control-bg: var(--dark-control-bg);
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --primary: hsl(220 100% 66%);
+        --primary-dark: hsl(220 100% 58%);
+        --bg: hsl(0 0% 9%);
+        --text: hsl(0 0% 90%);
+        --text-muted: hsl(0 0% 65%);
+        --card-bg: hsl(0 0% 14%);
+        --card-border: hsl(0 0% 24%);
+        --control-bg: hsl(0 0% 9% / 0.96);
+        --note-bg: hsl(40 30% 16%);
+        --note-text: hsl(40 80% 78%);
+    }
 }
 
-/* Base Styles */
+:root[data-theme="dark"] {
+    --primary: hsl(220 100% 66%);
+    --primary-dark: hsl(220 100% 58%);
+    --bg: hsl(0 0% 9%);
+    --text: hsl(0 0% 90%);
+    --text-muted: hsl(0 0% 65%);
+    --card-bg: hsl(0 0% 14%);
+    --card-border: hsl(0 0% 24%);
+    --control-bg: hsl(0 0% 9% / 0.96);
+    --note-bg: hsl(40 30% 16%);
+    --note-text: hsl(40 80% 78%);
+}
+
+/* Reset */
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -93,14 +87,34 @@ body {
     font-family: var(--font-family);
     background-color: var(--bg);
     color: var(--text);
-    transition:
-        background-color var(--transition-normal),
-        color var(--transition-normal);
-    margin: 0;
-    padding: 0;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+button {
+    font: inherit;
+    color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Focus */
+:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.app-header :focus-visible {
+    outline-color: var(--on-primary);
 }
 
 /* Layout */
@@ -111,7 +125,12 @@ body {
     padding: var(--space-md);
 }
 
-/* Utility Classes */
+.main-content {
+    flex: 1;
+    padding: var(--space-xl) 0 calc(var(--control-bar-height) + var(--space-lg));
+}
+
+/* Utilities */
 .visually-hidden {
     position: absolute;
     width: 1px;
@@ -124,43 +143,102 @@ body {
     border: 0;
 }
 
-/* Main Content Area */
-.main-content {
-    flex: 1;
-    padding: var(--space-xl) 0;
-    margin-bottom: 100px; /* Space for control bar */
+/* Icons: inline SVG, emoji fallback only when inline SVG is unsupported */
+.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25em;
+    height: 1.25em;
+    vertical-align: -0.25em;
+    flex: 0 0 auto;
 }
 
-/* Legacy Banner */
+.icon svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+    display: block;
+}
 
-.legacy-version-banner {
+.icon__fallback {
+    display: none;
+    line-height: 1;
+}
+
+html.no-svg .icon svg { display: none; }
+html.no-svg .icon__fallback { display: inline; }
+
+/* Toasts */
+.toast-host {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: var(--primary);
-    color: white;
-    padding: 8px 16px;
-    text-align: center;
-    z-index: var(--z-control-bar);
+    left: 50%;
+    bottom: calc(var(--control-bar-height) + var(--space-md));
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    z-index: var(--z-toast);
+    max-width: min(90vw, 480px);
+    pointer-events: none;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius);
+    background: var(--card-bg);
+    color: var(--text);
+    border: 1px solid var(--card-border);
+    border-left: 4px solid var(--primary);
+    box-shadow: 0 4px 16px hsl(0 0% 0% / 0.2);
+    pointer-events: auto;
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.toast--error { border-left-color: var(--danger); }
+.toast--warning { border-left-color: var(--warning); }
+.toast--success { border-left-color: var(--success); }
+.toast--hiding { opacity: 0; transform: translateY(6px); }
+
+.toast__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    display: inline-flex;
+}
+
+/* Legacy banner: in-flow, not fixed */
+.legacy-version-banner:not([hidden]) {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: var(--space-sm);
+    margin: 0 0 var(--space-md);
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px solid hsl(0 0% 100% / 0.3);
+    border-radius: var(--radius);
+    font-size: 0.9rem;
 }
 
 .legacy-version-banner a {
-    color: white;
+    color: inherit;
     text-decoration: underline;
-    font-weight: bold;
-    margin: 0 8px;
 }
 
 .legacy-banner-close {
     background: none;
     border: none;
-    color: white;
-    font-size: 1.2rem;
     cursor: pointer;
-    padding: 0 8px;
-    margin-left: 16px;
+    font-size: 1.1rem;
+    padding: 0 var(--space-xs);
+}
+
+.no-results {
+    color: var(--text-muted);
+    padding: var(--space-xl) 0;
+    text-align: center;
 }

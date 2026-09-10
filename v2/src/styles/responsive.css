@@ -1,140 +1,75 @@
-/* Responsive adjustments */
 @media (max-width: 768px) {
+    .app-title {
+        font-size: 1.4rem;
+    }
+
     .frequency-grid {
         grid-template-columns: 1fr;
     }
 
     .frequency-item {
-        grid-template-columns: 120px minmax(0, 1fr) auto;
+        grid-template-columns: minmax(0, 1fr) auto;
     }
 
-    .frequency-item__actions {
-        min-width: 100px;
+    .frequency-item__header {
+        border-right: none;
+        border-bottom: 1px solid var(--card-border);
+        grid-column: 1 / -1;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
     }
 
-    .btn--play {
-        min-width: 80px;
-        padding: 8px;
-    }
-
-    .control-bar {
-        padding: var(--space-sm);
+    .frequency-item__body {
+        padding-top: var(--space-xs);
     }
 
     .control-bar .container {
         gap: var(--space-sm);
-        flex-direction: column;
-        align-items: stretch;
     }
 
-    .control-bar__section {
-        margin: 0;
-        width: 100%;
-    }
-
-    .search-container {
-        width: 100%;
-    }
-
-    .control-bar__actions {
-        justify-content: space-between;
-    }
-
-    /* Compact layout for mobile */
     .control-bar__volume {
         flex: 0 0 auto;
     }
 
-    .control-bar__view-toggle {
-        flex: 0 0 auto;
-    }
-
-    .control-bar__search {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .control-bar__actions {
-        flex: 0 0 auto;
-    }
-
     .volume-slider {
-        width: 80px;
+        width: 90px;
     }
 
     .volume-display {
         display: none;
     }
 
-    .search-input {
-        padding: 6px 28px 6px 8px;
-        font-size: 0.85rem;
-    }
-
     .action-button {
-        padding: 6px 8px;
-        font-size: 0.85rem;
+        padding: 8px 10px;
     }
 
-    .action-button svg {
-        width: 14px;
-        height: 14px;
-    }
-
-    /* Adjust spacing for active tones */
-    .active-tones-container {
-        gap: 4px;
-        padding: 4px 0;
-    }
-
-    .active-tone {
-        padding: 2px 6px 2px 8px;
-        font-size: 0.85rem;
-    }
-
-    .active-tone__stop {
-        width: 16px;
-        height: 16px;
+    .action-button span {
+        display: none;
     }
 }
 
 @media (max-width: 576px) {
-    .frequency-item {
-        grid-template-columns: 100px minmax(0, 1fr) auto;
+    .btn__label {
+        display: none;
     }
 
-    .frequency-item__actions {
-        min-width: 90px;
-        padding: 6px;
+    .btn--play {
+        min-width: 0;
     }
 
-    .btn {
-        padding: 6px 10px;
-        font-size: 0.85rem;
+    .frequency-card .btn,
+    .frequency-item .btn {
+        padding: var(--space-sm) var(--space-md);
     }
 
-    .control-bar {
-        padding: var(--space-xs);
+    .control-bar__search {
+        flex: 1 1 100%;
+        order: 3;
     }
 
-    .control-bar .container {
-        gap: var(--space-xs);
-    }
-
-    .volume-slider {
-        width: 60px;
-    }
-
-    .btn {
-        padding: 6px 10px;
-        font-size: 0.85rem;
-    }
-}
-
-/* Adjust search bar size in intermediate widths to prevent wrapping */
-@media (min-width: 769px) and (max-width: 900px) { /* Adjust 900px as needed */
-    .search-container {
-        min-width: 150px; /* Adjust value as needed */
-        flex-shrink: 1;
+    .info-modal__content {
+        padding: var(--space-lg);
+        margin: var(--space-md) auto;
     }
 }

@@ -2,127 +2,90 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; base-uri 'self'; form-action 'none';">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Binaural Beats & Neural Entrainment System</title>
+    <title>Binaural</title>
 
     <!-- STYLES_PLACEHOLDER -->
 </head>
 <body>
     <header class="app-header">
         <div class="container">
-            <h1 class="app-title">Binaural Beats & Neural Entrainment System</h1>
-            <div class="legacy-version-banner">
-                <p>Looking for the previous version? <a href="v1/index.html">Click here to use v1</a></p>
-                <button class="legacy-banner-close" aria-label="Close banner">×</button>
+            <div class="legacy-version-banner" hidden>
+                <p>Previous version: <a href="v1/index.html">open v1</a></p>
+                <button class="legacy-banner-close" aria-label="Dismiss">×</button>
             </div>
-            <p class="app-subtitle">Brainwave Entrainment, Frequency Modulation & Cognitive State Control</p>
+            <h1 class="app-title">Binaural beat generator</h1>
+            <p class="app-subtitle">Stereo beat frequencies, reference tones, and synthesized patterns, generated in the browser with the Web Audio API. Beats need stereo headphones.</p>
             <div class="app-header__actions">
-                <button class="theme-toggle-button" id="themeToggle" aria-label="Toggle theme">
-                    <span class="theme-toggle-icon">🌓</span>
-                </button>
-                <div class="view-toggle-group">
-                    <button class="view-toggle-button" data-view="cards">
-                        <svg class="icon" viewBox="0 0 24 24" width="24" height="24">
-                            <rect x="3" y="3" width="7" height="7" rx="1"/>
-                            <rect x="14" y="3" width="7" height="7" rx="1"/>
-                            <rect x="3" y="14" width="7" height="7" rx="1"/>
-                            <rect x="14" y="14" width="7" height="7" rx="1"/>
-                        </svg>
-                        <span class="visually-hidden">Card View</span>
+                <button class="theme-toggle-button" id="themeToggle" aria-label="Toggle theme"></button>
+                <div class="view-toggle-group" role="group" aria-label="Layout">
+                    <button class="view-toggle-button" data-view="cards" aria-pressed="false" aria-label="Card layout">
+                        <span class="icon icon--grid" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="icon__fallback" aria-hidden="true">▦</span></span>
                     </button>
-                    <button class="view-toggle-button" data-view="list">
-                        <svg class="icon" viewBox="0 0 24 24" width="24" height="24">
-                            <line x1="3" y1="6" x2="21" y2="6" stroke-width="2"/>
-                            <line x1="3" y1="12" x2="21" y2="12" stroke-width="2"/>
-                            <line x1="3" y1="18" x2="21" y2="18" stroke-width="2"/>
-                        </svg>
-                        <span class="visually-hidden">List View</span>
+                    <button class="view-toggle-button" data-view="list" aria-pressed="false" aria-label="List layout">
+                        <span class="icon icon--list" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="icon__fallback" aria-hidden="true">☰</span></span>
                     </button>
                 </div>
-                <button class="btn btn--info" id="showInfo">ℹ️ About Sound Frequencies</button>
+                <button class="btn btn--info" id="showInfo" aria-haspopup="dialog">
+                    <span class="icon icon--info" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v6M12 7.5v.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="icon__fallback" aria-hidden="true">i</span></span>
+                    <span>About</span>
+                </button>
             </div>
         </div>
     </header>
 
-    <div class="info-modal" id="infoModal">
+    <div class="info-modal" id="infoModal" role="dialog" aria-modal="true" aria-labelledby="infoTitle" aria-hidden="true">
         <div class="info-modal__content">
-            <button class="info-modal__close" id="closeInfo">×</button>
-            <h2>Neural Entrainment Frequency Reference</h2>
+            <button class="info-modal__close" id="closeInfo" aria-label="Close">×</button>
+            <h2 id="infoTitle">What this plays</h2>
             <section>
-                <h3>Binaural Beat Mechanism</h3>
-                <p>Binaural beats generate auditory interference patterns by presenting two pure tones with slight frequency differences to each ear. The brain processes this difference as a beat frequency, potentially inducing corresponding brainwave entrainment patterns.</p>
+                <h3>Binaural beats</h3>
+                <p>Each ear receives one sine tone. The right-ear tone is higher by the beat frequency. Over headphones the two tones are combined in the auditory system and a fluctuation at the difference frequency is perceived. Over speakers the tones mix in the air instead and the result is an ordinary acoustic beat.</p>
             </section>
             <section>
-                <h3>Solfeggio Frequency Set</h3>
-                <p>Solfeggio frequencies are specific tones studied for their potential neuroacoustic effects on cognitive and physiological processes. Research into these frequencies examines their impact on brain activity and autonomic nervous system responses.</p>
+                <h3>Band names</h3>
+                <p>Beat frequencies are tagged with the EEG band whose range contains them: delta 0.5–4 Hz, theta 4–8 Hz, alpha 8–12 Hz, beta 12–30 Hz, gamma 30–100 Hz. Boundaries vary between sources. The tag describes the number, not an effect.</p>
             </section>
             <section>
-                <h3>Frequency-Response Mapping</h3>
-                <p>Different frequencies target specific neural oscillation patterns and physiological responses. These empirically-studied frequencies are categorized by their measured effects on cognitive performance:</p>
+                <h3>Pure tones</h3>
+                <p>Single sine oscillators. The solfeggio values (396, 417, 528, 639, 741, 852 Hz, later extended with 174 and 963 Hz) were published by Puleo and Horowitz in 1999 from a numerological reading of Numbers 7:12–83. They are not derived from a tuning system, and there is no controlled evidence of a physiological effect specific to them. 440 Hz is ISO 16 concert pitch; 432 Hz is an alternative concert pitch.</p>
+            </section>
+            <section>
+                <h3>Generated patterns</h3>
+                <p>Multi-oscillator and looped-buffer synthesis. Each entry's description states the algorithm and its constants.</p>
+            </section>
+            <section>
+                <h3>Listening</h3>
                 <ul>
-                    <li><strong>Cognitive Enhancement:</strong> Beta (14-30Hz) and Gamma (30-100Hz) frequencies increase attention span and working memory performance</li>
-                    <li><strong>Creative Problem-Solving:</strong> Theta (4-8Hz) frequencies correlate with increased divergent thinking and insight problem-solving</li>
-                    <li><strong>Sleep Induction:</strong> Delta (0.5-4Hz) frequencies promote slow-wave sleep and reduce sleep onset latency</li>
-                    <li><strong>Relaxed Focus:</strong> Alpha (8-14Hz) frequencies maintain alertness while reducing cortisol levels</li>
-                    <li><strong>Physiological Regulation:</strong> Specialized frequencies target autonomic nervous system regulation and stress response modulation</li>
+                    <li>Use headphones for beats.</li>
+                    <li>Keep the volume low. The output compressor limits peaks; it does not make loud listening safe.</li>
+                    <li>Stop if anything is uncomfortable. This is an audio tool, not a treatment.</li>
+                    <li>Up to six entries play at once; starting a seventh stops the oldest.</li>
                 </ul>
             </section>
             <section>
-                <h3>Getting the Best Results</h3>
-                <ol>
-                    <li>Use quality headphones for binaural beats to work effectively</li>
-                    <li>Start with shorter sessions (15-30 minutes) and observe how you respond</li>
-                    <li>Choose frequencies based on your current needs and desired state</li>
-                    <li>Keep volume at a comfortable level - louder isn't better</li>
-                    <li>Create favorites lists for different activities using the pin feature</li>
-                </ol>
+                <h3>Source</h3>
+                <p><a href="https://github.com/1ps0/binaural" target="_blank" rel="noopener noreferrer">github.com/1ps0/binaural</a>. Single-file build with no network requests; save the page and open it from disk in any current browser.</p>
             </section>
             <section>
-                <h3>Important Notes</h3>
-                <ul>
-                    <li>Always use comfortable volume levels</li>
-                    <li>If you experience any discomfort, stop using immediately</li>
-                    <li>This is not a substitute for medical treatment</li>
-                    <li>Some frequencies may be below human hearing range but can still have effects</li>
-                </ul>
-            </section>
-            <section>
-                <h3>Open Source</h3>
-                <p>This project is open source and available on GitHub. Feel free to contribute or report issues:</p>
-                <p><a href="https://github.com/1ps0/binaural" target="_blank" rel="noopener noreferrer" style="color: var(--primary);">github.com/1ps0/binaural</a></p>
-                <p>You can also run this app locally:</p>
-                <ul>
-                    <li><strong>Desktop:</strong> Simply drag index.html into Chrome/Edge</li>
-                    <li><strong>iOS:</strong> Save to Files app and open with Safari</li>
-                    <li><strong>Android:</strong> Open with Chrome from Downloads</li>
-                </ul>
-                <p>See the README for detailed setup instructions.</p>
-            </section>
-            <section>
-                <h3>Version Information</h3>
-                <p class="version-info">
-                    Version: 2.0.2<br>
-                    Last Updated: March 27, 2025
-                </p>
+                <h3>Version</h3>
+                <p class="version-info">2.2.0 · 2026-09-10</p>
             </section>
         </div>
     </div>
 
     <main class="main-content">
         <div class="container">
-            <div class="frequency-sections">
-                <!-- Sections will be dynamically populated -->
-            </div>
+            <div class="frequency-sections"></div>
         </div>
     </main>
 
     <div class="control-bar">
-        <div class="container">
-            <!-- Controls will be dynamically populated -->
-        </div>
+        <div class="container"></div>
     </div>
 
     <!-- SCRIPTS_PLACEHOLDER -->

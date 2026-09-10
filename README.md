@@ -1,165 +1,55 @@
-# Binaural Beats & Tones
+# Binaural
 
-A web-based application for generating binaural beats, solfeggio frequencies, aleph patterns, and other therapeutic tones. Built with modular JavaScript and the Web Audio API.
+A single-file web page that generates binaural beats, pure tones, and synthesized patterns with the Web Audio API. No network requests, no dependencies at runtime. Live at [1ps0.info/binaural](https://1ps0.info/binaural).
 
-## Features
+## What it plays
 
-- 🎵 Generate binaural beats and Tones
-- 🌓 Light/Dark theme support
-- 📱 Responsive design for all devices
-- 🎚️ Precise volume control
-- 📌 Pin favorite frequencies
-- 🔍 Search and filter frequencies
-- 📋 List and card views
-- 🔄 Stackable audio modules
-- 🎧 Real-time frequency monitoring
-- 🔋 Memory-efficient for long sessions
-- 🔄 Works across all modern browsers
-- 🔊 Built-in audio clipping prevention
-- 📊 Automatic device capability detection
-- 🧠 Advanced mathematical Aleph patterns
-- 🚀 Dynamic performance adjustments
+- **Binaural beats** — one sine per ear; the right ear is higher by the beat frequency (2 to 40 Hz on a 200 Hz carrier). Each entry states both ear frequencies and the EEG band the beat falls in. Headphones required.
+- **Pure tones** — the solfeggio set (with its 1999 numerological provenance stated), 440 Hz ISO concert pitch, 432 Hz alternative pitch.
+- **Generated patterns** — a φ-spaced harmonic series, an FM stack, and a looped prime-ratio buffer. Descriptions give the algorithm and constants.
 
-## Getting Started
+Descriptions are generated from the synthesis parameters, so the text cannot disagree with the audio, and a test rejects effect-claim vocabulary anywhere in the catalog.
 
-### Running Locally
+## Use
 
-1. **Desktop**: Simply drag `index.html` into any modern browser (Chrome, Firefox, Safari, Edge)
-2. **iOS**: Save to Files app and open with Safari
-3. **Android**: Open with Chrome from Downloads
+Open `index.html` in any current browser (Firefox, Safari, Chrome, Edge; desktop or mobile), or save it and open it from disk. Up to six entries play at once; the slider sets the level for all of them. Pins persist in the browser.
 
-### For Developers
+## Develop
 
-If you want to modify the source code:
-
-1. Clone the repository
-2. Install dependencies: `npm install`
-3. Build the project:
-   - Development: `npm run build`
-   - Production: `npm run build:prod`
-4. The compiled application will be in the `dist` directory
-
-### Using Headphones
-
-For binaural beats to work effectively, stereo headphones are required. The effect is created by playing slightly different frequencies in each ear.
-
-## Usage
-
-### Basic Controls
-
-- **Play/Stop**: Click the play button on any frequency card
-- **Volume**: Use the slider in the control bar
-- **Theme**: Toggle light/dark theme with the moon/sun icon
-- **View**: Switch between list and card views
-- **Search**: Use the search bar to find frequencies
-- **Pin**: Save frequencies for quick access
-
-### Frequency Categories
-
-- **Focus**: Beta and Gamma frequencies for concentration
-- **Meditation**: Theta frequencies for deep states
-- **Sleep**: Delta frequencies for rest
-- **Relaxation**: Alpha frequencies for calm
-- **Healing**: Solfeggio and special frequencies
-- **Transcendental**: Aleph mathematical patterns for advanced states
-
-### Advanced Features
-
-- **Combined Patterns**: Stack different audio techniques together
-- **Aleph Frequencies**: Experience mathematical infinity patterns
-- **Solfeggio Tuning**: Traditional healing frequency system
-- **Resource Management**: Optimized for long listening sessions
-- **Dynamic Quality**: Automatically adjusts based on your device capabilities
-
-## Technical Architecture
-
-The application uses a modular architecture with several key systems:
-
-- **AudioSystem**: Core audio generation with WebAudio API
-- **Audio Modules**: Stackable components for different sound techniques
-  - Carrier: Base frequency generation
-  - Binaural: Creates beating effects between ears
-  - Solfeggio: Applies traditional healing frequencies
-  - Aleph: Generates mathematical pattern matrices
-- **FrequencySystem**: Manages frequency data and preferences
-- **UISystem**: Handles interface rendering and interaction
-- **EventSystem**: Coordinates communication between components
-- **Build System**: Combines modules into a single deployable file
-- **Memory Management**: Optimizes resource usage and prevents audio glitches
-
-## Browser Compatibility
-
-The application is designed for maximum compatibility across browsers:
-- Chrome/Edge: Full support
-- Firefox: Full support
-- Safari: Full support
-- Mobile browsers: Full support with adaptive quality
-- Older browsers: Basic functionality supported if Web Audio API is available
-
-## Development
-
-### Project Structure
-
-```
-src/
-├── styles/
-│   ├── base.css          # Core variables and layout
-│   ├── components.css    # UI component styles
-│   └── responsive.css    # Media queries and mobile styles
-├── js/
-│   ├── core/
-│   │   ├── state.js      # Application state
-│   │   ├── events.js     # Event system
-│   │   └── theme.js      # Theme management
-│   ├── audio/
-│   │   ├── audio-system.js        # Core audio engine
-│   │   ├── modules/               # Audio modules
-│   │   │   ├── carrier.js         # Base frequency generator
-│   │   │   ├── binaural.js        # Binaural beat generator
-│   │   │   ├── solfeggio.js       # Solfeggio frequency system
-│   │   │   └── aleph.js           # Mathematical pattern generator
-│   ├── data/
-│   │   └── frequency-system.js    # Frequency data management
-│   └── ui/
-│       ├── ui-system.js           # UI rendering system
-│       └── components.js          # Reusable UI components
-└── index.html            # Main HTML template
+```sh
+cd v2
+npm install
+npm test          # node --test, 30 tests with a fake AudioContext
+npm run build     # v2/src → v2/dist/index.html
+npm run deploy    # build, then copy to ../index.html (the served file)
+npm run check     # test + deploy + fail if root index.html drifts from src
 ```
 
-### Roadmap
+`v2/src` is the source of truth. `v2/dist/index.html` and the root `index.html` are build outputs committed for GitHub Pages; CI fails if they are stale.
 
-See [ROADMAP.md](ROADMAP.md) for detailed development plans.
+```
+v2/src/
+├── index.html                 template with STYLES/SCRIPTS placeholders
+├── styles/{base,components,responsive}.css
+└── js/
+    ├── core/{state,events,theme}.js
+    ├── data/frequency-system.js   catalog, describe(), pins, legacy id map
+    ├── audio/audio-system.js      AudioContext, routing, start/stop
+    ├── audio/modules/aleph.js     pattern algorithms
+    ├── ui/{components,ui-system}.js
+    └── main.js
+```
 
-### Contributing
+Specs: [specs/audio-graph.md](specs/audio-graph.md), [specs/frequency-catalog.md](specs/frequency-catalog.md). Status: [docs/overview.md](docs/overview.md). Open work: [ROADMAP.md](ROADMAP.md). History: [CHANGELOG.md](CHANGELOG.md).
 
-This project is an exercise in AI-assisted development with a focus on carefully crafted, high-quality contributions. Before contributing, please read our:
+## Older versions
 
-- [Contributing Guidelines](CONTRIBUTING.md) for detailed instructions on the contribution process
-- [Code of Conduct](CODE_OF_CONDUCT.md) for community standards
+`v1/` is the previous single-file app (reachable from the banner). `v0.0.1/binaural.sh` is a SoX shell script. The `v3` branch holds an unfinished program/sequence system.
 
-Key contribution steps:
+## Contributing
 
-1. Review [BLUEPRINT.md](v2/BLUEPRINT.md) for planned features and current priorities
-2. Check existing issues in the Issues tab for tasks that need attention
-3. Fork the repository and create a descriptive feature branch
-4. Make your changes following our code standards and architecture
-5. Thoroughly test across multiple browsers and devices
-6. Submit a Pull Request with comprehensive documentation of your changes
-
-We welcome contributions that align with our project philosophy of purposeful, AI-assisted development with human oversight.
-
-## Version History
-
-See [CHANGELOG.md](CHANGELOG.md) for version history.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Every change lands with a test; run `npm run check` before pushing.
 
 ## License
 
-MIT License - See LICENSE file for details
-
-## Acknowledgments
-
-- Web Audio API
-- Modern browser capabilities
-- Scientific research on brainwave entrainment
-- Traditional healing frequency systems
-- Mathematical set theory concepts for Aleph patterns
+MIT — see [LICENSE](LICENSE).

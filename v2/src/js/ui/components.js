@@ -1,176 +1,56 @@
 /**
- * UI Components
- * Reusable UI component templates and utilities
+ * Icon markup, HTML escaping, and toasts.
+ * Icons are inline SVG with an emoji fallback that CSS shows only under html.no-svg.
  */
-
-// UI Components - Reusable templates and utilities
 const UIComponents = {
-    // Create a button component
-    createButton({ text, className, icon, ariaLabel, dataAttributes = {} }) {
-        const dataAttrs = Object.entries(dataAttributes)
-            .map(([key, value]) => `data-${key}="${value}"`)
-            .join(' ');
-            
-        return `
-            <button class="${className}" ${ariaLabel ? `aria-label="${ariaLabel}"` : ''} ${dataAttrs}>
-                ${icon ? icon : ''}
-                ${text}
-            </button>
-        `;
+    ICONS: {
+        play: { svg: '<path d="M8 5v14l11-7z"/>', fallback: '▶' },
+        stop: { svg: '<rect x="6" y="6" width="12" height="12" rx="1"/>', fallback: '⏹' },
+        pin: { svg: '<path d="M14 4v6l2 2v2h-3v6h-2v-6H8v-2l2-2V4H9V2h6v2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>', fallback: '📌' },
+        pinned: { svg: '<path d="M14 4v6l2 2v2h-3v6h-2v-6H8v-2l2-2V4H9V2h6v2z"/>', fallback: '📍' },
+        close: { svg: '<path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>', fallback: '×' },
+        sun: { svg: '<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>', fallback: '☀' },
+        moon: { svg: '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>', fallback: '☾' },
+        info: { svg: '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v6M12 7.5v.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>', fallback: 'i' },
+        grid: { svg: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>', fallback: '▦' },
+        list: { svg: '<path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>', fallback: '☰' }
     },
-    
-    // Create a card component
-    createCard({ title, body, footer, className = '', dataAttributes = {} }) {
-        const dataAttrs = Object.entries(dataAttributes)
-            .map(([key, value]) => `data-${key}="${value}"`)
-            .join(' ');
-            
-        return `
-            <div class="card ${className}" ${dataAttrs}>
-                ${title ? `<div class="card__header">${title}</div>` : ''}
-                ${body ? `<div class="card__body">${body}</div>` : ''}
-                ${footer ? `<div class="card__footer">${footer}</div>` : ''}
-            </div>
-        `;
+
+    icon(name, label) {
+        const def = this.ICONS[name];
+        if (!def) throw new Error(`Unknown icon "${name}"`);
+        const a11y = label ? `role="img" aria-label="${this.escape(label)}"` : 'aria-hidden="true"';
+        return `<span class="icon icon--${name}" ${a11y}>`
+            + `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">${def.svg}</svg>`
+            + `<span class="icon__fallback" aria-hidden="true">${def.fallback}</span>`
+            + '</span>';
     },
-    
-    // Create a badge component
-    createBadge({ text, type, className = '' }) {
-        return `<span class="badge badge--${type} ${className}">${text}</span>`;
+
+    escape(value) {
+        return String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     },
-    
-    // Create a toast notification (requires additional JS to show/hide)
-    createToast({ message, type = 'info', duration = 3000 }) {
-        const id = `toast-${Date.now()}`;
-        const toast = document.createElement('div');
-        toast.id = id;
-        toast.className = `toast toast--${type}`;
-        toast.innerHTML = `
-            <div class="toast__content">${message}</div>
-            <button class="toast__close">×</button>
-        `;
-        
-        // Add to DOM
-        document.body.appendChild(toast);
-        
-        // Add event listener for close button
-        const closeBtn = toast.querySelector('.toast__close');
-        const closeHandler = () => {
-            toast.classList.add('toast--hiding');
-            setTimeout(() => {
-                toast.remove();
-            }, 300); // Match CSS transition time
-        };
-        closeBtn.addEventListener('click', closeHandler);
-        
-        // Auto-remove after duration
-        setTimeout(closeHandler, duration);
-        
-        return id;
-    },
-    
-    // Show a toast notification with message
+
     showToast(message, type = 'info', duration = 3000) {
-        return this.createToast({ message, type, duration });
-    },
-    
-    // Create a modal dialog
-    createModal({ title, content, actions = [], id, className = '' }) {
-        const modal = document.createElement('div');
-        modal.id = id || `modal-${Date.now()}`;
-        modal.className = `modal ${className}`;
-        
-        modal.innerHTML = `
-            <div class="modal__overlay"></div>
-            <div class="modal__container">
-                <div class="modal__header">
-                    <h2 class="modal__title">${title}</h2>
-                    <button class="modal__close" aria-label="Close modal">×</button>
-                </div>
-                <div class="modal__content">
-                    ${content}
-                </div>
-                ${actions.length > 0 ? `
-                    <div class="modal__actions">
-                        ${actions.map(action => this.createButton(action)).join('')}
-                    </div>
-                ` : ''}
-            </div>
-        `;
-        
-        // Add to DOM but hidden
-        document.body.appendChild(modal);
-        
-        // Setup event handlers
-        const closeBtn = modal.querySelector('.modal__close');
-        const overlay = modal.querySelector('.modal__overlay');
-        
-        const closeModal = () => {
-            modal.classList.remove('modal--visible');
-            setTimeout(() => {
-                modal.remove();
-            }, 300); // Match CSS transition time
+        let host = document.querySelector('.toast-host');
+        if (!host) {
+            host = document.createElement('div');
+            host.className = 'toast-host';
+            host.setAttribute('role', 'status');
+            host.setAttribute('aria-live', 'polite');
+            document.body.appendChild(host);
+        }
+        const toast = document.createElement('div');
+        toast.className = `toast toast--${type}`;
+        toast.innerHTML = `<span class="toast__text"></span><button class="toast__close" aria-label="Dismiss">${this.icon('close')}</button>`;
+        toast.querySelector('.toast__text').textContent = message;
+
+        const dismiss = () => {
+            toast.classList.add('toast--hiding');
+            setTimeout(() => toast.remove(), 200);
         };
-        
-        closeBtn.addEventListener('click', closeModal);
-        overlay.addEventListener('click', closeModal);
-        
-        // Attach close method to modal
-        modal.close = closeModal;
-        
-        // Show method
-        modal.show = () => {
-            // Small delay to allow browser to process DOM addition
-            setTimeout(() => {
-                modal.classList.add('modal--visible');
-            }, 10);
-        };
-        
-        return modal;
-    },
-    
-    // Show a confirmation dialog
-    confirm({ title, message, confirmText = 'Confirm', cancelText = 'Cancel', onConfirm, onCancel }) {
-        const modal = this.createModal({
-            title,
-            content: `<p>${message}</p>`,
-            actions: [
-                {
-                    text: cancelText,
-                    className: 'btn btn--secondary',
-                    dataAttributes: { action: 'cancel' }
-                },
-                {
-                    text: confirmText,
-                    className: 'btn btn--primary',
-                    dataAttributes: { action: 'confirm' }
-                }
-            ],
-            className: 'modal--confirm'
-        });
-        
-        // Set up action handlers
-        const confirmBtn = modal.querySelector('[data-action="confirm"]');
-        const cancelBtn = modal.querySelector('[data-action="cancel"]');
-        
-        confirmBtn.addEventListener('click', () => {
-            if (onConfirm) onConfirm();
-            modal.close();
-        });
-        
-        cancelBtn.addEventListener('click', () => {
-            if (onCancel) onCancel();
-            modal.close();
-        });
-        
-        // Show the modal
-        modal.show();
-        
-        return modal;
+        toast.querySelector('.toast__close').addEventListener('click', dismiss);
+        host.appendChild(toast);
+        setTimeout(dismiss, duration);
+        return toast;
     }
 };
-
-// Export the UIComponents object if in a module environment
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { UIComponents };
-}

@@ -1,497 +1,229 @@
 /**
- * Frequency Data System
- * Manages frequency data and user preferences
+ * Frequency catalog and pin storage.
+ *
+ * Every entry is a synthesis spec that AudioSystem.startTone accepts as-is.
+ * Descriptions are derived from the numbers so text and audio cannot disagree.
+ * Tags are search aliases only and are never rendered.
  */
-
-// Frequency Data System
 const FrequencySystem = {
-    // Core frequency data
+    sections: {
+        binaural: {
+            title: 'Binaural beats',
+            description: 'One sine tone per ear at slightly different frequencies; the difference is the beat frequency. Stereo headphones required.'
+        },
+        tones: {
+            title: 'Pure tones',
+            description: 'Single sine oscillators at fixed frequencies, listed with the origin of each value.'
+        },
+        patterns: {
+            title: 'Generated patterns',
+            description: 'Multi-oscillator and buffer synthesis. Each entry states its algorithm.'
+        }
+    },
+
+    // [name, low Hz inclusive, high Hz exclusive]. Boundaries follow common EEG convention; sources vary.
+    bands: [
+        ['delta', 0.5, 4],
+        ['theta', 4, 8],
+        ['alpha', 8, 12],
+        ['beta', 12, 30],
+        ['gamma', 30, 100]
+    ],
+
     data: {
-        cognitive_enhancement: [
+        binaural: [
+            { id: 'beat-2hz', type: 'binaural', title: '2 Hz beat', frequency: 2, carrierFrequency: 200, tags: ['delta', 'sleep', 'slow-wave'] },
+            { id: 'beat-3.5hz', type: 'binaural', title: '3.5 Hz beat', frequency: 3.5, carrierFrequency: 200, tags: ['delta', 'sleep'] },
+            { id: 'beat-4.5hz', type: 'binaural', title: '4.5 Hz beat', frequency: 4.5, carrierFrequency: 200, tags: ['theta', 'meditation'] },
+            { id: 'beat-6hz', type: 'binaural', title: '6 Hz beat', frequency: 6, carrierFrequency: 200, tags: ['theta', 'meditation', 'creative'] },
             {
-                id: 'gamma-focus-40hz',
-                title: 'Gamma Focus Protocol',
-                frequency: 40,
-                type: 'binaural',
-                category: 'gamma',
-                carrierFrequency: 200,
-                description: 'Targets gamma wave entrainment (40Hz) for enhanced working memory and sustained attention. Measured improvements in cognitive binding tasks.',
-                warning: null
+                id: 'beat-7.83hz', type: 'binaural', title: '7.83 Hz beat', frequency: 7.83, carrierFrequency: 200, tags: ['theta', 'schumann'],
+                note: '7.83 Hz is the first Schumann resonance mode of the Earth–ionosphere cavity. Used here only as a beat frequency.'
             },
-            {
-                id: 'beta-concentration-15hz',
-                title: 'Beta Concentration Mode',
-                frequency: 15,
-                type: 'binaural',
-                category: 'beta',
-                carrierFrequency: 200,
-                description: 'Beta wave entrainment (15Hz) for sustained cognitive performance. Optimizes prefrontal cortex activation patterns.',
-                warning: null
-            },
-            {
-                id: 'solfeggio-741hz',
-                title: 'Cognitive Restructuring 741Hz',
-                frequency: 741,
-                type: 'solfeggio',
-                category: 'cognitive',
-                description: '741Hz solfeggio frequency. Research indicates potential for enhanced problem-solving and mental flexibility.',
-                warning: null
-            },
-            {
-                id: 'solfeggio-852hz',
-                title: 'Perceptual Processing 852Hz',
-                frequency: 852,
-                type: 'solfeggio',
-                category: 'cognitive',
-                description: '852Hz solfeggio frequency. Studies suggest improved pattern recognition and perceptual integration.',
-                warning: null
-            }
+            { id: 'beat-10hz', type: 'binaural', title: '10 Hz beat', frequency: 10, carrierFrequency: 200, tags: ['alpha', 'relaxation', 'calm'] },
+            { id: 'beat-15hz', type: 'binaural', title: '15 Hz beat', frequency: 15, carrierFrequency: 200, tags: ['beta', 'focus', 'flow'] },
+            { id: 'beat-40hz', type: 'binaural', title: '40 Hz beat', frequency: 40, carrierFrequency: 200, tags: ['gamma', 'focus', 'attention'] }
         ],
-        creative_processing: [
-            {
-                id: 'theta-creativity-6hz',
-                title: 'Theta Creative State',
-                frequency: 6,
-                type: 'binaural',
-                category: 'theta',
-                carrierFrequency: 200,
-                description: 'Theta wave entrainment (6Hz) for enhanced creative ideation. Correlates with increased default mode network activity.',
-                warning: null
-            },
-            {
-                id: 'theta-insight-4.5hz',
-                title: 'Insight Problem-Solving',
-                frequency: 4.5,
-                type: 'binaural',
-                category: 'theta',
-                carrierFrequency: 200,
-                description: 'Low theta (4.5Hz) for insight problem-solving tasks. Facilitates right hemisphere processing and pattern synthesis.',
-                warning: null
-            },
-            {
-                id: 'schumann-7.83hz',
-                title: 'Schumann Resonance Sync',
-                frequency: 7.83,
-                type: 'special',
-                category: 'geomagnetic',
-                description: "Earth's fundamental electromagnetic frequency (7.83Hz). Theoretical synchronization with natural circadian rhythms.",
-                warning: 'Sub-audible frequency. Effects may be subtle or placebo-based.'
-            },
-            {
-                id: 'solfeggio-963hz',
-                title: 'Neural Integration 963Hz',
-                frequency: 963,
-                type: 'solfeggio',
-                category: 'integrative',
-                description: '963Hz solfeggio frequency. Hypothesized to enhance neural network integration and cognitive coherence.',
-                warning: null
-            }
+        tones: [
+            { id: 'tone-174hz', type: 'tone', title: '174 Hz', frequency: 174, series: 'solfeggio', tags: ['solfeggio'], note: 'Extended solfeggio set (added after the original six).' },
+            { id: 'tone-396hz', type: 'tone', title: '396 Hz', frequency: 396, series: 'solfeggio', tags: ['solfeggio', 'ut'], note: 'Solfeggio set, syllable Ut.' },
+            { id: 'tone-417hz', type: 'tone', title: '417 Hz', frequency: 417, series: 'solfeggio', tags: ['solfeggio', 're'], note: 'Solfeggio set, syllable Re.' },
+            { id: 'tone-432hz', type: 'tone', title: '432 Hz', frequency: 432, series: 'pitch', tags: ['a4', 'concert pitch', 'verdi'], note: 'A4 at 432 Hz, an alternative concert pitch. ISO 16 standard A4 is 440 Hz.' },
+            { id: 'tone-440hz', type: 'tone', title: '440 Hz', frequency: 440, series: 'pitch', tags: ['a4', 'concert pitch', 'reference'], note: 'A4 concert pitch (ISO 16). Reference tone.' },
+            { id: 'tone-528hz', type: 'tone', title: '528 Hz', frequency: 528, series: 'solfeggio', tags: ['solfeggio', 'mi'], note: 'Solfeggio set, syllable Mi.' },
+            { id: 'tone-639hz', type: 'tone', title: '639 Hz', frequency: 639, series: 'solfeggio', tags: ['solfeggio', 'fa'], note: 'Solfeggio set, syllable Fa.' },
+            { id: 'tone-741hz', type: 'tone', title: '741 Hz', frequency: 741, series: 'solfeggio', tags: ['solfeggio', 'sol'], note: 'Solfeggio set, syllable Sol.' },
+            { id: 'tone-852hz', type: 'tone', title: '852 Hz', frequency: 852, series: 'solfeggio', tags: ['solfeggio', 'la'], note: 'Solfeggio set, syllable La.' },
+            { id: 'tone-963hz', type: 'tone', title: '963 Hz', frequency: 963, series: 'solfeggio', tags: ['solfeggio', 'si'], note: 'Extended solfeggio set, syllable Si.' }
         ],
-        sleep_optimization: [
-            {
-                id: 'delta-sleep-2hz',
-                title: 'Delta Sleep Induction',
-                frequency: 2,
-                type: 'binaural',
-                category: 'delta',
-                carrierFrequency: 200,
-                description: 'Delta wave entrainment (2Hz) for sleep onset. Targets slow-wave sleep promotion and reduced sleep latency.',
-                warning: null
-            },
-            {
-                id: 'delta-deep-3.5hz',
-                title: 'Deep Sleep Maintenance',
-                frequency: 3.5,
-                type: 'binaural',
-                category: 'delta',
-                carrierFrequency: 200,
-                description: 'Mid-delta (3.5Hz) for deep sleep maintenance. Supports N3 sleep stage duration and quality.',
-                warning: null
-            },
-            {
-                id: 'solfeggio-639hz',
-                title: 'Stress Reduction 639Hz',
-                frequency: 639,
-                type: 'solfeggio',
-                category: 'autonomic',
-                description: '639Hz solfeggio frequency. May reduce cortisol levels and promote parasympathetic activation before sleep.',
-                warning: null
-            },
-            {
-                id: 'solfeggio-396hz',
-                title: 'Anxiety Modulation 396Hz',
-                frequency: 396,
-                type: 'solfeggio',
-                category: 'autonomic',
-                description: '396Hz solfeggio frequency. Research into anxiolytic effects and stress response regulation.',
-                warning: null
-            }
-        ],
-        attention_regulation: [
-            {
-                id: 'alpha-focus-10hz',
-                title: 'Alpha Attention State',
-                frequency: 10,
-                type: 'binaural',
-                category: 'alpha',
-                carrierFrequency: 200,
-                description: 'Alpha wave entrainment (10Hz) for relaxed attention. Maintains alertness while reducing cognitive load.',
-                warning: null
-            },
-            {
-                id: 'solfeggio-432hz',
-                title: 'Harmonic Tuning 432Hz',
-                frequency: 432,
-                type: 'solfeggio',
-                category: 'harmonic',
-                description: '432Hz carrier frequency. Alternative tuning standard studied for potential psychoacoustic effects.',
-                warning: null
-            },
-            {
-                id: 'solfeggio-417hz',
-                title: 'Cognitive Flexibility 417Hz',
-                frequency: 417,
-                type: 'solfeggio',
-                category: 'adaptive',
-                description: '417Hz solfeggio frequency. Investigated for effects on cognitive flexibility and mental adaptation.',
-                warning: null
-            }
-        ],
-        physiological_regulation: [
-            {
-                id: 'solfeggio-528hz',
-                title: 'Cellular Frequency 528Hz',
-                frequency: 528,
-                type: 'solfeggio',
-                category: 'cellular',
-                description: '528Hz solfeggio frequency. Research into potential effects on DNA repair mechanisms and cellular processes.',
-                warning: 'Claims of DNA repair are speculative. Use for research purposes only.'
-            },
-            {
-                id: 'low-frequency-174hz',
-                title: 'Pain Modulation 174Hz',
-                frequency: 174,
-                type: 'special',
-                category: 'nociceptive',
-                description: '174Hz low frequency tone. Studies investigate potential analgesic effects and pain signal modulation.',
-                warning: 'Not a medical treatment. Consult healthcare providers for pain management.'
-            },
-            {
-                id: 'solfeggio-396hz-alt',
-                title: 'Stress Response 396Hz',
-                frequency: 396,
-                type: 'solfeggio',
-                category: 'autonomic',
-                description: '396Hz solfeggio frequency. Research into HPA axis modulation and stress hormone regulation.',
-                warning: null
-            },
-            {
-                id: 'solfeggio-963hz-alt',
-                title: 'Neural Coherence 963Hz',
-                frequency: 963,
-                type: 'solfeggio',
-                category: 'neural',
-                description: '963Hz solfeggio frequency. Studies examine effects on neural synchronization and brain network coherence.',
-                warning: null
-            },
-            {
-                id: 'solfeggio-852hz-alt',
-                title: 'Cognitive Control 852Hz',
-                frequency: 852,
-                type: 'solfeggio',
-                category: 'executive',
-                description: '852Hz solfeggio frequency. Research into executive function enhancement and cognitive control mechanisms.',
-                warning: null
-            },
-            {
-                id: 'solfeggio-639hz-alt',
-                title: 'Social Cognition 639Hz',
-                frequency: 639,
-                type: 'solfeggio',
-                category: 'social',
-                description: '639Hz solfeggio frequency. Studies investigate effects on social cognition and interpersonal neural synchrony.',
-                warning: null
-            }
-        ],
-        experimental_protocols: [
-            {
-                id: 'aleph-pattern-1',
-                title: 'Algorithmic Pattern Alpha',
-                frequency: null,
-                type: 'special',
-                category: 'algorithmic',
-                description: 'Complex frequency pattern based on mathematical series. Experimental protocol for non-linear auditory stimulation.',
-                warning: 'Experimental. Effects unpredictable. Use with caution.'
-            },
-            {
-                id: 'aleph-pattern-2',
-                title: 'Algorithmic Pattern Beta',
-                frequency: null,
-                type: 'special',
-                category: 'algorithmic',
-                description: 'Advanced multi-frequency synthesis using mathematical progressions. Research into complex auditory processing.',
-                warning: 'Advanced experimental protocol. May cause disorientation.'
-            },
-            {
-                id: 'aleph-pattern-3',
-                title: 'Algorithmic Pattern Gamma',
-                frequency: null,
-                type: 'special',
-                category: 'algorithmic',
-                description: 'Highest complexity frequency matrix. Combines multiple mathematical sequences for advanced research applications.',
-                warning: 'Highly experimental. Requires controlled environment and monitoring.'
-            }
+        patterns: [
+            { id: 'pattern-harmonic-series', type: 'pattern', title: 'Harmonic series', frequency: null, pattern: 'aleph-null', baseFrequency: 200, tags: ['aleph', 'harmonic', 'golden ratio', 'partials'] },
+            { id: 'pattern-fm', type: 'pattern', title: 'FM stack', frequency: null, pattern: 'aleph-one', baseFrequency: 200, tags: ['aleph', 'fm', 'modulation'] },
+            { id: 'pattern-prime-ratios', type: 'pattern', title: 'Prime ratio loop', frequency: null, pattern: 'aleph-two', baseFrequency: 200, tags: ['aleph', 'prime', 'buffer', 'loop'] }
         ]
     },
 
-    // Frequency scales and definitions
-    reference: {
-        // Solfeggio Frequency Scale - Research Applications
-        solfeggio: {
-            ut: 396, // Stress response modulation, anxiety research
-            re: 417, // Cognitive flexibility, adaptation studies
-            mi: 528, // Cellular process research, DNA studies
-            fa: 639, // Social cognition, interpersonal synchrony
-            sol: 741, // Problem-solving, cognitive restructuring
-            la: 852, // Executive function, cognitive control
-            si: 963  // Neural integration, coherence studies
-        },
-        
-        // Brainwave Frequency Bands
-        brainwaves: {
-            delta: '0.5-4 Hz', // Slow-wave sleep, deep rest protocols
-            theta: '4-8 Hz',   // Creative processing, insight tasks
-            alpha: '8-14 Hz',  // Relaxed attention, learning states
-            beta: '14-30 Hz',  // Active cognition, focused processing
-            gamma: '30-100 Hz' // Binding, working memory, attention
-        },
-        
-        // Experimental Pattern Information
-        algorithmic: {
-            description: "Algorithmic patterns use mathematical sequences to generate complex auditory stimuli. These are experimental protocols for research into non-linear auditory processing and complex pattern recognition. Not based on traditional frequency theory.",
-            applications: [
-                "Complex pattern recognition research",
-                "Non-linear auditory processing studies", 
-                "Advanced psychoacoustic experimentation"
-            ],
-            warning: "Experimental protocols with unpredictable effects. Use only in controlled research environments with proper monitoring."
-        }
+    // Ids used by earlier catalogs (v1, v2.0.x live site, undeployed v2.1) → current ids, so stored pins survive.
+    LEGACY_IDS: {
+        'deep-focus-40hz': 'beat-40hz', 'gamma-focus-40hz': 'beat-40hz',
+        'flow-state-15hz': 'beat-15hz', 'beta-concentration-15hz': 'beat-15hz',
+        'calm-clarity-10hz': 'beat-10hz', 'alpha-focus-10hz': 'beat-10hz',
+        'mindful-presence-7.83hz': 'beat-7.83hz', 'schumann-7.83hz': 'beat-7.83hz',
+        'deep-meditation-6hz': 'beat-6hz', 'theta-creativity-6hz': 'beat-6hz',
+        'creative-insight-4.5hz': 'beat-4.5hz', 'theta-insight-4.5hz': 'beat-4.5hz',
+        'twilight-3.5hz': 'beat-3.5hz', 'delta-deep-3.5hz': 'beat-3.5hz',
+        'deep-sleep-2hz': 'beat-2hz', 'delta-sleep-2hz': 'beat-2hz',
+        'pain-relief-174hz': 'tone-174hz', 'low-frequency-174hz': 'tone-174hz',
+        'emotional-release-396hz': 'tone-396hz', 'solfeggio-396hz': 'tone-396hz', 'solfeggio-396hz-alt': 'tone-396hz',
+        'peaceful-mind-417hz': 'tone-417hz', 'solfeggio-417hz': 'tone-417hz',
+        'stress-relief-432hz': 'tone-432hz', 'solfeggio-432hz': 'tone-432hz',
+        'cellular-harmony-528hz': 'tone-528hz', 'solfeggio-528hz': 'tone-528hz',
+        'relationship-healing-639hz': 'tone-639hz', 'sleep-harmony-639hz': 'tone-639hz', 'solfeggio-639hz': 'tone-639hz', 'solfeggio-639hz-alt': 'tone-639hz',
+        'negativity-741hz': 'tone-741hz', 'solfeggio-741hz': 'tone-741hz',
+        'intuition-852hz': 'tone-852hz', 'mental-clarity-852hz': 'tone-852hz', 'solfeggio-852hz': 'tone-852hz', 'solfeggio-852hz-alt': 'tone-852hz',
+        'spiritual-connection-963hz': 'tone-963hz', 'solfeggio-963hz': 'tone-963hz', 'solfeggio-963hz-alt': 'tone-963hz',
+        'aleph-null': 'pattern-harmonic-series', 'aleph-zero': 'pattern-harmonic-series', 'aleph-focus': 'pattern-harmonic-series', 'aleph-pattern-1': 'pattern-harmonic-series',
+        'aleph-one': 'pattern-fm', 'aleph-infinity': 'pattern-fm', 'aleph-pattern-2': 'pattern-fm',
+        'aleph-two': 'pattern-prime-ratios', 'aleph-integration': 'pattern-prime-ratios', 'aleph-dreams': 'pattern-prime-ratios',
+        'unified-field-infinity': 'pattern-prime-ratios', 'unified': 'pattern-prime-ratios', 'aleph-pattern-3': 'pattern-prime-ratios'
     },
 
     init() {
         this.loadPinnedFrequencies();
-        this.setupListeners();
     },
 
-    setupListeners() {
-        EventSystem.on('frequencyPinned', ({ id, type }) => {
-            this.pinFrequency(id, type);
-            UISystem.render();
-        });
-
-        EventSystem.on('frequencyUnpinned', ({ id, type }) => {
-            this.unpinFrequency(id, type);
-            UISystem.render();
-        });
+    all() {
+        return Object.values(this.data).flat();
     },
 
-    // Get all frequencies of a specific type
-    getFrequencies(type) {
-        return this.data[type] || [];
+    getFrequencies(section) {
+        return this.data[section] || [];
     },
 
-    // Get a specific frequency by ID
     getFrequency(id) {
-        // Search in all categories
-        for (const category of Object.keys(this.data)) {
-            const found = this.data[category].find(f => f.id === id);
-            if (found) return found;
+        return this.all().find(f => f.id === id) || null;
+    },
+
+    bandOf(hz) {
+        const band = this.bands.find(([, lo, hi]) => hz >= lo && hz < hi);
+        return band ? band[0] : null;
+    },
+
+    bandRange(name) {
+        const band = this.bands.find(([n]) => n === name);
+        return band ? `${band[1]}–${band[2]} Hz` : '';
+    },
+
+    describe(f) {
+        switch (f.type) {
+            case 'binaural': {
+                const right = +(f.carrierFrequency + f.frequency).toFixed(2);
+                const band = this.bandOf(f.frequency);
+                const bandText = band ? `, ${band} band (${this.bandRange(band)})` : '';
+                return `Left ${f.carrierFrequency} Hz, right ${right} Hz. ${f.frequency} Hz beat${bandText}.`;
+            }
+            case 'tone':
+                return `Single sine tone at ${f.frequency} Hz.`;
+            case 'pattern':
+                return AudioSystem.AudioModules.AlephModule.describe(f.pattern, f.baseFrequency);
+            default:
+                return '';
         }
+    },
+
+    badge(f) {
+        if (f.type === 'binaural') {
+            const band = this.bandOf(f.frequency);
+            return band ? { label: band, detail: this.bandRange(band) } : null;
+        }
+        if (f.type === 'tone') {
+            if (f.series === 'solfeggio') return { label: 'solfeggio', detail: '' };
+            if (f.series === 'pitch') return { label: 'concert pitch', detail: '' };
+            return null;
+        }
+        if (f.type === 'pattern') return { label: 'pattern', detail: f.pattern };
         return null;
     },
 
-    // Search frequencies across all types
+    searchText(f) {
+        const band = f.type === 'binaural' ? this.bandOf(f.frequency) : '';
+        return [f.title, this.describe(f), f.note, band, f.type, f.series, f.pattern, f.frequency, ...(f.tags || [])]
+            .filter(v => v !== null && v !== undefined && v !== '')
+            .join(' ')
+            .toLowerCase();
+    },
+
     searchFrequencies(query) {
-        query = query.toLowerCase().trim();
-        const results = [];
-
-        Object.keys(this.data).forEach(type => {
-            this.data[type].forEach(freq => {
-                if (
-                    freq.title.toLowerCase().includes(query) ||
-                    freq.description.toLowerCase().includes(query) ||
-                    (freq.frequency && freq.frequency.toString().includes(query))
-                ) {
-                    results.push(freq);
-                }
-            });
-        });
-
-        return results;
+        const q = String(query || '').toLowerCase().trim();
+        if (!q) return this.all();
+        return this.all().filter(f => this.searchText(f).includes(q));
     },
 
-    // Pin management
-    pinFrequency(id, type) {
-        const freq = this.getFrequency(id);
-        if (!freq) return false;
-
-        // Find which category this frequency belongs to
-        let category;
-        for (const [cat, freqs] of Object.entries(this.data)) {
-            if (freqs.find(f => f.id === id)) {
-                category = cat;
-                break;
-            }
+    // Accepts any shape earlier versions stored and returns known ids, deduplicated.
+    normalizePinned(raw) {
+        let ids = [];
+        if (Array.isArray(raw)) ids = raw;
+        else if (raw && typeof raw === 'object') ids = Object.values(raw).flat();
+        const known = new Set(this.all().map(f => f.id));
+        const out = [];
+        for (let id of ids) {
+            if (typeof id !== 'string') continue;
+            if (this.LEGACY_IDS[id]) id = this.LEGACY_IDS[id];
+            if (known.has(id) && !out.includes(id)) out.push(id);
         }
-
-        if (category && !AppState.frequencies.pinned[category].includes(id)) {
-            AppState.frequencies.pinned[category].push(id);
-            this.savePinnedFrequencies();
-            EventSystem.emit('pinsUpdated', AppState.frequencies.pinned);
-            return true;
-        }
-        return false;
+        return out;
     },
 
-    unpinFrequency(id, type) {
-        // Find which category this frequency belongs to
-        let category;
-        for (const [cat, freqs] of Object.entries(this.data)) {
-            if (freqs.find(f => f.id === id)) {
-                category = cat;
-                break;
-            }
-        }
+    isPinned(id) {
+        return AppState.frequencies.pinned.includes(id);
+    },
 
-        if (category) {
-            const index = AppState.frequencies.pinned[category].indexOf(id);
-            if (index > -1) {
-                AppState.frequencies.pinned[category].splice(index, 1);
-                this.savePinnedFrequencies();
-                EventSystem.emit('pinsUpdated', AppState.frequencies.pinned);
-                return true;
-            }
-        }
-        return false;
+    pinFrequency(id) {
+        if (!this.getFrequency(id) || this.isPinned(id)) return false;
+        AppState.frequencies.pinned.push(id);
+        this.savePinnedFrequencies();
+        EventSystem.emit('pinsUpdated', AppState.frequencies.pinned);
+        return true;
+    },
+
+    unpinFrequency(id) {
+        const index = AppState.frequencies.pinned.indexOf(id);
+        if (index < 0) return false;
+        AppState.frequencies.pinned.splice(index, 1);
+        this.savePinnedFrequencies();
+        EventSystem.emit('pinsUpdated', AppState.frequencies.pinned);
+        return true;
+    },
+
+    togglePin(id) {
+        return this.isPinned(id) ? this.unpinFrequency(id) : this.pinFrequency(id);
     },
 
     unpinAll() {
-        Object.keys(AppState.frequencies.pinned).forEach(type => {
-            AppState.frequencies.pinned[type] = [];
-        });
+        AppState.frequencies.pinned = [];
         this.savePinnedFrequencies();
         EventSystem.emit('pinsUpdated', AppState.frequencies.pinned);
     },
 
-    // Get all pinned frequencies as full objects
     getPinnedFrequencies() {
-        const pinned = {};
-        Object.keys(AppState.frequencies.pinned).forEach(category => {
-            pinned[category] = AppState.frequencies.pinned[category]
-                .map(id => this.getFrequency(id))
-                .filter(Boolean);
-        });
-        return pinned;
+        return AppState.frequencies.pinned.map(id => this.getFrequency(id)).filter(Boolean);
     },
 
-    // Local storage management
     savePinnedFrequencies() {
         try {
             localStorage.setItem('pinnedFrequencies', JSON.stringify(AppState.frequencies.pinned));
         } catch (e) {
-            console.warn('Could not save pinned frequencies to localStorage:', e);
+            console.warn('Could not save pins:', e);
         }
     },
 
     loadPinnedFrequencies() {
+        let raw = null;
         try {
-            const saved = localStorage.getItem('pinnedFrequencies');
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                // Validate the structure
-                if (typeof parsed === 'object' && parsed !== null) {
-                    // Handle migration from old format if necessary
-                    if (parsed.binaural || parsed.solfeggio || parsed.special) {
-                        AppState.frequencies.pinned = {
-                            cognitive_enhancement: [],
-                            creative_processing: [],
-                            sleep_optimization: [],
-                            attention_regulation: [],
-                            physiological_regulation: []
-                        };
-                    } else {
-                        AppState.frequencies.pinned = {
-                            cognitive_enhancement: Array.isArray(parsed.focus) ? parsed.focus : [],
-                            creative_processing: Array.isArray(parsed.meditation) ? parsed.meditation : [],
-                            sleep_optimization: Array.isArray(parsed.sleep) ? parsed.sleep : [],
-                            attention_regulation: Array.isArray(parsed.relaxation) ? parsed.relaxation : [],
-                            physiological_regulation: Array.isArray(parsed.healing || parsed.restorative) ? (parsed.healing || parsed.restorative) : []
-                        };
-                        // Add experimental protocols category if it doesn't exist
-                        if (!parsed.experimental_protocols) {
-                            AppState.frequencies.pinned.experimental_protocols = [];
-                        } else {
-                            AppState.frequencies.pinned.experimental_protocols = parsed.experimental_protocols;
-                        }
-                    }
-                }
-            }
-        } catch (error) {
-            console.error('Error loading pinned frequencies:', error);
-            // Reset to default state
-            AppState.frequencies.pinned = {
-                cognitive_enhancement: [],
-                creative_processing: [],
-                sleep_optimization: [],
-                attention_regulation: [],
-                physiological_regulation: [],
-                experimental_protocols: []
-            };
+            raw = JSON.parse(localStorage.getItem('pinnedFrequencies'));
+        } catch (e) {
+            raw = null;
         }
-    },
-
-    // Utility methods
-    getCategoryInfo(category) {
-        const categories = {
-            delta: { name: 'Delta', range: '0.5-4 Hz', description: 'Slow-wave sleep, deep rest protocols' },
-            theta: { name: 'Theta', range: '4-8 Hz', description: 'Creative processing, insight tasks' },
-            alpha: { name: 'Alpha', range: '8-14 Hz', description: 'Relaxed attention, learning states' },
-            beta: { name: 'Beta', range: '14-30 Hz', description: 'Active cognition, focused processing' },
-            gamma: { name: 'Gamma', range: '30-100 Hz', description: 'Binding, working memory, attention' },
-            cognitive: { name: 'Cognitive', range: 'Various', description: 'Cognitive function enhancement protocols' },
-            autonomic: { name: 'Autonomic', range: 'Various', description: 'Autonomic nervous system regulation' },
-            cellular: { name: 'Cellular', range: 'Various', description: 'Cellular process research frequencies' },
-            neural: { name: 'Neural', range: 'Various', description: 'Neural network and coherence studies' },
-            social: { name: 'Social', range: 'Various', description: 'Social cognition and communication research' },
-            algorithmic: { name: 'Algorithmic', range: 'Complex', description: 'Experimental mathematical pattern protocols' }
-        };
-        return categories[category] || null;
-    },
-
-    getSectionDescription(type) {
-        const descriptions = {
-            cognitive_enhancement: 'Frequencies targeting sustained attention, working memory, and executive cognitive functions.',
-            creative_processing: 'Protocols for enhanced creative ideation, insight problem-solving, and divergent thinking.',
-            sleep_optimization: 'Delta wave entrainment and related frequencies for sleep induction and maintenance.',
-            attention_regulation: 'Alpha wave protocols for maintaining relaxed attention and reducing cognitive load.',
-            physiological_regulation: 'Research frequencies investigating autonomic, cellular, and neural system effects.',
-            experimental_protocols: 'Advanced algorithmic patterns for complex auditory processing research.'
-        };
-        return descriptions[type] || '';
-    },
-    
-    // Clean up memory usage
-    cleanup() {
-        // Save pinned frequencies before cleanup
-        this.savePinnedFrequencies();
-        
-        // Remove event listeners
-        EventSystem.off('frequencyPinned');
-        EventSystem.off('frequencyUnpinned');
+        AppState.frequencies.pinned = this.normalizePinned(raw);
     }
 };
-
-// Export the FrequencySystem object if in a module environment
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { FrequencySystem };
-}
