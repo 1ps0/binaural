@@ -26,7 +26,8 @@ cd v2
 npm test          # must pass before any commit
 npm run check     # test + build + deploy + fail if root index.html drifts from src
 npm run deploy    # build and copy to ../index.html
-npm run test:browser   # real headless Firefox via geckodriver: load, trusted click, offline render
+npm run test:browser   # every browser whose driver is present: Firefox, Safari, Chromium
+npm run browsers:chromium   # one-time: project-local Chrome for Testing + matched chromedriver (~380 MB, gitignored)
 ```
 
 Never `git push` without an explicit go from the owner. Commit locally, then stop and summarise.
@@ -65,7 +66,15 @@ The vm tests prove routing and catalog rules; they cannot prove the page runs. A
   "file://$PWD/index.html"
 ```
 
-`npm run test:browser` (`v2/browser-tests/smoke.mjs`) drives real headless Firefox through `geckodriver` with plain WebDriver HTTP calls, no client library: it loads the deployed file, asserts zero runtime errors, performs a trusted click on Play, awaits `AudioContext.resume()` to `running`, and renders `buildBinaural` through an `OfflineAudioContext` to check each ear's frequency by zero-crossing count. It skips when `geckodriver` is absent (`brew install geckodriver`).
+`npm run test:browser` (`v2/browser-tests/smoke.mjs`) runs one scenario against every engine whose driver is present, over plain W3C WebDriver HTTP with no client library (`v2/browser-tests/webdriver.mjs`): load the deployed file, assert zero runtime errors, trusted click on Play, await `AudioContext.resume()` to `running`, render `buildBinaural` through an `OfflineAudioContext` and measure each ear by zero-crossing count. `--browser=a,b` selects engines; `--strict` makes a missing engine a failure (used in CI).
+
+| engine | driver | how to get it | notes |
+|--------|--------|---------------|-------|
+| Firefox | `geckodriver` | `brew install geckodriver` | headless; Firefox.app from Mozilla |
+| Safari | `safaridriver` | ships with macOS; `sudo safaridriver --enable` once, then Safari ▸ Develop ▸ **Allow Remote Automation** | no headless mode; a window opens |
+| Chromium | `chromedriver` | `npm run browsers:chromium` → `v2/.browsers/` | Google's Chrome for Testing build with a version-matched chromedriver; nothing in `/Applications`, no consumer Chrome. Homebrew's `chromium`/`chromedriver` casks are disabled (Gatekeeper, 2026-09). `CHROMIUM_BIN` / `CHROMEDRIVER_BIN` override. |
+
+CI runs Firefox + Chromium on `ubuntu-latest` (both preinstalled on the runner image) and Safari on `macos-latest`.
 
 The page exposes `window.binaural = { AppState, AudioSystem, FrequencySystem, … , errors }` because top-level `const` bindings are not reachable from WebDriver's script sandbox or the console. Use it for debugging; never for production code paths.
 

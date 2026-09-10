@@ -22,3 +22,32 @@ jobs:
       - run: npm run deploy
       - name: root index.html and v2/dist must match v2/src
         run: git -C .. diff --exit-code --stat -- index.html v2/dist/index.html
+
+  # Real engines over W3C WebDriver. Ubuntu runner images ship Firefox + geckodriver and
+  # Chrome + chromedriver; the macOS image ships Safari + safaridriver.
+  browsers-linux:
+    runs-on: ubuntu-latest
+    needs: check
+    defaults:
+      run:
+        working-directory: v2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node browser-tests/smoke.mjs --browser=firefox,chromium --strict
+
+  browsers-safari:
+    runs-on: macos-latest
+    needs: check
+    defaults:
+      run:
+        working-directory: v2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: sudo safaridriver --enable
+      - run: node browser-tests/smoke.mjs --browser=safari --strict

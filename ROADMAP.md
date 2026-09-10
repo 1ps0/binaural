@@ -19,7 +19,7 @@ Verification: `cd v2 && npm run check` (tests, build, and a diff that fails if r
 | — | Pin on a pattern threw after a legacy pin migration | Pins are a flat id list; every earlier storage shape and every historical id normalises through `FrequencySystem.LEGACY_IDS`. |
 | — | Section headings rendered as `Cognitive_enhancement Frequencies` | Titles come from `FrequencySystem.sections`. |
 | — | "Audio system ready" toast on every play | Toast removed; `audioReady` fires once. |
-| 22 | Real-browser smoke test | `npm run test:browser`: geckodriver + WebDriver over HTTP drives headless Firefox — load with zero errors, trusted click, `resume()` reaches `running`, `OfflineAudioContext` render measures 200/240 Hz per ear. Not in CI yet (needs a Firefox + geckodriver runner step). |
+| 22 | Real-browser smoke test | `npm run test:browser`: one WebDriver scenario over Firefox (geckodriver), Safari (safaridriver), Chromium (chromedriver + project-local Chrome for Testing) — load with zero errors, trusted click, `resume()` reaches `running`, `OfflineAudioContext` render measures 200/240 Hz per ear. CI: Firefox + Chromium on ubuntu, Safari on macOS. |
 | — | Focus/scroll-into-view lands under the fixed control bar | `html { scroll-padding-bottom }` tied to `--control-bar-height`. Found by the WebDriver click on a low entry being intercepted. |
 
 ## Open
@@ -36,3 +36,4 @@ Verification: `cd v2 && npm run check` (tests, build, and a diff that fails if r
 | 20 | Exclusive mode (switch tones instead of adding) | One flag in `startTone`: stop all before start. |
 | 23 | Offline / installable | Manifest + service worker; the page already makes no network requests. |
 | 24 | Keyboard shortcuts | Space toggles the focused entry; `/` focuses search; `Escape` already closes the modal. |
+| 25 | Short viewports: focus can land under the fixed bar | Chrome's WebDriver scroll-into-view ignores `scroll-padding-bottom` at 800×600; keyboard focus may behave the same. Option: make the bar non-fixed below 600 px tall, or collapse it to one row. |

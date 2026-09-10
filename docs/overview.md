@@ -1,18 +1,19 @@
 # binaural — state of play
 
-Updated 2026-09-10 on branch `v2.2`, after the 2.2.0 rewrite, committed locally and not yet pushed.
+Updated 2026-09-10 on branch `v2.2` (pushed). `main` fast-forwards to it; GitHub Pages builds from `main`, so pushing `main` publishes 2.2.0.
 
 ## What is real
 
 - **One product, one build.** `v2/src` → `node build.js` → `v2/dist/index.html` → `--deploy` copies to root `index.html`, the file GitHub Pages serves. Root and dist are byte-identical. [ran: diff -q → identical]
 - **Tests exist and pass.** 30 `node:test` cases load the production bundle order into a `vm` context with a fake `AudioContext` that records the graph. [ran: node --test → 30 pass, 0 fail]
 - **CI guards drift.** `.github/workflows/ci.yml` runs test, deploy, and fails if root `index.html` or `v2/dist` differ from what `v2/src` builds. Not yet exercised (needs a push).
-- **Firefox runs it.** `npm run test:browser` drives headless Firefox 152 through geckodriver 0.35: 3 sections, 21 play buttons, 0 runtime errors; a trusted click registers the entry and `AudioContext.resume()` settles to `running` with `userActivation.hasBeenActive === true`; an `OfflineAudioContext` render of the binaural graph measures 199.5 / 239.5 Hz per ear by zero-crossing. [ran: node browser-tests/smoke.mjs → PASS] Screenshots at 1280×900 and 390×844 inspected. [ran: firefox --headless --screenshot]
+- **Firefox and Chromium run it.** `npm run test:browser` drives each engine over plain WebDriver: 3 sections, 21 play buttons, 0 runtime errors; a trusted click registers the entry and `AudioContext.resume()` settles to `running` with `userActivation.hasBeenActive === true`; an `OfflineAudioContext` render of the binaural graph measures 199.5 / 239.5 Hz per ear by zero-crossing. Firefox 152 via geckodriver 0.35; HeadlessChrome 153 via a project-local Chrome for Testing + chromedriver pair (`v2/.browsers`, gitignored, ~380 MB). [ran: node browser-tests/smoke.mjs --browser=chromium,firefox → PASS, PASS] Firefox screenshots at 1280×900 and 390×844 inspected. [ran: firefox --headless --screenshot]
+- **Safari: tooling ready, run blocked on a UI toggle.** `safaridriver` answers `/status ready: true`, but session creation returns "You must enable the 'Allow Remote Automation' option in Safari's Develop menu". One-time toggle by the owner, then `node browser-tests/smoke.mjs --browser=safari`. [ran: smoke → FAIL safari with that message]
 - **Bundle is 76 KB unminified** (was 165 KB). [ran: wc -c]
 
 ## What the live site shows until the next push
 
-`https://1ps0.info/binaural` still serves 2.0.2 with "Healing & Wellbeing" sections. [src: fetched 2026-08-18] Nothing here is public until `git push`.
+`https://1ps0.info/binaural` still serves 2.0.2 with "Healing & Wellbeing" sections. [src: fetched 2026-08-18] Pages source is `main` at `/` [ran: gh api repos/1ps0/binaural/pages]; nothing here is live until `main` is pushed.
 
 ## Where things live
 
@@ -41,7 +42,8 @@ Updated 2026-09-10 on branch `v2.2`, after the 2.2.0 rewrite, committed locally 
 - ROADMAP #16 (warbling with other audio) — no reproduction.
 - Audible quality of the three patterns; the tests check graph shape and buffer range, not sound.
 - The `npm ci` step in CI against the re-synced lockfile.
-- `test:browser` in CI: needs a runner with Firefox + geckodriver (`browser-actions/setup-firefox` or the Ubuntu image's `firefox` + `geckodriver`), not wired yet.
+- CI browser jobs (`browsers-linux`: Firefox + Chromium on ubuntu-latest; `browsers-safari`: macos-latest with `sudo safaridriver --enable`) are written but have not run yet; they rely on the runner images shipping those browsers and drivers. [recall]
+- Safari smoke locally (see above).
 
 ## Loose ends in the working tree
 

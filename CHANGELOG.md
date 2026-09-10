@@ -23,7 +23,7 @@
 
 ### Project
 - `node --test` suite (30 tests) with a fake AudioContext; `npm run check` fails if root `index.html` drifts from `v2/src`.
-- `npm run test:browser`: headless Firefox via geckodriver — load, trusted click, `resume()` to `running`, `OfflineAudioContext` frequency check.
+- `npm run test:browser`: one WebDriver scenario across Firefox, Safari, and Chromium — load, trusted click, `resume()` to `running`, `OfflineAudioContext` frequency check. `npm run browsers:chromium` fetches a project-local Chrome for Testing + chromedriver pair. CI runs Firefox + Chromium on ubuntu and Safari on macOS.
 - `window.binaural` debug surface; `AGENTS.md` replaces `.cursorrules`; `html { scroll-padding-bottom }` keeps focused items above the control bar.
 - `npm run deploy` copies the build to the root; GitHub Actions runs test + check.
 - Removed `_headers` and `_config.yml` (never honoured by GitHub Pages); added `.nojekyll`.

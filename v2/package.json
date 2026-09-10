@@ -9,7 +9,9 @@
     "deploy": "node build.js --deploy",
     "test": "node --test test/",
     "check": "npm test && npm run deploy && git -C .. diff --exit-code --stat -- index.html v2/dist/index.html",
-    "test:browser": "node browser-tests/smoke.mjs"
+    "test:browser": "node browser-tests/smoke.mjs",
+    "browsers:chromium": "sh browser-tests/setup.sh --chromium",
+    "browsers:setup": "sh browser-tests/setup.sh"
   },
   "devDependencies": {
     "cssnano": "^5.1.15",
