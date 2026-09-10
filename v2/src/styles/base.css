@@ -81,6 +81,8 @@
 html {
     font-size: var(--font-size-base);
     line-height: var(--line-height-base);
+    /* Scroll-into-view (keyboard focus, WebDriver) stops above the fixed control bar. */
+    scroll-padding-bottom: calc(var(--control-bar-height) + var(--space-sm));
 }
 
 body {

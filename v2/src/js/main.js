@@ -1,6 +1,13 @@
 /**
  * Entry point. Wires systems together; contains no rendering or audio logic.
  */
+
+// Debug and test surface. Top-level const bindings are not window properties,
+// so WebDriver scripts and the devtools console reach the app through here.
+window.binaural = { AppState, EventSystem, ThemeSystem, FrequencySystem, AudioSystem, UISystem, UIComponents, errors: [] };
+window.addEventListener('error', e => window.binaural.errors.push(String(e.message || e)));
+window.addEventListener('unhandledrejection', e => window.binaural.errors.push(String((e.reason && e.reason.message) || e.reason)));
+
 (function detectInlineSvg() {
     const supported = !!(document.createElementNS
         && document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect);

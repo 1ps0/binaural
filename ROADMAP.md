@@ -19,6 +19,8 @@ Verification: `cd v2 && npm run check` (tests, build, and a diff that fails if r
 | — | Pin on a pattern threw after a legacy pin migration | Pins are a flat id list; every earlier storage shape and every historical id normalises through `FrequencySystem.LEGACY_IDS`. |
 | — | Section headings rendered as `Cognitive_enhancement Frequencies` | Titles come from `FrequencySystem.sections`. |
 | — | "Audio system ready" toast on every play | Toast removed; `audioReady` fires once. |
+| 22 | Real-browser smoke test | `npm run test:browser`: geckodriver + WebDriver over HTTP drives headless Firefox — load with zero errors, trusted click, `resume()` reaches `running`, `OfflineAudioContext` render measures 200/240 Hz per ear. Not in CI yet (needs a Firefox + geckodriver runner step). |
+| — | Focus/scroll-into-view lands under the fixed control bar | `html { scroll-padding-bottom }` tied to `--control-bar-height`. Found by the WebDriver click on a low entry being intercepted. |
 
 ## Open
 
@@ -32,6 +34,5 @@ Verification: `cd v2 && npm run check` (tests, build, and a diff that fails if r
 | 16 | Warbling / down-res while other audio plays | Not reproduced here. Suspects: OS mixer ducking, sample-rate switching on device change. Capture `context.sampleRate` and `baseLatency` in a debug panel first. |
 | 17 | Closing the browser on mobile stops audio | Expected for a page. Background playback needs an `<audio>` element fed by a MediaStreamDestination plus the Media Session API, or a PWA. |
 | 20 | Exclusive mode (switch tones instead of adding) | One flag in `startTone`: stop all before start. |
-| 22 | Real-browser smoke test | Headless Firefox screenshots run manually; a Playwright job in CI would catch runtime errors the vm tests cannot. |
 | 23 | Offline / installable | Manifest + service worker; the page already makes no network requests. |
 | 24 | Keyboard shortcuts | Space toggles the focused entry; `/` focuses search; `Escape` already closes the modal. |

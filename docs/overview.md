@@ -7,7 +7,7 @@ Updated 2026-09-10 on branch `v2.2`, after the 2.2.0 rewrite, committed locally 
 - **One product, one build.** `v2/src` → `node build.js` → `v2/dist/index.html` → `--deploy` copies to root `index.html`, the file GitHub Pages serves. Root and dist are byte-identical. [ran: diff -q → identical]
 - **Tests exist and pass.** 30 `node:test` cases load the production bundle order into a `vm` context with a fake `AudioContext` that records the graph. [ran: node --test → 30 pass, 0 fail]
 - **CI guards drift.** `.github/workflows/ci.yml` runs test, deploy, and fails if root `index.html` or `v2/dist` differ from what `v2/src` builds. Not yet exercised (needs a push).
-- **Firefox renders it.** Headless Firefox screenshots at 1280×900 and 390×844 show initialised sections, generated descriptions, SVG icons, dark theme. [ran: firefox --headless --screenshot → 2 PNGs, inspected]
+- **Firefox runs it.** `npm run test:browser` drives headless Firefox 152 through geckodriver 0.35: 3 sections, 21 play buttons, 0 runtime errors; a trusted click registers the entry and `AudioContext.resume()` settles to `running` with `userActivation.hasBeenActive === true`; an `OfflineAudioContext` render of the binaural graph measures 199.5 / 239.5 Hz per ear by zero-crossing. [ran: node browser-tests/smoke.mjs → PASS] Screenshots at 1280×900 and 390×844 inspected. [ran: firefox --headless --screenshot]
 - **Bundle is 76 KB unminified** (was 165 KB). [ran: wc -c]
 
 ## What the live site shows until the next push
@@ -37,13 +37,14 @@ Updated 2026-09-10 on branch `v2.2`, after the 2.2.0 rewrite, committed locally 
 
 ## Not verified here
 
-- Live Firefox behaviour on the host after deploy. Headless local render passed; the historical failures were host-side.
+- Live Firefox behaviour on the host after deploy. Local headless Firefox creates and runs the context on a trusted click; the historical failures were host-side (headers/Jekyll) and those files are gone.
 - ROADMAP #16 (warbling with other audio) — no reproduction.
 - Audible quality of the three patterns; the tests check graph shape and buffer range, not sound.
 - The `npm ci` step in CI against the re-synced lockfile.
+- `test:browser` in CI: needs a runner with Firefox + geckodriver (`browser-actions/setup-firefox` or the Ubuntu image's `firefox` + `geckodriver`), not wired yet.
 
 ## Loose ends in the working tree
 
 - `v3/` (untracked) differs from the `v3` branch in every shared file [ran: diff]; it holds work newer than `878677c` and is unbuildable (11 of 22 inputs missing). Left untouched. Decide: stash onto the `v3` branch, or delete.
-- `.cursorrules` (untracked) is a personal file; not added.
+- `.cursorrules` retired into `AGENTS.md` (imported by `CLAUDE.md`); the original is kept in the session scratchpad only.
 - `v1/` and `v0.0.1/` frozen.
