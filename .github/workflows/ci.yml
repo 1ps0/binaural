@@ -11,8 +11,8 @@ jobs:
       run:
         working-directory: v2
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
           cache: npm
@@ -32,10 +32,16 @@ jobs:
       run:
         working-directory: v2
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
+      - name: audio sink for Firefox (the runner has no sound device; Chromium fakes one, Firefox does not)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq pulseaudio >/dev/null
+          pulseaudio --start --exit-idle-time=-1
+          pactl info | head -4
       - run: node browser-tests/smoke.mjs --browser=firefox,chromium --strict
 
   browsers-safari:
@@ -45,8 +51,8 @@ jobs:
       run:
         working-directory: v2
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
       - run: sudo safaridriver --enable

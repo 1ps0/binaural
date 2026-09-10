@@ -6,8 +6,29 @@
 //   node browser-tests/smoke.mjs --browser=firefox,safari --file=path/to/index.html
 //   node browser-tests/smoke.mjs --strict          # a missing browser fails instead of skipping
 import path from 'node:path';
+import http from 'node:http';
+import { readFile } from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import { BROWSERS, startDriver, Session } from './webdriver.mjs';
+
+// Serve the target over loopback HTTP: file:// is refused or sandboxed differently per engine.
+async function serve(rootDir) {
+  const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png' };
+  const server = http.createServer(async (req, res) => {
+    const urlPath = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
+    const file = path.normalize(path.join(rootDir, urlPath === '/' ? 'index.html' : urlPath));
+    if (!file.startsWith(rootDir)) { res.writeHead(403); res.end(); return; }
+    try {
+      const data = await readFile(file);
+      res.writeHead(200, { 'content-type': types[path.extname(file)] || 'application/octet-stream', 'cache-control': 'no-store' });
+      res.end(data);
+    } catch {
+      res.writeHead(404); res.end('not found');
+    }
+  });
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  return { server, origin: `http://127.0.0.1:${server.address().port}` };
+}
 
 const args = Object.fromEntries(process.argv.slice(2).map(a => {
   const m = a.match(/^--([^=]+)(?:=(.*))?$/);
@@ -18,11 +39,14 @@ const wanted = args.browser ? String(args.browser).split(',') : Object.keys(BROW
 const strict = !!args.strict;
 const ENTRY = 'beat-2hz';
 
-async function scenario(session) {
+async function scenario(session, pageUrl) {
   // Same viewport in every engine; headless Chrome defaults to 800×600, which puts the
   // first entry under the fixed control bar after WebDriver's scroll-into-view.
   await session.setWindowRect(1280, 900);
-  await session.navigate(`file://${target}`);
+  await session.navigate(pageUrl);
+
+  const loaded = await session.exec(`return { href: location.href, ready: document.readyState, title: document.title, app: typeof window.binaural }`);
+  assert.equal(loaded.app, 'object', `page script did not run: ${JSON.stringify(loaded)}`);
 
   const page = await session.exec(`return {
     sections: document.querySelectorAll('.frequency-section').length,
@@ -98,6 +122,9 @@ function report(status, name, detail) {
   }
 }
 
+const { server, origin } = await serve(path.dirname(target));
+const pageUrl = `${origin}/${path.basename(target)}`;
+
 let failed = 0;
 let port = 4460;
 for (const name of wanted) {
@@ -112,7 +139,7 @@ for (const name of wanted) {
   try {
     driver = await startDriver(name, port++);
     session = await Session.create(driver.base, spec.capabilities());
-    const result = await scenario(session);
+    const result = await scenario(session, pageUrl);
     report('PASS', name, JSON.stringify(result));
   } catch (e) {
     failed++;
@@ -122,4 +149,5 @@ for (const name of wanted) {
     if (driver) driver.proc.kill();
   }
 }
+server.close();
 process.exit(failed ? 1 : 0);
