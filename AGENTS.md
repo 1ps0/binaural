@@ -66,7 +66,7 @@ The vm tests prove routing and catalog rules; they cannot prove the page runs. A
   "file://$PWD/index.html"
 ```
 
-`npm run test:browser` (`v2/browser-tests/smoke.mjs`) runs one scenario against every engine whose driver is present, over plain W3C WebDriver HTTP with no client library (`v2/browser-tests/webdriver.mjs`): load the deployed file, assert zero runtime errors, trusted click on Play, await `AudioContext.resume()` to `running`, render `buildBinaural` through an `OfflineAudioContext` and measure each ear by zero-crossing count. `--browser=a,b` selects engines; `--strict` makes a missing engine a failure (used in CI).
+`npm run test:browser` (`v2/browser-tests/smoke.mjs`) runs one scenario against every engine whose driver is present, over plain W3C WebDriver HTTP with no client library (`v2/browser-tests/webdriver.mjs`): load the deployed file, assert zero runtime errors, trusted click on Play, await `AudioContext.resume()` to `running`, render `buildBinaural` through an `OfflineAudioContext` and measure each ear by zero-crossing count. `--browser=a,b` selects engines; `--strict` makes a missing engine a failure (used in CI). The page is served from a loopback HTTP server inside the runner: Safari's WebDriver does not run scripts from `file://`, and headless Chrome's default 800×600 viewport is overridden to 1280×900 so the first entry is not under the fixed bar.
 
 | engine | driver | how to get it | notes |
 |--------|--------|---------------|-------|
@@ -74,7 +74,7 @@ The vm tests prove routing and catalog rules; they cannot prove the page runs. A
 | Safari | `safaridriver` | ships with macOS; `sudo safaridriver --enable` once, then Safari ▸ Develop ▸ **Allow Remote Automation** | no headless mode; a window opens |
 | Chromium | `chromedriver` | `npm run browsers:chromium` → `v2/.browsers/` | Google's Chrome for Testing build with a version-matched chromedriver; nothing in `/Applications`, no consumer Chrome. Homebrew's `chromium`/`chromedriver` casks are disabled (Gatekeeper, 2026-09). `CHROMIUM_BIN` / `CHROMEDRIVER_BIN` override. |
 
-CI runs Firefox + Chromium on `ubuntu-latest` (both preinstalled on the runner image) and Safari on `macos-latest`.
+CI runs Firefox + Chromium on `ubuntu-latest` (both preinstalled; Firefox needs `pulseaudio --start` because the runner has no sound device and Firefox, unlike Chromium, will not `resume()` without one) and Safari on `macos-latest` after `sudo safaridriver --enable`. Failures surface as workflow annotations, readable with `gh api repos/1ps0/binaural/check-runs/<job>/annotations` when the raw log host is unreachable.
 
 The page exposes `window.binaural = { AppState, AudioSystem, FrequencySystem, … , errors }` because top-level `const` bindings are not reachable from WebDriver's script sandbox or the console. Use it for debugging; never for production code paths.
 

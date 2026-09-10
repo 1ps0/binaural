@@ -19,7 +19,7 @@ Verification: `cd v2 && npm run check` (tests, build, and a diff that fails if r
 | — | Pin on a pattern threw after a legacy pin migration | Pins are a flat id list; every earlier storage shape and every historical id normalises through `FrequencySystem.LEGACY_IDS`. |
 | — | Section headings rendered as `Cognitive_enhancement Frequencies` | Titles come from `FrequencySystem.sections`. |
 | — | "Audio system ready" toast on every play | Toast removed; `audioReady` fires once. |
-| 22 | Real-browser smoke test | `npm run test:browser`: one WebDriver scenario over Firefox (geckodriver), Safari (safaridriver), Chromium (chromedriver + project-local Chrome for Testing) — load with zero errors, trusted click, `resume()` reaches `running`, `OfflineAudioContext` render measures 200/240 Hz per ear. CI: Firefox + Chromium on ubuntu, Safari on macOS. |
+| 22 | Real-browser smoke test | `npm run test:browser`: one WebDriver scenario over Firefox (geckodriver), Safari (safaridriver), Chromium (chromedriver + project-local Chrome for Testing) — load with zero errors, trusted click, `resume()` reaches `running`, `OfflineAudioContext` render measures 200/240 Hz per ear. CI green: Firefox 155 + Chromium 152 on ubuntu, Safari 26.6 on macOS. |
 | — | Focus/scroll-into-view lands under the fixed control bar | `html { scroll-padding-bottom }` tied to `--control-bar-height`. Found by the WebDriver click on a low entry being intercepted. |
 
 ## Open

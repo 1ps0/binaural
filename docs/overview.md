@@ -6,9 +6,9 @@ Updated 2026-09-10 on branch `v2.2` (pushed). `main` fast-forwards to it; GitHub
 
 - **One product, one build.** `v2/src` → `node build.js` → `v2/dist/index.html` → `--deploy` copies to root `index.html`, the file GitHub Pages serves. Root and dist are byte-identical. [ran: diff -q → identical]
 - **Tests exist and pass.** 30 `node:test` cases load the production bundle order into a `vm` context with a fake `AudioContext` that records the graph. [ran: node --test → 30 pass, 0 fail]
-- **CI guards drift.** `.github/workflows/ci.yml` runs test, deploy, and fails if root `index.html` or `v2/dist` differ from what `v2/src` builds. Not yet exercised (needs a push).
+- **CI is green on all three engines.** `check` (Node 24: `npm ci`, 30 tests, deploy, drift gate), `browsers-linux` (Firefox 155 + HeadlessChrome 152 over WebDriver, PulseAudio null sink for Firefox), `browsers-safari` (Safari 26.6.2 on macos-latest). Each browser: page loads with zero errors, trusted click → `AudioContext` `running`, offline render 199.5 / 239.5 Hz per ear. [ran: gh run view 34524579132 → all jobs success; annotations read via API]
 - **Firefox and Chromium run it.** `npm run test:browser` drives each engine over plain WebDriver: 3 sections, 21 play buttons, 0 runtime errors; a trusted click registers the entry and `AudioContext.resume()` settles to `running` with `userActivation.hasBeenActive === true`; an `OfflineAudioContext` render of the binaural graph measures 199.5 / 239.5 Hz per ear by zero-crossing. Firefox 152 via geckodriver 0.35; HeadlessChrome 153 via a project-local Chrome for Testing + chromedriver pair (`v2/.browsers`, gitignored, ~380 MB). [ran: node browser-tests/smoke.mjs --browser=chromium,firefox → PASS, PASS] Firefox screenshots at 1280×900 and 390×844 inspected. [ran: firefox --headless --screenshot]
-- **Safari: tooling ready, run blocked on a UI toggle.** `safaridriver` answers `/status ready: true`, but session creation returns "You must enable the 'Allow Remote Automation' option in Safari's Develop menu". One-time toggle by the owner, then `node browser-tests/smoke.mjs --browser=safari`. [ran: smoke → FAIL safari with that message]
+- **Safari locally needs one toggle.** `safaridriver` is enabled but session creation on this Mac returns "You must enable the 'Allow Remote Automation' option in Safari's Develop menu". Flip it once, then `node browser-tests/smoke.mjs --browser=safari`. In CI Safari passes. [ran: local smoke → that message; CI → PASS safari]
 - **Bundle is 76 KB unminified** (was 165 KB). [ran: wc -c]
 
 ## What the live site shows until the next push
@@ -41,9 +41,7 @@ Updated 2026-09-10 on branch `v2.2` (pushed). `main` fast-forwards to it; GitHub
 - Live Firefox behaviour on the host after deploy. Local headless Firefox creates and runs the context on a trusted click; the historical failures were host-side (headers/Jekyll) and those files are gone.
 - ROADMAP #16 (warbling with other audio) — no reproduction.
 - Audible quality of the three patterns; the tests check graph shape and buffer range, not sound.
-- The `npm ci` step in CI against the re-synced lockfile.
-- CI browser jobs (`browsers-linux`: Firefox + Chromium on ubuntu-latest; `browsers-safari`: macos-latest with `sudo safaridriver --enable`) are written but have not run yet; they rely on the runner images shipping those browsers and drivers. [recall]
-- Safari smoke locally (see above).
+- Safari smoke on this Mac (see above); CI covers it.
 
 ## Loose ends in the working tree
 
